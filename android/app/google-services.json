@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "806584624803",
+    "project_id": "tfg-dam-lucia-angela",
+    "storage_bucket": "tfg-dam-lucia-angela.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:806584624803:android:0aac1d6eaaaa43420d4116",
+        "android_client_info": {
+          "package_name": "com.example.tfg_bettervibes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3qLusvX6GK_uyfOPwwtKQmisd3qbmpuw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
