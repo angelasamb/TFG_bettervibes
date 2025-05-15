@@ -1,7 +1,7 @@
 abstract class ClaseBase{
-  late final String id;
+  final String id;
 
-  ClaseBase(this.id);
+  ClaseBase({required this.id});
 
   Map<String, dynamic> toMap();
 //fromMap() no puede ser abstract porque devuelve la instancia del Objeto

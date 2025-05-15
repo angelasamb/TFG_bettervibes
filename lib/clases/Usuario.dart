@@ -4,15 +4,13 @@ import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 class Usuario extends ClaseBase {
   // usar "_" -> private, para solo poder tener acceso mediante getters y setters
 
-  final String _email;
   String _nombre;
   ColorElegido _colorElegido;
 
-  Usuario(String id, String email, String nombre, ColorElegido colorElegido)
-    : _email = email,
-      _nombre = nombre,
-      _colorElegido = colorElegido,
-      super(id);
+
+  Usuario({required String id, required this._nombre, this._colorElegido } ):super(id: id);
+
+
 
   @override
   Map<String, dynamic> toMap() {
