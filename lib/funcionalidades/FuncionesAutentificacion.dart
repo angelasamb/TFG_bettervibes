@@ -26,5 +26,17 @@ class Autentificacion {
   }
 
   // INICIO CON CORREO
-  Future<UserCredential>
+  Future<UserCredential?> conectarConCorreo(String correo, String contrasena) async {
+    try {
+      return await _autentificacion.signInWithEmailAndPassword(email: correo, password: contrasena);
+    }catch (e){
+      print('ERROR: Inicio sesión con Correo: $e');
+      return null;
+    }
+  }
+
+  Future<void> cerrarSesion() async {
+    await _autentificacion.signOut();
+    await _inicioGoogle.signOut();
+  }
 }
