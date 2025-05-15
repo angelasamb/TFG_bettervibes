@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class Autentificacion {
   final FirebaseAuth _autentificacion = FirebaseAuth.instance;
-  final GoogleSignIn _inicioGoogle = GoogleSignIn();
+  final GoogleSignIn _inicioGoogle = kIsWeb
+  ? GoogleSignIn(clientId: '806584624803-0cble539totsqjma6kq9redu5o4dttd7.apps.googleusercontent.com')
+      : GoogleSignIn();
 
   // INICIO  CON GOOGLE
   Future<UserCredential?> conectarConGoogle() async {
