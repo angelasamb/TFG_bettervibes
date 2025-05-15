@@ -6,7 +6,8 @@ class Usuario extends ClaseBase {
 
   String _nombre;
   ColorElegido _colorElegido;
-
+  String _fotoPerfil;
+  bool _admin;
 
   Usuario({required String id, required this._nombre, this._colorElegido } ):super(id: id);
 

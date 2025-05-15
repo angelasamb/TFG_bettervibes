@@ -12,7 +12,7 @@ void main() async {
   }
   runApp(MyApp());
 }
-
+/*
 // Widget principal de la aplicación
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -67,9 +67,9 @@ class UnidadesFamiliaresScreen extends StatelessWidget {
     );
   }
 }
+*/
 
 
-/*
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) :super(key: key);
 
@@ -157,4 +157,4 @@ class _PantallaPrincipalState extends State<PantallaPrincipal> {
     );
 
   }
-}*/
+}
