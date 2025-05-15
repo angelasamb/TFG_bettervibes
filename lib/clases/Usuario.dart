@@ -5,7 +5,7 @@ import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 class Usuario extends ClaseBase {
   // usar "_" -> private, para solo poder tener acceso mediante getters y setters
   bool _admin;
-  double _balance;
+  num _balance;
   String _fotoPerfil;
   String _nombre;
   ColorElegido _colorElegido;
@@ -13,7 +13,7 @@ class Usuario extends ClaseBase {
 
   Usuario({
     required bool admin,
-    double balance=0.0,
+    num balance=0.0,
     required String fotoPerfil,
     required String nombre,
     required ColorElegido colorElegido,
@@ -30,18 +30,17 @@ class Usuario extends ClaseBase {
     return {
       "admin": _admin,
       "balance": _balance,
-      "foto": _fotoPerfil,
+      "fotoPerfil": _fotoPerfil,
       "nombre": _nombre,
       "colorElegido":_colorElegido.name,
       "unidadFamiliarRef":_unidadFamiliarRef
     };
   }
 
-  @override
   factory Usuario.fromFirestore(Map<String, dynamic> map) {
     return Usuario(
       admin:map["admin"]as bool,
-      balance:(map["balance"] as num).toDouble(),
+      balance: map["balance"] as num,
       fotoPerfil: map["fotoPerfil"] as String,
       nombre: map["nombre"] as String,
       //esta convirtiendo el string guardado en firestore al enum ColorElegido
@@ -56,9 +55,9 @@ class Usuario extends ClaseBase {
     _admin = value;
   }
 
-  double get balance => _balance;
+  num get balance => _balance;
 
-  set balance(double value) {
+  set balance(num value) {
     _balance = value;
   }
 
@@ -84,6 +83,11 @@ class Usuario extends ClaseBase {
 
   set unidadFamiliarRef(DocumentReference value) {
     _unidadFamiliarRef = value;
+  }
+
+  @override
+  String toString() {
+    return 'Usuario{_admin: $_admin, _balance: $_balance, _fotoPerfil: $_fotoPerfil, _nombre: $_nombre, _colorElegido: $_colorElegido, _unidadFamiliarRef: $_unidadFamiliarRef}';
   }
 
 
