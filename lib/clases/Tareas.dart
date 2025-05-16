@@ -2,21 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/clases/ClaseBase.dart';
 
 class Tareas extends ClaseBase {
+  bool _realizada;
   Timestamp _timestamp;
   DocumentReference _tipoTareaRef;
   DocumentReference _usuarioRef;
 
   Tareas({
+    required bool realizada,
     required Timestamp timestamp,
     required DocumentReference tipoTareaRef,
     required DocumentReference usuarioRef,
-  }) : _timestamp = timestamp,
+  }) : _realizada = realizada,
+        _timestamp = timestamp,
        _tipoTareaRef = tipoTareaRef,
        _usuarioRef = usuarioRef;
 
   @override
   Map<String, dynamic> toFirestore() {
     return {
+      "realizada": _realizada,
       "timestamp": _timestamp,
       "tipotareaRef": _tipoTareaRef,
       "usuarioRef": _usuarioRef,
@@ -25,6 +29,7 @@ class Tareas extends ClaseBase {
 
   factory Tareas.fromFirestore(Map<String, dynamic> map) {
     return Tareas(
+      realizada: map["realizada"] as bool,
       timestamp: map["timestamp"] as Timestamp,
       tipoTareaRef: map["tipoTareas"] as DocumentReference,
       usuarioRef: map["usuarioRef"] as DocumentReference,
@@ -47,5 +52,16 @@ class Tareas extends ClaseBase {
 
   set timestamp(Timestamp value) {
     _timestamp = value;
+  }
+
+  bool get realizada => _realizada;
+
+  set realizada(bool value) {
+    _realizada = value;
+  }
+
+  @override
+  String toString() {
+    return 'Tareas{_realizada: $_realizada, _timestamp: $_timestamp, _tipoTareaRef: $_tipoTareaRef, _usuarioRef: $_usuarioRef}';
   }
 }
