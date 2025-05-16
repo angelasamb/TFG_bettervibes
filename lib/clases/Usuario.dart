@@ -9,6 +9,7 @@ class Usuario extends ClaseBase {
   String _fotoPerfil;
   String _nombre;
   ColorElegido _colorElegido;
+  num _puntuacion;
   DocumentReference _unidadFamiliarRef;
 
   Usuario({
@@ -17,12 +18,14 @@ class Usuario extends ClaseBase {
     required String fotoPerfil,
     required String nombre,
     required ColorElegido colorElegido,
+    num puntuacion=0,
     required DocumentReference unidadFamiliarRef,
   }) : _admin = admin,
       _balance=balance,
        _fotoPerfil = fotoPerfil,
        _nombre = nombre,
        _colorElegido = colorElegido,
+  _puntuacion = puntuacion,
        _unidadFamiliarRef = unidadFamiliarRef;
 
   @override
@@ -33,6 +36,7 @@ class Usuario extends ClaseBase {
       "fotoPerfil": _fotoPerfil,
       "nombre": _nombre,
       "colorElegido":_colorElegido.name,
+      "puntuacion":_puntuacion,
       "unidadFamiliarRef":_unidadFamiliarRef
     };
   }
@@ -45,6 +49,7 @@ class Usuario extends ClaseBase {
       nombre: map["nombre"] as String,
       //esta convirtiendo el string guardado en firestore al enum ColorElegido
       colorElegido: ColorElegido.values.byName(map["colorElegido"] as String),
+      puntuacion: map["puntuacion"] as num,
       unidadFamiliarRef: map["unidadFamiliarRef"] as DocumentReference,
     );
   }
@@ -85,9 +90,15 @@ class Usuario extends ClaseBase {
     _unidadFamiliarRef = value;
   }
 
+  num get puntuacion => _puntuacion;
+
+  set puntuacion(num value) {
+    _puntuacion = value;
+  }
+
   @override
   String toString() {
-    return 'Usuario{_admin: $_admin, _balance: $_balance, _fotoPerfil: $_fotoPerfil, _nombre: $_nombre, _colorElegido: $_colorElegido, _unidadFamiliarRef: $_unidadFamiliarRef}';
+    return 'Usuario{_admin: $_admin, _balance: $_balance, _fotoPerfil: $_fotoPerfil, _nombre: $_nombre, _colorElegido: $_colorElegido, _puntuacion: $_puntuacion, _unidadFamiliarRef: $_unidadFamiliarRef}';
   }
 
 
