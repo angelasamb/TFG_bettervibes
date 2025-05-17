@@ -29,11 +29,24 @@ class Autentificacion {
   }
 
   // INICIO CON CORREO
-  Future<UserCredential?> conectarConCorreo(String correo, String contrasena) async {
+  Future<UserCredential?> conectarConCorreo(String correo, String contrasena) async{
     try {
       return await _autentificacion.signInWithEmailAndPassword(email: correo, password: contrasena);
     }catch (e){
       print('ERROR: Inicio sesión con Correo: $e');
+      return null;
+    }
+  }
+
+  // REGISTRARSE CON CORREO
+  Future<UserCredential?> registrarseConCorreo(String correo, String contrasena) async {
+    try {
+      return await _autentificacion.createUserWithEmailAndPassword(email: correo, password: contrasena);
+    } on FirebaseAuthException catch (e) {
+      print('ERROR: Registro con correo: ${e.code} - ${e.message}');
+      throw e; // Lanzamos la excepción para manejarla fuera
+    } catch (e) {
+      print('ERROR Registro con correo: $e');
       return null;
     }
   }
