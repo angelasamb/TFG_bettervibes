@@ -41,7 +41,7 @@ class pantallaAutentification extends StatelessWidget {
                   const SizedBox(height: 30),
                   _plantillaField(correo, "Correo"),
                   const SizedBox(height: 20),
-                  _plantillaField(contrasena, "Contraseña"),
+                  _plantillaField(contrasena, "Contraseña", esContrasena: true),
 
                   const SizedBox(height: 20),
 

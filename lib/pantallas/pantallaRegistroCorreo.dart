@@ -152,7 +152,7 @@ class PantallaRegistroCorreo extends StatelessWidget {
     );
   }
   String _mensajeError(var e){
-    String mensaje = _mensajeError(e);
+    String mensaje = "";
     switch (e.code) {
       case 'email-already-in-use':
         mensaje = 'El correo ya está en uso.';
