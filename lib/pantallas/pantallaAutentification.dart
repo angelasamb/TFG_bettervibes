@@ -136,7 +136,7 @@ class pantallaAutentification extends StatelessWidget {
                 ),// BOTON GOOGLE
                 TextButton(
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => pantallaRegistroCorreo()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaRegistroCorreo()));
                   },
                   child: Text('Regístrarme por correo')
                 ), //BOTON REGISTRARSE CORREO
