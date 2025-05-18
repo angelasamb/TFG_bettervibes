@@ -5,146 +5,155 @@ import 'package:tfg_bettervibes/pantallas/pantallaRegistroCorreo.dart';
 
 class pantallaAutentification extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
-  String correo = "";
-  String contrasena = "";
+
+  TextEditingController correo = TextEditingController();
+  TextEditingController contrasena = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          Positioned.fill(child: Image.asset('assets/imagenes/fondo1.png',fit: BoxFit.cover,
-          ),
+          Positioned.fill(
+            child: Image.asset('assets/imagenes/fondo1.png', fit: BoxFit.cover),
           ),
           Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              spacing: 5,
-              children: [
-                Text('Better\n  Vibes',
-                  style: TextStyle(
-                      color: Color(0xFFB86DFF),
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  const SizedBox(height: 130),
+                  Center(
+                    child: Image.asset(
+                      'assets/imagenes/iconos/logoFrase.png',
+                      height: 50,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Image.asset('assets/imagenes/iconos/iconoBetterVibes.png',
-                  height: 120,
-                ),
+                  const SizedBox(height: 10),
+                  Center(
+                    child: Image.asset(
+                      'assets/imagenes/iconos/iconoBetterVibes.png',
+                      height: 120,
+                    ),
+                  ),
 
-                SizedBox(height: 30),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: TextField(
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(color: Colors.grey),
-                            hintText: 'Correo',
+                  const SizedBox(height: 30),
+                  _plantillaField(correo, "Correo"),
+                  const SizedBox(height: 20),
+                  _plantillaField(contrasena, "Contraseña"),
+
+                  const SizedBox(height: 20),
+
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      minimumSize: const Size(260, 40),
+                    ),
+                    onPressed: () async {
+                      final correoAux = correo.text;
+                      final  contrasenaAux= contrasena.text;
+
+                      final credencialesUsuario = await _autentificacionFirebase
+                          .conectarConCorreo(correoAux, contrasenaAux);
+                      if (credencialesUsuario != null) {
+                        print(
+                          'Inicion de sesión con Google: ${credencialesUsuario.user!.email}',
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PantallaCerrarSesion(),
                           ),
-                          onChanged: (value) {
-                            correo = value;
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 12),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: TextField(
-                          obscureText: true,
-                          style: TextStyle(color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintStyle: TextStyle(color: Colors.grey),
-                            hintText: 'Contraseña',
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Correo o contraseña incorrectos'),
+                            backgroundColor: Colors.red,
                           ),
-                          onChanged: (value) {
-                            contrasena = value;
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    minimumSize: const Size(260, 40),
-                  ),
-                  onPressed: () async{
-                    final credencialesUsuario = await _autentificacionFirebase.conectarConCorreo(correo,contrasena);
-                    if(credencialesUsuario != null) {
-                      print('Inicion de sesión con Google: ${credencialesUsuario.user!.email}');
-                      Navigator.pushReplacement(
+                        );
+                      }
+                    },
+                    child: const Text(
+                      'Iniciar sesión',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),                   // BOTON CORREO
+
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                      minimumSize: const Size(260, 40),
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () async {
+                      final credencialesUsuario =
+                          await _autentificacionFirebase.conectarConGoogle();
+                      if (credencialesUsuario != null) {
+                        print(
+                          'Inicio de sesión con Google: ${credencialesUsuario.user!.email}',
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PantallaCerrarSesion(),
+                          ),
+                        );
+                      }
+                    },
+                    icon: Image.asset(
+                      'assets/imagenes/iconos/iconoGoogle.png',
+                      height: 24,
+                      width: 24,
+                    ),
+                    label: const Text(
+                      'Inicio de sesión con google',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ), // BOTON GOOGLE
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => PantallaCerrarSesion()),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Correo o contraseña incorrectos'),
-                          backgroundColor: Colors.red,
+                        MaterialPageRoute(
+                          builder: (context) => PantallaRegistroCorreo(),
                         ),
                       );
-                    }
-                  },
-                  child: const Text('Iniciar sesión',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ), // BOTON CORREO
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    minimumSize: const Size(260,40),
-                    padding: EdgeInsets.zero,
-                  ),
-                  onPressed: () async{
-                    final credencialesUsuario = await _autentificacionFirebase.conectarConGoogle();
-                    if(credencialesUsuario != null) {
-                      print('Inicio de sesión con Google: ${credencialesUsuario.user!.email}');
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => PantallaCerrarSesion()),
-                      );
-                    }
-                  },
-                  icon: Image.asset(
-                    'assets/imagenes/iconos/iconoGoogle.png',
-                    height: 24,
-                    width: 24,
-                  ),
-                  label: const Text('Inicio de sesión con google',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),// BOTON GOOGLE
-                TextButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PantallaRegistroCorreo()));
-                  },
-                  child: Text('Regístrarme por correo')
-                ), //BOTON REGISTRARSE CORREO
-                SizedBox(height: 20),
-              ],
+                    },
+                    child: Text('Regístrarme por correo'),
+                  ), //BOTON REGISTRARSE CORREO
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
-          )
+          ),
         ],
+      ),
+    );
+  }
+  Widget _plantillaField(
+      TextEditingController controller,
+      String hint, {
+        bool esContrasena = false,
+      }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TextField(
+        controller: controller,
+        obscureText: esContrasena,
+        style: const TextStyle(color: Colors.black),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintText: hint,
+          hintStyle: const TextStyle(color: Colors.grey),
+        ),
       ),
     );
   }

@@ -6,9 +6,9 @@ import 'package:tfg_bettervibes/pantallas/pantallaCerrarSesion.dart';
 class PantallaRegistroCorreo extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
 
-  final TextEditingController correoController = TextEditingController();
-  final TextEditingController contrasenaController = TextEditingController();
-  final TextEditingController contrasenaRepetidaController =
+  final TextEditingController correo = TextEditingController();
+  final TextEditingController contrasena = TextEditingController();
+  final TextEditingController contrasenaRepetida =
       TextEditingController();
 
   @override
@@ -28,7 +28,8 @@ class PantallaRegistroCorreo extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          Positioned.fill(child:Image.asset(
+          Positioned.fill(child:
+          Image.asset(
             'assets/imagenes/fondo1.png',
             fit: BoxFit.cover,
             height: double.infinity,
@@ -41,17 +42,11 @@ class PantallaRegistroCorreo extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               //padding uniforme de 20 pixeles en todos los lados
               children: [
-                const SizedBox(height: 100), //empty space
-                const Center(
-                  child: Text(
-                    'Better\n  Vibes',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Color(0xFFB86DFF),
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic,
-                    ),
+                const SizedBox(height: 130),
+                Center(
+                  child: Image.asset(
+                    'assets/imagenes/iconos/logoFrase.png',
+                    height: 50,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -63,16 +58,16 @@ class PantallaRegistroCorreo extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 //plantilla para los inputs, ahorro código
-                _plantillaField(contrasenaController, "Correo"),
+                _plantillaField(correo, "Correo"),
                 const SizedBox(height: 10),
                 _plantillaField(
-                  contrasenaController,
+                  contrasena,
                   "Contraseña",
                   esContrasena: true,
                 ),
                 const SizedBox(height: 10),
                 _plantillaField(
-                  contrasenaController,
+                  contrasenaRepetida,
                   "Repite la contraseña",
                   esContrasena: true,
                 ),
@@ -85,13 +80,13 @@ class PantallaRegistroCorreo extends StatelessWidget {
                     minimumSize: const Size(260, 40),
                   ),
                   onPressed: () async {
-                    final correo = correoController.text;
-                    final contrasena = contrasenaController.text;
-                    final contrasenaRepetida = contrasenaRepetidaController.text;
-                    if (contrasena == contrasenaRepetida) {
+                    final correoAux = correo.text;
+                    final contrasenaAux = contrasena.text;
+                    final contrasenaRepetidaAux = contrasenaRepetida.text;
+                    if (contrasenaAux == contrasenaRepetidaAux) {
                       try {
                         final credencialesUsuario = await _autentificacionFirebase
-                            .registrarseConCorreo(correo, contrasena);
+                            .registrarseConCorreo(correoAux, contrasenaAux);
                         if (credencialesUsuario != null) {
                           print(
                             'Registro por correo: ${credencialesUsuario.user!.email}',
@@ -103,24 +98,10 @@ class PantallaRegistroCorreo extends StatelessWidget {
                             ),
                           );
                         }
-                      } on FirebaseAuthException catch (e) {
-                        String mensaje = 'Error desconocido';
-                        switch (e.code) {
-                          case 'email-already-in-use':
-                            mensaje = 'El correo ya está en uso.';
-                            break;
-                          case 'invalid-email':
-                            mensaje = 'Correo inválido.';
-                            break;
-                          case 'weak-password':
-                            mensaje = 'La contraseña es demasiado débil.';
-                            break;
-                          default:
-                            mensaje = e.message ?? mensaje;
-                        }
+                      } on FirebaseAuthException catch (e) {                        
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(mensaje),
+                            content: Text(_mensajeError(e)),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -169,5 +150,27 @@ class PantallaRegistroCorreo extends StatelessWidget {
         ),
       ),
     );
+  }
+  String _mensajeError(var e){
+    String mensaje = _mensajeError(e);
+    switch (e.code) {
+      case 'email-already-in-use':
+        mensaje = 'El correo ya está en uso.';
+        break;
+      case 'invalid-email':
+        mensaje = 'Correo inválido.';
+        break;
+      case 'weak-password':
+        mensaje = 'La contraseña es demasiado débil.';
+        break;
+      case 'missing-password':
+        mensaje = 'El campo contraseña está vacio.';
+        break;
+      case 'channel-error':
+        mensaje ='Hay campos vacíos';
+      default:
+        mensaje = e.message ?? mensaje;
+    }
+    return mensaje;
   }
 }
