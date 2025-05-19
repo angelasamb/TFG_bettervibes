@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaCerrarSesion.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaDatosUsuario.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PantallaRegistroCorreo extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
@@ -30,12 +31,9 @@ class PantallaRegistroCorreo extends StatelessWidget {
       body: Stack(
         children: [
           Positioned.fill(child:
-          Image.asset(
-            'assets/imagenes/fondo1.png',
+          SvgPicture.asset(
+            'assets/imagenes/fondo1.svg',
             fit: BoxFit.cover,
-            height: double.infinity,
-            //stretches the widget to fill all available height within its parent container
-            width: double.infinity,
           ), ),
           Center(
             child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 400),

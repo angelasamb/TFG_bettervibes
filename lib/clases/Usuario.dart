@@ -10,7 +10,7 @@ class Usuario extends ClaseBase {
   String _nombre;
   ColorElegido _colorElegido;
   num _puntuacion;
-  DocumentReference _unidadFamiliarRef;
+  late DocumentReference _unidadFamiliarRef;
 
   Usuario({
     required bool admin,
@@ -18,15 +18,13 @@ class Usuario extends ClaseBase {
     required String fotoPerfil,
     required String nombre,
     required ColorElegido colorElegido,
-    num puntuacion=0,
-    required DocumentReference unidadFamiliarRef,
+    num puntuacion=0
   }) : _admin = admin,
       _balance=balance,
        _fotoPerfil = fotoPerfil,
        _nombre = nombre,
        _colorElegido = colorElegido,
-  _puntuacion = puntuacion,
-       _unidadFamiliarRef = unidadFamiliarRef;
+  _puntuacion = puntuacion;
 
   @override
   Map<String, dynamic> toFirestore() {
@@ -49,8 +47,7 @@ class Usuario extends ClaseBase {
       nombre: map["nombre"] as String,
       //esta convirtiendo el string guardado en firestore al enum ColorElegido
       colorElegido: ColorElegido.values.byName(map["colorElegido"] as String),
-      puntuacion: map["puntuacion"] as num,
-      unidadFamiliarRef: map["unidadFamiliarRef"] as DocumentReference,
+      puntuacion: map["puntuacion"] as num
     );
   }
 
