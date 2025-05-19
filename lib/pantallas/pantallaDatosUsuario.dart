@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 
 
 class PantallaDatosUsuario extends StatefulWidget {
@@ -9,8 +9,9 @@ class PantallaDatosUsuario extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _PantallaDatosUsuarioState();
 }
-class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario>{
-TextEditingController nombre = TextEditingController();
+
+class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
+  TextEditingController nombre = TextEditingController();
   final List<String> _rutasImagenes = [
     "assets/imagenes/fotoPerfil/icon_1.svg",
     "assets/imagenes/fotoPerfil/icon_2.svg",
@@ -18,7 +19,19 @@ TextEditingController nombre = TextEditingController();
     "assets/imagenes/fotoPerfil/icon_4.svg",
     "assets/imagenes/fotoPerfil/icon_5.svg",
   ];
+  Map<ColorElegido, Color> mapaColores = {
+    ColorElegido.Rojo: Color(0xff75181f),
+    ColorElegido.Naranja: Color(0xfff36135),
+    ColorElegido.Amarillo: Color(0xfff8df64),
+    ColorElegido.Verde: Color(0xff7aa85e),
+    ColorElegido.AzulClaro: Color(0xff6cd9de),
+    ColorElegido.AzulOscuro: Color(0xff173370),
+    ColorElegido.Morado: Color(0xFF562A77),
+    ColorElegido.Rosa: Color(0xFFD986E3),
+    ColorElegido.Gris: Color(0xFF97919B),
+  };
   String? imagenSeleccionada;
+  ColorElegido? colorSeleccionado;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +39,8 @@ TextEditingController nombre = TextEditingController();
       body: Stack(
         children: [
           Positioned.fill(
-            child: SvgPicture.asset("assets/imagenes/fondo1.svg", fit: BoxFit.cover),
+            child: SvgPicture.asset(
+                "assets/imagenes/fondo1.svg", fit: BoxFit.cover),
           ),
           Center(
             child: ConstrainedBox(
@@ -46,49 +60,13 @@ TextEditingController nombre = TextEditingController();
                   const SizedBox(height: 10),
                   _plantillaField(nombre, "Nombre"),
                   const SizedBox(height: 10),
-                  Text(
-                    "Seleccione una imagen: ",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
-                  ),
+                  _texto("Seleccione un icono"),
+                  _plantillaSelector(_rutasImagenes, true),
                   const SizedBox(height: 10),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: _rutasImagenes.length,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: 8,
-                        ),
-                    itemBuilder: (context, index) {
-                      final ruta = _rutasImagenes[index];
-                      final seleccionada = ruta == imagenSeleccionada;
-
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            imagenSeleccionada=ruta;
-                          });
-                          print("imagen seleccionada:$imagenSeleccionada");
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color:
-                                  seleccionada
-                                      ? Colors.gamaColores.shade50
-                                      : Colors.transparent,
-                              width: 3,
-                            ),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: SvgPicture.asset(ruta),
-                        ),
-                      );
-                    },
-                  ),
+                  _texto("Seleccione un color"),
+                  _plantillaSelector(mapaColores.keys.toList(), false),
+                  const SizedBox(height: 10),
+                  _texto("*Se podrá modificar en la configuracion del perfil")
                 ],
               ),
             ),
@@ -97,7 +75,13 @@ TextEditingController nombre = TextEditingController();
       ),
     );
   }
-
+Widget _texto(String mensaje){
+  return Text(
+    mensaje,
+    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+    textAlign: TextAlign.left,
+  );
+}
   Widget _plantillaField(TextEditingController controlador, String hint) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -117,4 +101,65 @@ TextEditingController nombre = TextEditingController();
     );
   }
 
+  Widget _plantillaSelector(List listaRutas, bool esIcono) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: listaRutas.length,
+      gridDelegate:
+      SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: esIcono? 3:6,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+      ),
+      itemBuilder: (context, index) {
+        final ruta = listaRutas[index];
+        bool seleccionada = false;
+        Widget contenido;
+
+        if (ruta is String) {
+          seleccionada = ruta == imagenSeleccionada;
+          contenido = SvgPicture.asset(ruta);
+        } else
+          if(ruta is ColorElegido)
+        {
+          final color = mapaColores[ruta]!;
+          seleccionada = ruta == colorSeleccionado;
+          contenido = Container(
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          );
+        }else{
+        contenido = const SizedBox();
+        };
+        return GestureDetector(
+        onTap: () {
+        setState(() {
+        if (ruta is String){
+        imagenSeleccionada = ruta;
+        }else if (ruta is ColorElegido){
+        colorSeleccionado = ruta;
+        }
+        });
+        },
+        child: Container(
+        decoration: BoxDecoration(
+        border: Border.all(
+        color:
+        seleccionada
+        ? Colors.gamaColores.shade50
+            : Colors.transparent,
+        width: 3,
+        ),
+        borderRadius: BorderRadius.circular(8),
+        ),
+        child: contenido,
+        )
+        ,
+        );
+      },
+    );
+  }
 }
