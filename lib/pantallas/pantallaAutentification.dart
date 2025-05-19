@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaCerrarSesion.dart';
+import 'package:tfg_bettervibes/pantallas/pantallaDatosUsuario.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaRegistroCorreo.dart';
 
 class pantallaAutentification extends StatelessWidget {
@@ -43,7 +44,7 @@ class pantallaAutentification extends StatelessWidget {
                   const SizedBox(height: 20),
                   _plantillaField(contrasena, "Contraseña", esContrasena: true),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 30),
 
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -53,7 +54,7 @@ class pantallaAutentification extends StatelessWidget {
                     ),
                     onPressed: () async {
                       final correoAux = correo.text;
-                      final  contrasenaAux= contrasena.text;
+                      final contrasenaAux = contrasena.text;
 
                       final credencialesUsuario = await _autentificacionFirebase
                           .conectarConCorreo(correoAux, contrasenaAux);
@@ -64,7 +65,7 @@ class pantallaAutentification extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PantallaCerrarSesion(),
+                            builder: (context) => PantallaDatosUsuario(),
                           ),
                         );
                       } else {
@@ -80,8 +81,8 @@ class pantallaAutentification extends StatelessWidget {
                       'Iniciar sesión',
                       style: TextStyle(color: Colors.black),
                     ),
-                  ),                   // BOTON CORREO
-
+                  ), // BOTON CORREO
+                  const SizedBox(height: 15),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -99,7 +100,7 @@ class pantallaAutentification extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PantallaCerrarSesion(),
+                            builder: (context) => PantallaDatosUsuario(),
                           ),
                         );
                       }
@@ -113,7 +114,8 @@ class pantallaAutentification extends StatelessWidget {
                       'Inicio de sesión con google',
                       style: TextStyle(color: Colors.black),
                     ),
-                  ), // BOTON GOOGLE
+                  ),
+                  const SizedBox(height: 5),// BOTON GOOGLE
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -134,11 +136,12 @@ class pantallaAutentification extends StatelessWidget {
       ),
     );
   }
+
   Widget _plantillaField(
-      TextEditingController controller,
-      String hint, {
-        bool esContrasena = false,
-      }) {
+    TextEditingController controlador,
+    String hint, {
+    bool esContrasena = false,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
@@ -146,7 +149,7 @@ class pantallaAutentification extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: TextField(
-        controller: controller,
+        controller: controlador,
         obscureText: esContrasena,
         style: const TextStyle(color: Colors.black),
         decoration: InputDecoration(

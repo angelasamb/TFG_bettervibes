@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaCerrarSesion.dart';
+import 'package:tfg_bettervibes/pantallas/pantallaDatosUsuario.dart';
 
 class PantallaRegistroCorreo extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
@@ -94,7 +95,7 @@ class PantallaRegistroCorreo extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PantallaCerrarSesion(),
+                              builder: (context) => PantallaDatosUsuario(),
                             ),
                           );
                         }
