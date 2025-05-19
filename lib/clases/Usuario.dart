@@ -19,6 +19,7 @@ class Usuario extends ClaseBase {
     required String nombre,
     required ColorElegido colorElegido,
     num puntuacion=0
+
   }) : _admin = admin,
       _balance=balance,
        _fotoPerfil = fotoPerfil,
@@ -81,9 +82,9 @@ class Usuario extends ClaseBase {
     _colorElegido = value;
   }
 
-  DocumentReference get unidadFamiliarRef => _unidadFamiliarRef;
+  DocumentReference? get unidadFamiliarRef => _unidadFamiliarRef;
 
-  set unidadFamiliarRef(DocumentReference value) {
+  set unidadFamiliarRef(DocumentReference? value) {
     _unidadFamiliarRef = value;
   }
 

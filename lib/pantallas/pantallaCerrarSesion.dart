@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
-import 'pantallaAutentification.dart'; // Asegúrate de importar la pantalla de autenticación
+import 'pantallaAutentification.dart';
 
 class PantallaCerrarSesion extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
@@ -50,6 +50,15 @@ class PantallaCerrarSesion extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               ),
               child: const Text('Cerrar sesión'),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(onPressed: () async {
+            },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
+              child: const Text('Añadir usuario'),
             ),
           ],
         ),
