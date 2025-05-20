@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
+import 'package:tfg_bettervibes/pantallas/pantallaPrincipal.dart';
 import '../pantallas/pantallaAutentification.dart';
-import '../pantallas/pantallaCerrarSesion.dart';
+import '../pantallas/pantallaCrearUnidadFamiliar.dart';
 import '../pantallas/pantallaDatosUsuario.dart';
-import '../pantallas/pantallaUnidadFamiliar.dart';
 
 class EscogerPantalla extends StatefulWidget{
   @override
@@ -41,17 +40,17 @@ class _EscogerPantallaState extends State<EscogerPantalla>{
         if (usuarioBaseDatos.exists) {
           print("usuarioBaseDatos.exists");
           final datosUsuario = usuarioBaseDatos.data();
-          if (datosUsuario?["UnidadFamiliar"] != null) {
+          if (datosUsuario?["unidadFamiliarRef"] != null) {
             print("datosUsuario?[]!=null");
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => PantallaCerrarSesion()),
+              MaterialPageRoute(builder: (_) => PantallaPrincipal()),
             );
           } else {
             print("else datosUsuario?[]!=null");
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (_) => PantallaUnidadFamiliar()),
+              MaterialPageRoute(builder: (_) => PantallaCrearUnidadFamiliar()),
             );
           }
         } else {
