@@ -7,5 +7,6 @@ enum ColorElegido{
   AzulOscuro,
   Morado,
   Rosa,
+  VerdeOscuro,
   Gris;
 }
