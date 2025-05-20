@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
+import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
 import '../clases/ColorElegido.dart';
 import '../funcionalidades/FuncionesUsuario.dart';
@@ -99,49 +100,17 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
                           imagenSeleccionada,
                           nombreUsuario,
                         );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EscogerPantalla(),
+                          ),
+                        );
+                        
                       }
                     },
                     child: _texto("Guardar"),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 400),
-              child: ListView(
-                padding: const EdgeInsets.all(20),
-                children: [
-                  const SizedBox(height: 40),                  const Text(
-                    "Datos Usuario",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18, // size in logical pixels
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 10),
-                  _plantillaField(nombre, "Nombre"),
-                  const SizedBox(height: 10),
-                  _texto("Seleccione un icono"),
-                  _plantillaSelector(_rutasImagenes, true),
-                  _texto("Seleccione un color"),
-                  _plantillaSelector(mapaColores.keys.toList(), false),
-                  _texto("*Se podrá modificar en la configuracion del perfil"),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.gamaColores.shade100,
-                      foregroundColor: Colors.black,
-                      minimumSize: const Size(260, 40),
-                    ),
-                    onPressed: () async {
-                      crearUsuarioBaseDeDatos(colorSeleccionado.toString(), imagenSeleccionada, nombre.text);
-                    },
-                    child: _texto("Guardar"),
-                  ),
-
                 ],
               ),
             ),
