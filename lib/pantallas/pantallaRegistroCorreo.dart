@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
-import 'package:tfg_bettervibes/pantallas/pantallaCerrarSesion.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaDatosUsuario.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tfg_bettervibes/widgets/personalizacion.dart';
+
 
 class PantallaRegistroCorreo extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
@@ -57,15 +58,15 @@ class PantallaRegistroCorreo extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
                 //plantilla para los inputs, ahorro código
-                _plantillaField(correo, "Correo"),
+                plantillaField(correo, "Correo"),
                 const SizedBox(height: 10),
-                _plantillaField(
+                plantillaField(
                   contrasena,
                   "Contraseña",
                   esContrasena: true,
                 ),
                 const SizedBox(height: 10),
-                _plantillaField(
+                plantillaField(
                   contrasenaRepetida,
                   "Repite la contraseña",
                   esContrasena: true,
@@ -127,29 +128,6 @@ class PantallaRegistroCorreo extends StatelessWidget {
     );
   }
 
-  Widget _plantillaField(
-    TextEditingController controller,
-    String hint, {
-    bool esContrasena = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextField(
-        controller: controller,
-        obscureText: esContrasena,
-        style: const TextStyle(color: Colors.black),
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: hint,
-          hintStyle: const TextStyle(color: Colors.grey),
-        ),
-      ),
-    );
-  }
   String _mensajeError(var e){
     String mensaje = "";
     switch (e.code) {
