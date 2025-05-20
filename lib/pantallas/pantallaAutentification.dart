@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
+<<<<<<< Updated upstream
 import 'package:tfg_bettervibes/pantallas/pantallaCerrarSesion.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaRegistroCorreo.dart';
+=======
+import 'package:tfg_bettervibes/pantallas/pantallaDatosUsuario.dart';
+import 'package:tfg_bettervibes/pantallas/pantallaRegistroCorreo.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tfg_bettervibes/widgets/personalizacion.dart';
+>>>>>>> Stashed changes
 
 class pantallaAutentification extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
@@ -39,9 +46,9 @@ class pantallaAutentification extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 30),
-                  _plantillaField(correo, "Correo"),
+                  plantillaField(correo, "Correo"),
                   const SizedBox(height: 20),
-                  _plantillaField(contrasena, "Contraseña", esContrasena: true),
+                  plantillaField(contrasena, "Contraseña", esContrasena: true),
 
                   const SizedBox(height: 20),
 
@@ -88,6 +95,7 @@ class pantallaAutentification extends StatelessWidget {
                       foregroundColor: Colors.black,
                       minimumSize: const Size(260, 40),
                       padding: EdgeInsets.zero,
+                      side: const BorderSide(color: Colors.black),
                     ),
                     onPressed: () async {
                       final credencialesUsuario =
@@ -134,6 +142,7 @@ class pantallaAutentification extends StatelessWidget {
       ),
     );
   }
+<<<<<<< Updated upstream
   Widget _plantillaField(
       TextEditingController controller,
       String hint, {
@@ -157,4 +166,6 @@ class pantallaAutentification extends StatelessWidget {
       ),
     );
   }
+=======
+>>>>>>> Stashed changes
 }

@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+<<<<<<< Updated upstream
+=======
+import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
+import 'package:tfg_bettervibes/pantallas/pantallaCerrarSesion.dart';
+import 'package:tfg_bettervibes/pantallas/pantallaDatosUsuario.dart';
+import 'package:tfg_bettervibes/pantallas/pantallaCrearUnidadFamiliar.dart';
+>>>>>>> Stashed changes
 import 'pantallas/pantallaAutentification.dart';
 import 'firebase_options.dart';
 
