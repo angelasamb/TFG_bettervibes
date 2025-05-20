@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaCerrarSesion.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaDatosUsuario.dart';
@@ -101,7 +102,7 @@ class pantallaAutentification extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PantallaDatosUsuario(),
+                            builder: (context) => EscogerPantalla(),
                           ),
                         );
                       }

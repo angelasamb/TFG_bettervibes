@@ -4,7 +4,7 @@ import 'package:tfg_bettervibes/clases/Usuario.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 
 final nombreColeccionUsuarios = 'Usuario';
-Future<bool> CrearUsuarioBaseDeDatos(String colorEscogido, String imagenEscogida, String nombreEscogidod) async {
+Future<bool> crearUsuarioBaseDeDatos(String colorEscogido, String imagenEscogida, String nombreEscogidod) async {
   try {
     final autentificacion = FirebaseAuth.instance;
     final baseDatos = FirebaseFirestore.instance;
