@@ -100,11 +100,7 @@ class pantallaAutentification extends StatelessWidget {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-<<<<<<< Updated upstream
-                            builder: (context) => PantallaCerrarSesion(),
-=======
                             builder: (context) => EscogerPantalla(),
->>>>>>> Stashed changes
                           ),
                         );
                       }

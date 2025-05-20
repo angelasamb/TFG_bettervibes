@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-<<<<<<< Updated upstream
-class PantallaDatosUsuario extends StatelessWidget {
-  const PantallaDatosUsuario({super.key});
-=======
+import '../clases/ColorElegido.dart';
+import '../funcionalidades/FuncionesUsuario.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+
+
 class PantallaDatosUsuario extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _PantallaDatosUsuarioState();
@@ -33,7 +35,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
   };
   String imagenSeleccionada = "";
   ColorElegido colorSeleccionado = ColorElegido.Rojo;
->>>>>>> Stashed changes
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +45,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
           Positioned.fill(
             child: Image.asset("assets/imagenes/fondo1.png", fit: BoxFit.cover),
           ),
-<<<<<<< Updated upstream
-          const Center(
-            child: Column(
 
-=======
           Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
@@ -105,15 +103,12 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
                   ),
                 ],
               ),
->>>>>>> Stashed changes
             ),
           )
         ],
       ),
     );
   }
-<<<<<<< Updated upstream
-=======
 
   Widget _texto(String mensaje) {
     return Text(
@@ -196,5 +191,4 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
       },
     );
   }
->>>>>>> Stashed changes
 }
