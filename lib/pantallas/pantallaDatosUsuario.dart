@@ -2,10 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
-
+import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
 
 class PantallaDatosUsuario extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => _PantallaDatosUsuarioState();
 }
@@ -30,7 +29,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
     ColorElegido.Rosa: Color(0xFFD986E3),
     ColorElegido.Gris: Color(0xFF97919B),
   };
-  String? imagenSeleccionada;
+  String imagenSeleccionada="";
   ColorElegido? colorSeleccionado;
 
   @override
@@ -40,7 +39,9 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
         children: [
           Positioned.fill(
             child: SvgPicture.asset(
-                "assets/imagenes/fondo1.svg", fit: BoxFit.cover),
+              "assets/imagenes/fondo1.svg",
+              fit: BoxFit.cover,
+            ),
           ),
           Center(
             child: ConstrainedBox(
@@ -48,8 +49,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
               child: ListView(
                 padding: const EdgeInsets.all(20),
                 children: [
-                  const SizedBox(height: 130),
-                  Text(
+                  const SizedBox(height: 40),                  const Text(
                     "Datos Usuario",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -62,11 +62,22 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
                   const SizedBox(height: 10),
                   _texto("Seleccione un icono"),
                   _plantillaSelector(_rutasImagenes, true),
-                  const SizedBox(height: 10),
                   _texto("Seleccione un color"),
                   _plantillaSelector(mapaColores.keys.toList(), false),
+                  _texto("*Se podrá modificar en la configuracion del perfil"),
                   const SizedBox(height: 10),
-                  _texto("*Se podrá modificar en la configuracion del perfil")
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.gamaColores.shade100,
+                      foregroundColor: Colors.black,
+                      minimumSize: const Size(260, 40),
+                    ),
+                    onPressed: () async {
+                      crearUsuarioBaseDeDatos(colorSeleccionado.toString(), imagenSeleccionada, nombre.text);
+                    },
+                    child: _texto("Guardar"),
+                  ),
+
                 ],
               ),
             ),
@@ -75,16 +86,17 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
       ),
     );
   }
-Widget _texto(String mensaje){
-  return Text(
-    mensaje,
-    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-    textAlign: TextAlign.left,
-  );
-}
+
+  Widget _texto(String mensaje) {
+    return Text(
+      mensaje,
+      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      textAlign: TextAlign.left,
+    );
+  }
+
   Widget _plantillaField(TextEditingController controlador, String hint) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -106,9 +118,8 @@ Widget _texto(String mensaje){
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: listaRutas.length,
-      gridDelegate:
-      SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: esIcono? 3:6,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: esIcono ? 3 : 5,
         mainAxisSpacing: 8,
         crossAxisSpacing: 8,
       ),
@@ -120,44 +131,39 @@ Widget _texto(String mensaje){
         if (ruta is String) {
           seleccionada = ruta == imagenSeleccionada;
           contenido = SvgPicture.asset(ruta);
-        } else
-          if(ruta is ColorElegido)
-        {
+        } else if (ruta is ColorElegido) {
           final color = mapaColores[ruta]!;
           seleccionada = ruta == colorSeleccionado;
           contenido = Container(
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           );
-        }else{
-        contenido = const SizedBox();
-        };
-        return GestureDetector(
-        onTap: () {
-        setState(() {
-        if (ruta is String){
-        imagenSeleccionada = ruta;
-        }else if (ruta is ColorElegido){
-        colorSeleccionado = ruta;
+        } else {
+          contenido = const SizedBox();
         }
-        });
-        },
-        child: Container(
-        decoration: BoxDecoration(
-        border: Border.all(
-        color:
-        seleccionada
-        ? Colors.gamaColores.shade50
-            : Colors.transparent,
-        width: 3,
-        ),
-        borderRadius: BorderRadius.circular(8),
-        ),
-        child: contenido,
-        )
-        ,
+        ;
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              if (ruta is String) {
+                imagenSeleccionada = ruta;
+              } else if (ruta is ColorElegido) {
+                colorSeleccionado = ruta;
+              }
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color:
+                seleccionada
+                    ? Colors.gamaColores.shade50
+                    : Colors.transparent,
+                width: 3,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: contenido,
+          ),
         );
       },
     );
