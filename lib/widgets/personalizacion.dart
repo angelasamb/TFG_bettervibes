@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+
+import '../clases/ColorElegido.dart';
+
+
   Widget plantillaField(
       TextEditingController controlador,
       String hint, {
@@ -22,3 +26,4 @@ import 'package:flutter/material.dart';
       ),
     );
   }
+
