@@ -7,6 +7,7 @@ class Tareas extends ClaseBase {
   DocumentReference _tipoTareaRef;
   DocumentReference _usuarioRef;
 
+
   Tareas({
     required bool realizada,
     required Timestamp timestamp,
