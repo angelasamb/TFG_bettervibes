@@ -63,7 +63,11 @@ flutter:
     - assets/imagenes/
     - assets/imagenes/iconos/
     - assets/imagenes/fotoPerfil/
-
+    - assets/fonts/
+  fonts:
+    - family: ERASMD
+      fonts:
+        - asset: assets/fonts/erasmd.ttf
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
