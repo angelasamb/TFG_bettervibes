@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
-import 'package:tfg_bettervibes/pantallas/pantallaDatosUsuario.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaRegistroCorreo.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
@@ -63,12 +62,12 @@ class pantallaAutentification extends StatelessWidget {
                           .conectarConCorreo(correoAux, contrasenaAux);
                       if (credencialesUsuario != null) {
                         print(
-                          'Inicion de sesión con Google: ${credencialesUsuario.user!.email}',
+                          'Inicio de sesión correo: ${credencialesUsuario.user!.email}',
                         );
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PantallaDatosUsuario(),
+                            builder: (context) => EscogerPantalla(),
                           ),
                         );
                       } else {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 import 'package:tfg_bettervibes/widgets/PlantillaSelector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/funcionalidades/SalirCambiarUnidadFamiliar.dart';
 
+import '../pantallaAutentification.dart';
 
 class PantallaConfiguracion extends StatefulWidget {
   @override
@@ -28,6 +28,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
   TextEditingController repetirContraseniaController = TextEditingController();
 
   DocumentReference? unidadFamiliarRef;
+  bool esUsuarioActualAdmin = false;
 
   @override
   void initState() {
@@ -52,12 +53,13 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
           orElse: () => ColorElegido.Rojo,
         );
 
+        esUsuarioActualAdmin = datos['admin'] ?? false;
+
         final unidadRef = datos['unidadFamiliarRef'];
         if (unidadRef != null && unidadRef is DocumentReference) {
           unidadFamiliarRef = unidadRef;
           final unidadDoc = await unidadRef.get();
 
-          // Cast seguro a Map<String, dynamic>
           final datosUnidad = unidadDoc.data() as Map<String, dynamic>?;
           unidadFamiliarId = unidadRef.id;
           contraseniaUnidad = datosUnidad?['contrasenia'] ?? '';
@@ -84,7 +86,6 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
       );
     }
   }
-
 
   Widget _seccionInvitacion() {
     return Card(
@@ -132,7 +133,6 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                 ),
               ],
             ),
-
             cambiarContraseniaActivo
                 ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,6 +192,126 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
     );
   }
 
+  Widget _listaUsuarios() {
+    if (unidadFamiliarRef == null) {
+      return Center(child: Text("No hay unidad familiar seleccionada"));
+    }
+
+    final firestore = FirebaseFirestore.instance;
+
+    final usuariosStream = firestore
+        .collection('Usuario')
+        .where('unidadFamiliarRef', isEqualTo: unidadFamiliarRef)
+        .snapshots();
+
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Usuarios en la unidad familiar",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            StreamBuilder<QuerySnapshot>(
+              stream: usuariosStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return Text("No hay usuarios en esta unidad familiar");
+                }
+
+                final usuariosDocs = snapshot.data!.docs;
+
+                return Column(
+                  children: usuariosDocs.map((doc) {
+                    final datos = doc.data() as Map<String, dynamic>;
+                    final nombre = datos['nombre'] ?? "Sin nombre";
+                    final foto = datos['fotoPerfil'] ?? "";
+                    final esAdmin = datos['admin'] ?? false;
+                    final uid = doc.id;
+
+                    final esUsuarioActual = FirebaseAuth.instance.currentUser?.uid == uid;
+
+                    return Card(
+                      margin: const EdgeInsets.symmetric(vertical: 6),
+                      child: ListTile(
+                        leading: foto.isNotEmpty
+                            ? CircleAvatar(backgroundImage: NetworkImage(foto))
+                            : CircleAvatar(child: Icon(Icons.person)),
+                        title: Text(nombre),
+                        subtitle: Text(esAdmin ? "Administrador" : "Usuario"),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (esUsuarioActualAdmin && !esAdmin && !esUsuarioActual)
+                              IconButton(
+                                icon: Icon(Icons.admin_panel_settings, color: Colors.green),
+                                tooltip: "Hacer admin",
+                                onPressed: () async {
+                                  await actualizarAdmin(uid, true);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text("$nombre ahora es admin")),
+                                  );
+                                },
+                              ),
+
+                            if (esUsuarioActualAdmin && esAdmin && !esUsuarioActual)
+                              IconButton(
+                                icon: Icon(Icons.remove_moderator, color: Colors.orange),
+                                tooltip: "Quitar admin",
+                                onPressed: () async {
+                                  await actualizarAdmin(uid, false);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text("Se quitó admin a $nombre")),
+                                  );
+                                },
+                              ),
+
+                            if (esUsuarioActualAdmin && !esUsuarioActual)
+                              IconButton(
+                                icon: Icon(Icons.exit_to_app, color: Colors.red),
+                                tooltip: "Expulsar usuario",
+                                onPressed: () async {
+                                  final confirmar = await showDialog<bool>(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Text("Confirmar expulsión"),
+                                      content: Text("¿Seguro que quieres expulsar a $nombre?"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () => Navigator.pop(context, false),
+                                            child: Text("Cancelar")),
+                                        TextButton(
+                                            onPressed: () => Navigator.pop(context, true),
+                                            child: Text("Expulsar")),
+                                      ],
+                                    ),
+                                  );
+                                  if (confirmar == true) {
+                                    await expulsarUsuario(context, doc.reference, unidadFamiliarRef);
+                                  }
+                                },
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _seccionModificarPerfil() {
     return Card(
       elevation: 2,
@@ -219,7 +339,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
               },
             ),
             PlantillaSelector(
-              esIcono: false, // false para colores
+              esIcono: false,
               itemSeleccionado: colorSeleccionado,
               onSelect: (dynamic value) {
                 setState(() {
@@ -271,21 +391,6 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            _seccionModificarPerfil(),
-            _seccionInvitacion(),
-            _seccionSalirUnidadFamiliar(),
-          ],
-        ),
-      ),
-    );
-  }
   Future<void> _cambiarContraseniaUnidadFamiliar() async {
     final nueva = nuevaContraseniaController.text.trim();
     final repetir = repetirContraseniaController.text.trim();
@@ -302,6 +407,52 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
         repetirContraseniaController.clear();
         setState(() {});
       },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            _seccionInvitacion(),
+            _seccionModificarPerfil(),
+            _listaUsuarios(),
+            _seccionSalirUnidadFamiliar(),
+            ElevatedButton(
+              onPressed: () async {
+                final confirmar = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text("Confirmar acción"),
+                    content: Text("¿Seguro que quieres cerrar sesión?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Text("Cancelar"),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: Text("Aceptar"),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirmar == true) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => pantallaAutentification()),
+                  );
+                }
+              },
+              child: Text("Cerrar sesión"),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,7 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-
 import 'EscogerPantalla.dart';
 
 Future<void> salirUnidadFamiliar(BuildContext context, DocumentReference unidadFamiliarRef) async {
@@ -14,22 +13,16 @@ Future<void> salirUnidadFamiliar(BuildContext context, DocumentReference unidadF
 
     try {
       await firestore.runTransaction((transaction) async {
-        // 1. Lee primero todos los documentos que necesites
         final unidadSnapshot = await transaction.get(unidadDocRef);
         final datosUnidad = unidadSnapshot.data() as Map<String, dynamic>?;
 
-        if (datosUnidad == null) {
-          throw Exception("Unidad familiar no encontrada");
-        }
+        if (datosUnidad == null) throw Exception("Unidad familiar no encontrada");
 
         List<dynamic> participantes = datosUnidad['participantes'] ?? [];
-        participantes = List.from(participantes); // copia mutable
+        participantes = List.from(participantes);
 
-        // Remover usuario actual de participantes
         participantes.removeWhere((ref) => ref.id == user.uid);
 
-        // 2. Ahora haz las escrituras después de las lecturas
-        // Quitar la unidad familiar del usuario
         transaction.update(usuarioDocRef, {'unidadFamiliarRef': FieldValue.delete()});
 
         if (participantes.isEmpty) {
@@ -38,7 +31,6 @@ Future<void> salirUnidadFamiliar(BuildContext context, DocumentReference unidadF
           transaction.update(unidadDocRef, {'participantes': participantes});
         }
       });
-
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Has salido de la unidad familiar")),
@@ -49,23 +41,17 @@ Future<void> salirUnidadFamiliar(BuildContext context, DocumentReference unidadF
         MaterialPageRoute(builder: (_) => EscogerPantalla()),
             (route) => false,
       );
-
-    } catch (e, stackTrace) {
-      print("Error al salir de unidad familiar: $e");
-      print(stackTrace);
-
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error al salir de la unidad familiar: $e")),
       );
     }
   } else {
-    print("Usuario no autenticado o referencia unidad familiar nula.");
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("No hay usuario autenticado o unidad familiar seleccionada")),
     );
   }
 }
-
 
 Future<bool> cambiarContraseniaUnidadFamiliar({
   required BuildContext context,
@@ -104,5 +90,47 @@ Future<bool> cambiarContraseniaUnidadFamiliar({
       SnackBar(content: Text("Error al actualizar contraseña")),
     );
     return false;
+  }
+}
+
+Future<void> actualizarAdmin(String uid, bool esAdmin) async {
+  final db = FirebaseFirestore.instance;
+  final userRef = db.collection('Usuario').doc(uid);
+  await userRef.update({'admin': esAdmin});
+}
+
+Future<void> expulsarUsuario(BuildContext context, DocumentReference usuarioRef, DocumentReference? unidadFamiliarRef) async {
+  final firestore = FirebaseFirestore.instance;
+
+  if (unidadFamiliarRef == null) return;
+
+  try {
+    await firestore.runTransaction((transaction) async {
+      final unidadSnapshot = await transaction.get(unidadFamiliarRef);
+      final datosUnidad = unidadSnapshot.data() as Map<String, dynamic>?;
+
+      if (datosUnidad == null) throw Exception("Unidad familiar no encontrada");
+
+      List<dynamic> participantes = datosUnidad['participantes'] ?? [];
+      participantes = List.from(participantes);
+
+      participantes.removeWhere((ref) => ref.id == usuarioRef.id);
+
+      if (participantes.isEmpty) {
+        transaction.delete(unidadFamiliarRef);
+      } else {
+        transaction.update(unidadFamiliarRef, {'participantes': participantes});
+      }
+
+      transaction.update(usuarioRef, {'unidadFamiliarRef': FieldValue.delete()});
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Usuario expulsado correctamente")),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error al expulsar usuario: $e")),
+    );
   }
 }

@@ -12,78 +12,71 @@ Future<bool> crearUnidadFamiliar(String nombre, String contrasena) async {
     final baseDatos = FirebaseFirestore.instance;
     final usuarioConectado = autentificacion.currentUser;
 
-    if (usuarioConectado == null) {
-      print("ERROR: No hay usuario registrado, no se ha podido crear usuario");
-      return false;
-    }
+    if (usuarioConectado == null) return false;
+
     final idUsuario = usuarioConectado.uid;
     DocumentReference usuarioRef = baseDatos.collection(nombreColeccionUsuarios).doc(idUsuario);
+
     List<DocumentReference> participantes = [usuarioRef];
 
+    UnidadFamiliar nuevaUnidadFamiliar = UnidadFamiliar(
+      contrasenia: contrasena,
+      nombre: nombre,
+      participantes: participantes,
+    );
 
-    UnidadFamiliar nuevaUnidadFamiliar = UnidadFamiliar(contrasenia: contrasena, nombre: nombre, participantes: participantes);
-    DocumentReference unidadRef = await baseDatos.collection(nombreColeccionUnidadFamiliar).add(nuevaUnidadFamiliar.toFirestore());
+    final datosAFirebase = nuevaUnidadFamiliar.toFirestore();
+
+    DocumentReference unidadRef = await baseDatos
+        .collection(nombreColeccionUnidadFamiliar)
+        .add(datosAFirebase);
 
     await usuarioRef.update({
       'unidadFamiliarRef': unidadRef,
       'admin': true,
     });
 
-    return(true);
+    return true;
   } catch (e) {
-    print("ERROR: Error en crearUnidadFamiliar: $e");
-    return(false);
+    print("ERROR: $e");
+    return false;
   }
 }
+
 Future<bool> unirseUnidadFamiliar(String unidadFamiliarId, String contrasenaIntento) async {
   try {
     final auth = FirebaseAuth.instance;
     final db = FirebaseFirestore.instance;
     final usuarioConectado = auth.currentUser;
 
-    if (usuarioConectado == null) {
-      print("ERROR: No hay usuario registrado");
-      return false;
-    }
-
-    DocumentReference unidadRef = db.collection(nombreColeccionUnidadFamiliar).doc(unidadFamiliarId);
-    DocumentSnapshot fotoUnidadFamiliar = await unidadRef.get();
-
-    if (!fotoUnidadFamiliar.exists) {
-      print("ERROR: La unidad familiar no existe");
-      return false;
-    }
-
-    UnidadFamiliar unidad = UnidadFamiliar.fromFirestore(fotoUnidadFamiliar.data() as Map<String, dynamic>);
-
-    if (unidad.contrasenia != contrasenaIntento) {
-      print("ERROR: Contraseña incorrecta");
-      return false;
-    }
+    if (usuarioConectado == null) return false;
 
     final idUsuario = usuarioConectado.uid;
     DocumentReference usuarioRef = db.collection(nombreColeccionUsuarios).doc(idUsuario);
+    DocumentReference unidadRef = db.collection(nombreColeccionUnidadFamiliar).doc(unidadFamiliarId);
 
-    // Añadimos usuario a unidad familiar
-    if (!unidad.participantes.contains(usuarioRef)) {
-      unidad.participantes.add(usuarioRef);
-    }
+    DocumentSnapshot fotoUnidadFamiliar = await unidadRef.get();
+    if (!fotoUnidadFamiliar.exists) return false;
 
-    // Actualizamos usuario
+    UnidadFamiliar unidad = UnidadFamiliar.fromFirestore(fotoUnidadFamiliar.data() as Map<String, dynamic>);
+    if (unidad.contrasenia != contrasenaIntento) return false;
+
     await usuarioRef.update({
       'unidadFamiliarRef': unidadRef,
       'admin': false,
     });
 
-    // Actualizamos unidad familiar
-    await unidadRef.update({
-      'participantes': unidad.participantes,
-    });
+    try {
+      await unidadRef.update({
+        'participantes': FieldValue.arrayUnion([usuarioRef]),
+      });
+    } catch (e) {
+      print("ERROR: $e");
+    }
 
     return true;
-
   } catch (e) {
-    print("ERROR: Error al unirse a unidad familiar: $e");
+    print("ERROR: $e");
     return false;
   }
 }

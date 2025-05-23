@@ -1,1 +1,38 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"tfg-dam-lucia-angela","appId":"1:806584624803:android:0aac1d6eaaaa43420d4116","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"tfg-dam-lucia-angela","configurations":{"android":"1:806584624803:android:0aac1d6eaaaa43420d4116","macos":"1:806584624803:ios:6aea096a8cbc975e0d4116","web":"1:806584624803:web:6bfd9c3b0b77b0c80d4116","windows":"1:806584624803:web:eb422a015c9777c80d4116"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "tfg-dam-lucia-angela",
+          "appId": "1:806584624803:android:0aac1d6eaaaa43420d4116",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "tfg-dam-lucia-angela",
+          "configurations": {
+            "android": "1:806584624803:android:0aac1d6eaaaa43420d4116",
+            "macos": "1:806584624803:ios:6aea096a8cbc975e0d4116",
+            "web": "1:806584624803:web:6bfd9c3b0b77b0c80d4116",
+            "windows": "1:806584624803:web:eb422a015c9777c80d4116"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
