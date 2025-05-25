@@ -5,6 +5,8 @@ import 'package:tfg_bettervibes/widgets/PlantillaSelector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/funcionalidades/SalirCambiarUnidadFamiliar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 import '../pantallaAutentification.dart';
 
@@ -235,6 +237,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                     final foto = datos['fotoPerfil'] ?? "";
                     final esAdmin = datos['admin'] ?? false;
                     final uid = doc.id;
+                    print("Foto perfil: $foto");
 
                     final esUsuarioActual = FirebaseAuth.instance.currentUser?.uid == uid;
 
@@ -242,7 +245,19 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                       margin: const EdgeInsets.symmetric(vertical: 6),
                       child: ListTile(
                         leading: foto.isNotEmpty
-                            ? CircleAvatar(backgroundImage: NetworkImage(foto))
+                            ? (foto.endsWith('.svg')
+                            ? CircleAvatar(
+                          backgroundColor: Colors.transparent,
+                          child: SvgPicture.asset(
+                            foto,
+                            fit: BoxFit.cover,
+                            width: 40,
+                            height: 40,
+                          ),
+                        )
+                            : CircleAvatar(
+                          backgroundImage: AssetImage(foto),
+                        ))
                             : CircleAvatar(child: Icon(Icons.person)),
                         title: Text(nombre),
                         subtitle: Text(esAdmin ? "Administrador" : "Usuario"),
@@ -266,10 +281,13 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                                 icon: Icon(Icons.remove_moderator, color: Colors.orange),
                                 tooltip: "Quitar admin",
                                 onPressed: () async {
-                                  await actualizarAdmin(uid, false);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text("Se quitó admin a $nombre")),
-                                  );
+                                  bool esAdmin = await sigueSiendoAdmin();
+                                  if(esAdmin){
+                                    await actualizarAdmin(uid, false);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text("Se quitó admin a $nombre")),);
+                                  }
+                                  return;
                                 },
                               ),
 
@@ -294,7 +312,11 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                                     ),
                                   );
                                   if (confirmar == true) {
-                                    await expulsarUsuario(context, doc.reference, unidadFamiliarRef);
+                                    bool esAdmin = await sigueSiendoAdmin();
+                                    if(esAdmin) {
+                                      await expulsarUsuario(context, doc.reference, unidadFamiliarRef);
+                                    }
+                                    return;
                                   }
                                 },
                               ),
@@ -369,7 +391,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
           final confirmar = await showDialog<bool>(
             context: context,
             builder: (_) => AlertDialog(
-              title: Text("Confirmar"),
+              title: Text("Confirmar salir unidad familiar"),
               content: Text(
                   "¿Seguro que quieres salir de la unidad familiar? Esta acción no se puede deshacer."),
               actions: [
@@ -389,6 +411,15 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
         child: Text("Salir de la unidad familiar"),
       ),
     );
+  }
+
+  Future<bool> sigueSiendoAdmin() async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return false;
+
+    final userSnapshot = await FirebaseFirestore.instance.collection('Usuario').doc(uid).get();
+    final data = userSnapshot.data();
+    return data != null && data['admin'] == true;
   }
 
   Future<void> _cambiarContraseniaUnidadFamiliar() async {
@@ -426,7 +457,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                 final confirmar = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text("Confirmar acción"),
+                    title: Text("Confirmar cerrar sesión"),
                     content: Text("¿Seguro que quieres cerrar sesión?"),
                     actions: [
                       TextButton(
@@ -442,14 +473,17 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                 );
 
                 if (confirmar == true) {
-                  Navigator.push(
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => pantallaAutentification()),
+                        (route) => false,
                   );
                 }
               },
               child: Text("Cerrar sesión"),
             ),
+
           ],
         ),
       ),
