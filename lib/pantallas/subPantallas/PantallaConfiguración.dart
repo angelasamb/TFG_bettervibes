@@ -7,8 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/funcionalidades/SalirCambiarUnidadFamiliar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../registroUsuario/pantallaAutentification.dart';
 
-import '../pantallaAutentification.dart';
 
 class PantallaConfiguracion extends StatefulWidget {
   @override
