@@ -4,7 +4,7 @@ import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
-import '../datosUsuario/pantallaDatosUsuario.dart';
+import '../funcionalidades/EscogerPantalla.dart';
 
 
 class PantallaRegistroCorreo extends StatelessWidget {
@@ -95,7 +95,7 @@ class PantallaRegistroCorreo extends StatelessWidget {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => PantallaDatosUsuario(),
+                              builder: (context) => EscogerPantalla(),
                             ),
                           );
                         }
