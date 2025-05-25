@@ -5,11 +5,11 @@ import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
 import 'package:tfg_bettervibes/widgets/PlantillaSelector.dart';
-import '../clases/ColorElegido.dart';
-import '../funcionalidades/FuncionesUsuario.dart';
+import '../../clases/ColorElegido.dart';
+import '../../funcionalidades/FuncionesUsuario.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../widgets/personalizacion.dart';
+import '../../widgets/personalizacion.dart';
 
 class PantallaDatosUsuario extends StatefulWidget {
   @override

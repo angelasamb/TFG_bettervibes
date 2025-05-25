@@ -1,10 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tfg_bettervibes/pantallas/pantallaCrearUnidadFamiliar.dart';
-import 'package:tfg_bettervibes/pantallas/pantallaDatosUsuario.dart';
-import 'package:tfg_bettervibes/pantallas/pantallaUnirteUnidadFamiliar.dart';
-
+import 'package:tfg_bettervibes/pantallas/datosUsuario/pantallaCrearUnidadFamiliar.dart';
 import 'firebase_options.dart';
 
 void main() async{

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
-import 'pantallaAutentification.dart';
+import 'registroUsuario/pantallaAutentification.dart';
 
 class PantallaCerrarSesion extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();

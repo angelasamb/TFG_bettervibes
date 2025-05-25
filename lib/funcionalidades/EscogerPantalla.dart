@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaPrincipal.dart';
-import '../pantallas/pantallaAutentification.dart';
-import '../pantallas/pantallaCrearUnidadFamiliar.dart';
-import '../pantallas/pantallaDatosUsuario.dart';
+import '../pantallas/datosUsuario/pantallaCrearUnidadFamiliar.dart';
+import '../pantallas/datosUsuario/pantallaDatosUsuario.dart';
+import '../pantallas/registroUsuario/pantallaAutentification.dart';
 
 
 class EscogerPantalla extends StatefulWidget{
@@ -27,34 +27,28 @@ class _EscogerPantallaState extends State<EscogerPantalla>{
       final usuarioFirebase = FirebaseAuth.instance.currentUser;
 
       if (usuarioFirebase == null) {
-        print("usuarioFirebase ==null");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => pantallaAutentification()),
         );
       } else {
-        print(" else usuarioFirebase ==null");
         final idUsuario = usuarioFirebase.uid;
         final usuarioBaseDatos = await FirebaseFirestore.instance.collection(
             "Usuario").doc(idUsuario).get();
         if (usuarioBaseDatos.exists) {
-          print("usuarioBaseDatos.exists");
           final datosUsuario = usuarioBaseDatos.data();
           if (datosUsuario?["unidadFamiliarRef"] != null) {
-            print("datosUsuario?[]!=null");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => PantallaPrincipal()),
             );
           } else {
-            print("else datosUsuario?[]!=null");
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => PantallaCrearUnidadFamiliar()),
             );
           }
         } else {
-          print("else usuarioBaseDatos.exists");
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => PantallaDatosUsuario()),
