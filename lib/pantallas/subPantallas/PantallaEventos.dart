@@ -19,11 +19,6 @@ class _PantallaEventosState extends State<PantallaEventos> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: const Text('Eventos'),
-        backgroundColor: Colors.gamaColores.shade100,
-        foregroundColor: Colors.white,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView( // Scroll vertical principal
