@@ -19,8 +19,14 @@ class Eventos extends ClaseBase {
 
   @override
   Map<String, dynamic> toFirestore() {
-    return {"timestamp": _timestamp, "usuarioRef": _usuarioRef};
+    return {
+      "timestamp": _timestamp,
+      "usuarioRef": _usuarioRef,
+      "nombre": _nombre,
+      "descripcion": _descripcion,
+    };
   }
+
 
   factory Eventos.fromFirestore(Map<String, dynamic> map) {
     return Eventos(
