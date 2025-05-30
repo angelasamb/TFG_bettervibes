@@ -16,34 +16,75 @@ class _PantallaEventosState extends State<PantallaEventos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Eventos')),
+      backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        title: const Text('Eventos'),
+        backgroundColor: Colors.gamaColores.shade100,
+        foregroundColor: Colors.white,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: TableCalendar(
-          locale: 'es_ES',
-          firstDay: DateTime(2020),
-          lastDay: DateTime(2030),
-          focusedDay: _fechaSeleccionada,
-          calendarFormat: _formatoCalendario,
-          selectedDayPredicate: (day) => isSameDay(day, _fechaSeleccionada),
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _fechaSeleccionada = selectedDay;
-            });
-          },
-          onFormatChanged: (format) {
-            setState(() {
-              _formatoCalendario = format;
-            });
-          },
-          availableCalendarFormats: const {
-            CalendarFormat.month: 'Mes',
-            CalendarFormat.twoWeeks: '2 semanas',
-            CalendarFormat.week: 'Semana',
-          },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 6,
+                offset: Offset(0, 3),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.all(8),
+          child: TableCalendar(
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            locale: 'es_ES',
+            firstDay: DateTime(2020),
+            lastDay: DateTime(2030),
+            focusedDay: _fechaSeleccionada,
+            calendarFormat: _formatoCalendario,
+            selectedDayPredicate: (day) => isSameDay(day, _fechaSeleccionada),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _fechaSeleccionada = selectedDay;
+              });
+            },
+            onFormatChanged: (format) {
+              setState(() {
+                _formatoCalendario = format;
+              });
+            },
+            availableCalendarFormats: const {
+              CalendarFormat.month: 'Mes',
+              CalendarFormat.twoWeeks: '2 semanas',
+              CalendarFormat.week: 'Semana',
+            },
+            calendarStyle: const CalendarStyle(
+              todayDecoration: BoxDecoration(
+                color: Colors.grey,
+                shape: BoxShape.circle,
+              ),
+              selectedDecoration: BoxDecoration(
+                color: Colors.black87,
+                shape: BoxShape.circle,
+              ),
+              weekendTextStyle: TextStyle(color: Colors.redAccent),
+            ),
+            headerStyle: HeaderStyle(
+              formatButtonDecoration: BoxDecoration(
+                color: Colors.gamaColores.shade50,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              formatButtonTextStyle: const TextStyle(color: Colors.white),
+              titleCentered: true,
+            ),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.gamaColores.shade100,
+        foregroundColor: Colors.white,
         onPressed: () {
           Navigator.push(
             context,
@@ -54,7 +95,6 @@ class _PantallaEventosState extends State<PantallaEventos> {
         },
         child: const Icon(Icons.add),
       ),
-
     );
   }
 }

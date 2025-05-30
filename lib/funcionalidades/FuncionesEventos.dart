@@ -8,7 +8,7 @@ Future<void> crearEventoEnUnidadFamiliar({
   required String nombre,
   String? descripcion,
   required Timestamp timestamp,
-  DocumentReference? usuarioRef,
+  DocumentReference? usuarioRefEvento,
 }) async {
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
@@ -39,7 +39,7 @@ Future<void> crearEventoEnUnidadFamiliar({
       nombre: nombre,
       descripcion: descripcion,
       timestamp: timestamp,
-      usuarioRef: usuarioRef,
+      usuarioRef: usuarioRefEvento,
     );
 
     await firestore.runTransaction((transaction) async {

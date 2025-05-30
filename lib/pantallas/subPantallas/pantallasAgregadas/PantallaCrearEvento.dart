@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../funcionalidades/FuncionesEventos.dart';
+import '../../../widgets/personalizacion.dart';
 
 class PantallaCrearEvento extends StatefulWidget {
   final DateTime fechaSeleccionada;
@@ -16,31 +17,40 @@ class PantallaCrearEvento extends StatefulWidget {
 class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   final TextEditingController _nombreCtrl = TextEditingController();
   final TextEditingController _descripcionCtrl = TextEditingController();
+  TimeOfDay? _horaSeleccionada;
   bool _paraTodos = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text('Crear Evento'),
+        backgroundColor: Colors.gamaColores.shade100,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _nombreCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Nombre del evento',
-              ),
-            ),
+            plantillaField(_nombreCtrl, 'Nombre del evento'),
             const SizedBox(height: 16),
-            TextField(
-              controller: _descripcionCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Descripción',
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
               ),
-              maxLines: 3,
+              child: TextField(
+                controller: _descripcionCtrl,
+                maxLines: 3,
+                style: const TextStyle(color: Colors.black),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Descripción',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -53,8 +63,43 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
               ],
             ),
             const SizedBox(height: 16),
+            Row(
+              children: [
+                const Text('Hora: '),
+                Text(
+                  _horaSeleccionada != null
+                      ? _horaSeleccionada!.format(context)
+                      : 'No seleccionada',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.gamaColores.shade100,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () async {
+                    final hora = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (hora != null) {
+                      setState(() {
+                        _horaSeleccionada = hora;
+                      });
+                    }
+                  },
+                  child: const Text('Elegir hora'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             CheckboxListTile(
               title: const Text("Evento para toda la familia"),
+              activeColor: Colors.gamaColores.shade100,
               value: _paraTodos,
               onChanged: (value) {
                 setState(() {
@@ -66,29 +111,63 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(
+                OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.gamaColores.shade100,
+                    side: BorderSide(color: Colors.gamaColores.shade100),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Cancelar'),
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.gamaColores.shade100,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                   onPressed: () async {
                     final nombre = _nombreCtrl.text.trim();
                     final descripcion = _descripcionCtrl.text.trim();
-                    final fecha = widget.fechaSeleccionada;
 
-                    if (nombre.isEmpty) {
+                    if (_horaSeleccionada == null) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Por favor, completa el nombre del evento")),
+                        const SnackBar(
+                          content: Text("Por favor, selecciona la hora del evento"),
+                        ),
                       );
                       return;
                     }
+
+                    if (nombre.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Por favor, completa el nombre del evento"),
+                        ),
+                      );
+                      return;
+                    }
+
+                    final fecha = DateTime(
+                      widget.fechaSeleccionada.year,
+                      widget.fechaSeleccionada.month,
+                      widget.fechaSeleccionada.day,
+                      _horaSeleccionada!.hour,
+                      _horaSeleccionada!.minute,
+                    );
 
                     await crearEventoEnUnidadFamiliar(
                       context: context,
                       nombre: nombre,
                       descripcion: descripcion.isEmpty ? null : descripcion,
                       timestamp: Timestamp.fromDate(fecha),
-                      usuarioRef: _paraTodos ? null : FirebaseFirestore.instance.collection('Usuario').doc(FirebaseAuth.instance.currentUser!.uid),
+                      usuarioRefEvento: _paraTodos
+                          ? null
+                          : FirebaseFirestore.instance.collection('Usuario').doc(FirebaseAuth.instance.currentUser!.uid),
                     );
 
                     Navigator.pop(context);
