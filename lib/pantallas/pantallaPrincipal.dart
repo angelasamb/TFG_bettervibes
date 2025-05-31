@@ -27,12 +27,9 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {//mover el appbar a cada pantalla para que el fondo pueda ocupar todo el espacio
     return Scaffold(
-      appBar: AppBar(
-        title: Text(['Inicio', 'TODO', 'Eventos', 'Configuración'][_indiceSeleccionado]),
-        backgroundColor: Colors.gamaColores.shade400,
-      ),
+
       body: _pantallas[_indiceSeleccionado],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _indiceSeleccionado,

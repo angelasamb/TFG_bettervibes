@@ -4,7 +4,7 @@ import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
-import '../funcionalidades/EscogerPantalla.dart';
+import '../../funcionalidades/EscogerPantalla.dart';
 
 
 class PantallaRegistroCorreo extends StatelessWidget {

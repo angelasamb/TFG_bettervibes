@@ -4,7 +4,12 @@ import 'package:tfg_bettervibes/clases/Usuario.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 
 final nombreColeccionUsuarios = 'Usuario';
-Future<bool> crearUsuarioBaseDeDatos(String colorEscogido, String imagenEscogida, String nombreEscogidod) async {
+
+Future<bool> crearUsuarioBaseDeDatos(
+  String colorEscogido,
+  String imagenEscogida,
+  String nombreEscogidod,
+) async {
   try {
     final autentificacion = FirebaseAuth.instance;
     final baseDatos = FirebaseFirestore.instance;
@@ -15,21 +20,29 @@ Future<bool> crearUsuarioBaseDeDatos(String colorEscogido, String imagenEscogida
       return false;
     }
 
-      final idUsuario = usuarioConectado.uid;
+    final idUsuario = usuarioConectado.uid;
 
-      ColorElegido colorEnum = ColorElegido.values.firstWhere(
-              (color) => color.name == colorEscogido,
-          orElse: () => ColorElegido.AzulOscuro); // Color predeterminado
+    ColorElegido colorEnum = ColorElegido.values.firstWhere(
+      (color) => color.name == colorEscogido,
+      orElse: () => ColorElegido.AzulOscuro,
+    ); // Color predeterminado
 
-      Usuario usuarioNuevo = Usuario(admin: false, fotoPerfil: imagenEscogida, nombre: nombreEscogidod, colorElegido: colorEnum);
+    Usuario usuarioNuevo = Usuario(
+      admin: false,
+      fotoPerfil: imagenEscogida,
+      nombre: nombreEscogidod,
+      colorElegido: colorEnum,
+    );
 
-      await baseDatos.collection(nombreColeccionUsuarios).doc(idUsuario).set(usuarioNuevo.toFirestore());
+    await baseDatos
+        .collection(nombreColeccionUsuarios)
+        .doc(idUsuario)
+        .set(usuarioNuevo.toFirestore());
 
-      return(true);
-
+    return (true);
   } catch (e) {
     print("ERROR: Error en FuncionesUsuario: $e");
-    return(false);
+    return (false);
   }
 }
 
@@ -46,10 +59,32 @@ Future<bool> existeElUsuario() async {
 
     final idUsuario = usuarioConectado.uid;
 
-    final registro = await baseDatos.collection(nombreColeccionUsuarios).doc(idUsuario).get();
-    return(true);
+    final registro =
+        await baseDatos
+            .collection(nombreColeccionUsuarios)
+            .doc(idUsuario)
+            .get();
+    return (true);
   } catch (e) {
     print("ERROR: Error en FuncionesUsuario: $e");
-    return(false);
+    return (false);
   }
+}
+
+Future<String?> obtenerUnidadFamiliarId() async {
+  final usuario = FirebaseAuth.instance.currentUser;
+  if (usuario != null) {
+    final docUsuario =
+        await FirebaseFirestore.instance
+            .collection("Usuario")
+            .doc(usuario.uid)
+            .get();
+    if (docUsuario.exists) {
+      final unidadRef = docUsuario.data()?["unidadFamiliarRef"];
+      if (unidadRef != null && unidadRef is DocumentReference) {
+        return unidadRef.id;
+      }
+    }
+  }
+  return null;
 }

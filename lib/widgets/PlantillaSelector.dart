@@ -20,7 +20,7 @@ class PlantillaSelector extends StatelessWidget {
     "assets/imagenes/fotoPerfil/icon_5.svg",
   ];
 
-  final Map<ColorElegido, Color> _mapaColores = {
+  final Map<ColorElegido, Color> mapaColores = {
     ColorElegido.Rojo: Color(0xff75181f),
     ColorElegido.Naranja: Color(0xfff36135),
     ColorElegido.Amarillo: Color(0xfff8df64),
@@ -35,7 +35,7 @@ class PlantillaSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final listaRutas = esIcono ? _rutasImagenes : _mapaColores.keys.toList();
+    final listaRutas = esIcono ? _rutasImagenes : mapaColores.keys.toList();
 
     return GridView.builder(
       shrinkWrap: true,
@@ -56,7 +56,7 @@ class PlantillaSelector extends StatelessWidget {
           seleccionada = ruta == itemSeleccionado;
           contenido = SvgPicture.asset(ruta);
         } else if (ruta is ColorElegido) {
-          final color = _mapaColores[ruta]!;
+          final color = mapaColores[ruta]!;
           seleccionada = ruta == itemSeleccionado;
           contenido = Container(
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),

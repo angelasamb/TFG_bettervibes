@@ -5,15 +5,14 @@ import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
 import 'package:tfg_bettervibes/widgets/PlantillaSelector.dart';
-import '../../clases/ColorElegido.dart';
-import '../../funcionalidades/FuncionesUsuario.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../widgets/personalizacion.dart';
 
 class PantallaDatosUsuario extends StatefulWidget {
+  const PantallaDatosUsuario({super.key});
+
   @override
-  State<StatefulWidget> createState() => _PantallaDatosUsuarioState();
+  State<PantallaDatosUsuario> createState() => _PantallaDatosUsuarioState();
 }
 
 class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
@@ -24,6 +23,18 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true, //para que la imagen de las lineas se vea detras de la appBar tambien
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false, //para que se muestre el icono de vuelta atrás
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Stack(
         children: [
           Positioned.fill(

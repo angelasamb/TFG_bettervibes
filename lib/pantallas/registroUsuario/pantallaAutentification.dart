@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
-import 'package:tfg_bettervibes/pantallas/pantallaRegistroCorreo.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/pantallas/registroUsuario/pantallaRegistroCorreo.dart';
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
@@ -18,6 +17,18 @@ class pantallaAutentification extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true, //para que la imagen de las lineas se vea detras de la appBar tambien
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false, //para que se muestre el icono de vuelta atrás
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: Stack(
         children: [
           Positioned.fill(
