@@ -5,7 +5,6 @@ import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaEventos.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaConfiguración.dart';
 class PantallaPrincipal extends StatefulWidget {
   const PantallaPrincipal({super.key});
-
   @override
   State<PantallaPrincipal> createState() => _PantallaPrincipalEstado();
 }

@@ -5,13 +5,13 @@ class Eventos extends ClaseBase {
   String? _descripcion;
   String _nombre;
   Timestamp _timestamp;
-  DocumentReference _usuarioRef;
+  DocumentReference? _usuarioRef;
 
   Eventos({
     String? descripcion,
     required String nombre,
     required Timestamp timestamp,
-    required DocumentReference usuarioRef,
+    DocumentReference? usuarioRef,
   }) : _descripcion = descripcion,
        _nombre = nombre,
        _timestamp = timestamp,
@@ -19,8 +19,14 @@ class Eventos extends ClaseBase {
 
   @override
   Map<String, dynamic> toFirestore() {
-    return {"timestamp": _timestamp, "usuarioRef": _usuarioRef};
+    return {
+      "timestamp": _timestamp,
+      "usuarioRef": _usuarioRef,
+      "nombre": _nombre,
+      "descripcion": _descripcion,
+    };
   }
+
 
   factory Eventos.fromFirestore(Map<String, dynamic> map) {
     return Eventos(
@@ -31,9 +37,9 @@ class Eventos extends ClaseBase {
     );
   }
 
-  DocumentReference get usuarioRef => _usuarioRef;
+  DocumentReference? get usuarioRef => _usuarioRef;
 
-  set usuarioRef(DocumentReference value) {
+  set usuarioRef(DocumentReference? value) {
     _usuarioRef = value;
   }
 
