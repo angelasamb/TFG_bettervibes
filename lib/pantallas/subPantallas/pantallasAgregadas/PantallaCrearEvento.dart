@@ -23,7 +23,6 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text('Crear Evento'),
         backgroundColor: Colors.gamaColores.shade100,

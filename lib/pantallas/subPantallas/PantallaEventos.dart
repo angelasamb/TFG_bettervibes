@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
 
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../widgets/eventosHoy.dart';
 
 class PantallaEventos extends StatefulWidget {
@@ -18,13 +19,20 @@ class _PantallaEventosState extends State<PantallaEventos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView( // Scroll vertical principal
+      body: Stack(
+        children: [
+          SvgPicture.asset(
+            'assets/imagenes/fondo1.svg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        SingleChildScrollView(
+          padding: const EdgeInsets.all(12),// Scroll vertical principal
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 50),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -74,7 +82,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
                   ),
                   headerStyle: HeaderStyle(
                     formatButtonDecoration: BoxDecoration(
-                      color: Colors.gamaColores.shade50,
+                      color: Colors.gamaColores.shade200,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     formatButtonTextStyle: const TextStyle(color: Colors.white),
@@ -110,10 +118,11 @@ class _PantallaEventosState extends State<PantallaEventos> {
             ],
           ),
         ),
+      ]
       ),
 
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.gamaColores.shade100,
+        backgroundColor: Colors.gamaColores.shade500,
         foregroundColor: Colors.white,
         onPressed: () {
           Navigator.push(

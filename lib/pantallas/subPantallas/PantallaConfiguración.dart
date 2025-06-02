@@ -91,6 +91,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
 
   Widget _seccionInvitacion() {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -207,6 +208,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
         .snapshots();
 
     return Card(
+      color: Colors.white,
       margin: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
@@ -336,6 +338,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
 
   Widget _seccionModificarPerfil() {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -371,6 +374,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
+
               onPressed: _guardarCambios,
               child: Text("Guardar cambios"),
             ),
@@ -444,10 +448,20 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
+
+      body:Stack(
+      children: [
+        SvgPicture.asset(
+          'assets/imagenes/fondo1.svg',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
+        SingleChildScrollView(
+          padding: const EdgeInsets.all(12),
         child: Column(
           children: [
+            const SizedBox(height: 50),
             _seccionInvitacion(),
             _seccionModificarPerfil(),
             _listaUsuarios(),
@@ -487,6 +501,8 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
           ],
         ),
       ),
+    ]
+      )
     );
   }
 }
