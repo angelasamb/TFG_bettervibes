@@ -162,7 +162,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PantallaCrearEvento(fechaSeleccionada: _fechaSeleccionada),
+              builder: (context) => PantallaCrearEvento(tipoActividad: "evento",),
             ),
           );
         },

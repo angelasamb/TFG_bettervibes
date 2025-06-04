@@ -23,15 +23,15 @@ Color getColorFromEnum(String color) {
     case "Verde":
       return Color(0xff7aa85e);
     case "AzulClaro":
-      return Color(0xff366421);
-    case "AzulOscuro":
       return Color(0xff6cd9de);
-    case "Morado":
+    case "AzulOscuro":
       return Color(0xff173370);
-    case "Rosa":
+    case "Morado":
       return Color(0xFF562A77);
-    case "VerdeOscuro":
+    case "Rosa":
       return Color(0xFFD986E3);
+    case "VerdeOscuro":
+      return Color(0xff366421);
     case "Gris":
       return Color(0xFF97919B);
     default:

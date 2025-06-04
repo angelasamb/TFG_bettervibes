@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
 
 import '../../clases/Usuario.dart';
 
@@ -16,10 +17,8 @@ class PantallaTODO extends StatefulWidget {
 }
 
 class _PantallaTODOState extends State<PantallaTODO> {
-  String filtroDefecto = "Mis tareas";
-  List<String> _filtros = ["Mis tareas", "Completadas", "Pendientes", "Todas"];
   String? unidadFamiliarId;
-
+  String? user = FirebaseAuth.instance.currentUser?.uid;
   @override
   void initState() {
     super.initState();
@@ -47,9 +46,17 @@ class _PantallaTODOState extends State<PantallaTODO> {
         .collection("Tareas");
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Colors.gamaColores.shade200,
-        child: Icon(Icons.add, color: Colors.white),
+        backgroundColor: Colors.gamaColores.shade500,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PantallaCrearEvento(tipoActividad: "tarea"),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -110,40 +117,57 @@ class _PantallaTODOState extends State<PantallaTODO> {
   }
 
   Future<List<Widget>> _listaTareasPorDia(
-      List<QueryDocumentSnapshot> tareas,
-      ) async {
-    Map<String, List<DocumentSnapshot>> tareasPorDia = {};
-    String fechaClave = "";
-    DateTime fecha;
+    List<QueryDocumentSnapshot> tareas,
+  ) async {
+    Map<DateTime, List<DocumentSnapshot>> tareasPorDia = {};
+
     for (var tarea in tareas) {
-      fecha = (tarea["timestamp"] as Timestamp).toDate();
-      fechaClave = DateFormat('EEEE, dd MMM yyyy').format(fecha);
-      tareasPorDia.putIfAbsent(fechaClave, () => []).add(tarea);
+      DateTime fechaClave = (tarea["timestamp"] as Timestamp).toDate();
+      DateTime soloFecha = DateTime(
+        fechaClave.year,
+        fechaClave.month,
+        fechaClave.day,
+      );
+      tareasPorDia.putIfAbsent(soloFecha, () => []).add(tarea);
     }
-    List<String> tareasOrdenadas =
-    tareasPorDia.keys.toList()..sort((a, b) => b.compareTo(a));
+    final tareasOrdenadas =
+        tareasPorDia.keys.toList()..sort((a, b) => a.compareTo(b));
+
     List<Widget> lista = [];
+
     for (var fecha in tareasOrdenadas) {
-      lista.add(Padding(padding: const EdgeInsets.all(8), child: Text(fecha)));
+      final tareaDia = tareasPorDia[fecha]!;
+      tareaDia.sort(
+        (a, b) => (a["timestamp"] as Timestamp).compareTo(
+          b["timestamp"] as Timestamp,
+        ),
+      );
+      final String fechaFormateada = DateFormat(
+        "EEE, dd MMM yyyy",
+      ).format(fecha);
+    var tipoTareaRef;
+      lista.add(
+        Padding(padding: const EdgeInsets.all(8), child: Text(fechaFormateada)),
+      );
       for (var tarea in tareasPorDia[fecha]!) {
-        final tipoTareaRef = tarea["tipoTarea"] as DocumentReference;
-        final usuarioRef = tarea["idUsuario"] as DocumentReference;
+        tipoTareaRef = tarea["tipotareaRef"] as DocumentReference;
+        final usuarioRef = tarea["usuarioRef"] as DocumentReference;
         final usuario =
-        await FirebaseFirestore.instance
-            .collection("Usuario")
-            .doc(usuarioRef.id)
-            .get();
+            await FirebaseFirestore.instance
+                .collection("Usuario")
+                .doc(usuarioRef.id)
+                .get();
 
         final tipoTarea =
-        await FirebaseFirestore.instance
-            .collection("UnidadFamiliar")
-            .doc(unidadFamiliarId)
-            .collection("TipoTareas")
-            .doc(tipoTareaRef.id)
-            .get();
+            await FirebaseFirestore.instance
+                .collection("UnidadFamiliar")
+                .doc(unidadFamiliarId)
+                .collection("TipoTareas")
+                .doc(tipoTareaRef.id)
+                .get();
 
         String nombreTipoTarea = tipoTarea.get("nombre");
-        String descripcionTareas = tipoTarea.get("descripcion")??"";
+        String descripcionTareas = tarea["descripcion"] ?? "";
         Color colorUsuario = getColorFromEnum(usuario.get("colorElegido"));
         final hora = DateFormat("HH:mm").format(tarea["timestamp"].toDate());
 
@@ -155,7 +179,13 @@ class _PantallaTODOState extends State<PantallaTODO> {
               ),
             ),
             onPressed: () {
-              print("Tarea presionada");
+              if(user==usuarioRef.id){
+              Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PantallaCrearEvento(tareaEditar: tarea.reference),
+              ),
+            );}
             },
             child: Column(
               children: [
@@ -163,33 +193,80 @@ class _PantallaTODOState extends State<PantallaTODO> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-
-                    Text(
-                      nombreTipoTarea,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: colorUsuario,
+                    Expanded(
+                      child: Text(
+                        nombreTipoTarea,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: colorUsuario,
+                        ),
                       ),
                     ),
-                    Text(
-                      hora,
-                      style: TextStyle(fontSize: 18, color: colorUsuario),
+                    Row(
+                      children: [
+                        Text(
+                          hora,
+                          style: TextStyle(fontSize: 18, color: colorUsuario),
+                        ),
+
+                        if (tarea["realizada"] == false)
+                          IconButton(
+                            onPressed: () async {
+                              final confirmar = await showDialog(
+                                context: context,
+                                builder:
+                                    (context) => AlertDialog(
+                                      title: Text("Confirmar"),
+                                      content: Text(
+                                        "¿Quieres marcar esta tarea como completada?",
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed:
+                                              () => Navigator.of(
+                                                context,
+                                              ).pop(false),
+                                          child: Text("Cancelar"),
+                                        ),
+                                        TextButton(
+                                          onPressed:
+                                              () => Navigator.of(
+                                                context,
+                                              ).pop(true),
+                                          child: Text("Sí"),
+                                        ),
+                                      ],
+                                    ),
+                              );
+                              if (confirmar == true) {
+                                await FirebaseFirestore.instance
+                                    .collection("UnidadFamiliar")
+                                    .doc(unidadFamiliarId)
+                                    .collection("Tareas")
+                                    .doc(tarea.id)
+                                    .update({"realizada": true});
+                              }
+                            },
+                            icon: Icon(Icons.check),
+                          ),
+                      ],
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                if(descripcionTareas.isNotEmpty)...[ //si no hay descripcion no está el campo
-                Text(
-                  descripcionTareas,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: colorUsuario,
+                if (descripcionTareas.isNotEmpty) ...[
+                  //si no hay descripcion no está el campo
+                  Text(
+                    descripcionTareas,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade700,
+                    ),
                   ),
-                ),
 
-                const SizedBox(height: 10)
+                  const SizedBox(height: 10),
                 ],
               ],
             ),
