@@ -237,6 +237,8 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                     final datos = doc.data() as Map<String, dynamic>;
                     final nombre = datos['nombre'] ?? "Sin nombre";
                     final foto = datos['fotoPerfil'] ?? "";
+                    final color = datos["colorElegido"];
+                    final colorElegido = getColorFromEnum(color);
                     final esAdmin = datos['admin'] ?? false;
                     final uid = doc.id;
                     print("Foto perfil: $foto");
@@ -261,7 +263,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                           backgroundImage: AssetImage(foto),
                         ))
                             : CircleAvatar(child: Icon(Icons.person)),
-                        title: Text(nombre),
+                        title: Text(nombre, style: TextStyle(color: colorElegido),),
                         subtitle: Text(esAdmin ? "Administrador" : "Usuario"),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,

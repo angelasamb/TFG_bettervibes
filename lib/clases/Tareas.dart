@@ -6,17 +6,19 @@ class Tareas extends ClaseBase {
   Timestamp _timestamp;
   DocumentReference _tipoTareaRef;
   DocumentReference _usuarioRef;
-
+  String _descripcion;
 
   Tareas({
     required bool realizada,
     required Timestamp timestamp,
     required DocumentReference tipoTareaRef,
     required DocumentReference usuarioRef,
+    required String descripcion,
   }) : _realizada = realizada,
         _timestamp = timestamp,
        _tipoTareaRef = tipoTareaRef,
-       _usuarioRef = usuarioRef;
+       _usuarioRef = usuarioRef,
+  _descripcion = descripcion;
 
   @override
   Map<String, dynamic> toFirestore() {
@@ -25,6 +27,7 @@ class Tareas extends ClaseBase {
       "timestamp": _timestamp,
       "tipotareaRef": _tipoTareaRef,
       "usuarioRef": _usuarioRef,
+      "descripcion":_descripcion,
     };
   }
 
@@ -34,6 +37,7 @@ class Tareas extends ClaseBase {
       timestamp: map["timestamp"] as Timestamp,
       tipoTareaRef: map["tipoTareas"] as DocumentReference,
       usuarioRef: map["usuarioRef"] as DocumentReference,
+      descripcion: map["descripcion"] as String,
     );
   }
 
@@ -61,8 +65,14 @@ class Tareas extends ClaseBase {
     _realizada = value;
   }
 
+  String get descripcion => _descripcion;
+
+  set descripcion(String value) {
+    _descripcion = value;
+  }
+
   @override
   String toString() {
-    return 'Tareas{_realizada: $_realizada, _timestamp: $_timestamp, _tipoTareaRef: $_tipoTareaRef, _usuarioRef: $_usuarioRef}';
+    return 'Tareas{_realizada: $_realizada, _timestamp: $_timestamp, _tipoTareaRef: $_tipoTareaRef, _usuarioRef: $_usuarioRef, _descripcion: $_descripcion}';
   }
 }
