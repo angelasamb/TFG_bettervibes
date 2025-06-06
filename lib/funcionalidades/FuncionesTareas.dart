@@ -47,9 +47,9 @@ Future<void> crearTareaEnUnidadFamiliar({
 
     await unidadFamiliarRef.collection("Tareas").add(nuevaTarea.toFirestore());
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Tarea creada correctamente")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Tarea creada correctamente")));
   } catch (e) {
     ScaffoldMessenger.of(
       context,
@@ -58,18 +58,14 @@ Future<void> crearTareaEnUnidadFamiliar({
 }
 
 Future<void> actualizarTareaEnUnidadFamiliar({
-required BuildContext context,
-required bool realizada,
-required Timestamp timestamp,
-required DocumentReference tipoTareaRef,
-required String descripcion,
-  required DocumentReference tarea
-})async{
+  required BuildContext context,
+  required bool realizada,
+  required Timestamp timestamp,
+  required DocumentReference tipoTareaRef,
+  required String descripcion,
+  required DocumentReference tarea,
+}) async {
 
 }
-Future<void> borrarTareaEnUnidadFamiliar({
-required BuildContext context,
-required DocumentReference tarea
-})async{
 
-}
+

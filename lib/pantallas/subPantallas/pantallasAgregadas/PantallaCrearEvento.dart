@@ -11,12 +11,14 @@ class PantallaCrearEvento extends StatefulWidget {
   final String tipoActividad;
   final DocumentReference? tareaEditar;
   final DocumentReference? eventoEditar;
+  final DateTime? fechaSeleccionada;
 
   const PantallaCrearEvento({
     super.key,
     this.tipoActividad = "evento",
     this.eventoEditar,
     this.tareaEditar,
+    this.fechaSeleccionada,
   });
 
   @override
@@ -37,7 +39,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   @override
   void initState() {
     super.initState();
-    _fechaSeleccionada = DateTime.now();
+    _fechaSeleccionada = widget.fechaSeleccionada ?? DateTime.now();
     cargaDatos();
   }
 
