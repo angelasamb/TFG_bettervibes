@@ -69,6 +69,8 @@ class PantallaInicio extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 seccionCaja(hijo: ListaEventosDia(fecha: hoy)),
+
+                const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
