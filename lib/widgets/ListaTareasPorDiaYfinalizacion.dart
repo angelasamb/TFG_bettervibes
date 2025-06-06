@@ -3,25 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/clases/Tareas.dart';
 import 'package:tfg_bettervibes/clases/TipoTareas.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
+import 'package:tfg_bettervibes/clases/ColorElegido.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ListaTareasPorDia extends StatefulWidget {
+class ListaTareasPorDiaYFinalizacion extends StatefulWidget {
   final DateTime fecha;
   final bool mostrarRealizadas;
 
-  const ListaTareasPorDia({
+  const ListaTareasPorDiaYFinalizacion({
     super.key,
     required this.fecha,
     required this.mostrarRealizadas,
   });
 
   @override
-  State<ListaTareasPorDia> createState() => _ListaTareasPorDiaState();
+  State<ListaTareasPorDiaYFinalizacion> createState() => _ListaTareasPorDiaYFinalizacionState();
 }
 
-class _ListaTareasPorDiaState extends State<ListaTareasPorDia> {
+class _ListaTareasPorDiaYFinalizacionState extends State<ListaTareasPorDiaYFinalizacion> {
   List<Map<String, dynamic>> tareasConTipo = [];
   bool cargando = true;
   String? error;
+  String? userId = FirebaseAuth.instance.currentUser?.uid;
 
   @override
   void initState() {
@@ -30,7 +34,7 @@ class _ListaTareasPorDiaState extends State<ListaTareasPorDia> {
   }
 
   @override
-  void didUpdateWidget(covariant ListaTareasPorDia oldWidget) {
+  void didUpdateWidget(covariant ListaTareasPorDiaYFinalizacion oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.fecha != widget.fecha || oldWidget.mostrarRealizadas != widget.mostrarRealizadas) {
       _cargarTareasDelDia();
@@ -57,45 +61,104 @@ class _ListaTareasPorDiaState extends State<ListaTareasPorDia> {
           .where('realizada', isEqualTo: widget.mostrarRealizadas)
           .get();
 
-      final docs = querySnapshot.docs;
+      final tareasDocs = querySnapshot.docs;
+
+      // Obtén referencias únicas de tipoTarea y usuario para hacer menos lecturas
+      final tipoTareaRefs = tareasDocs
+          .map((doc) => Tareas.fromFirestore2(doc.data()).tipoTareaRef)
+          .whereType<DocumentReference>()
+          .toSet()
+          .toList();
+
+      final usuarioRefs = tareasDocs
+          .map((doc) => Tareas.fromFirestore2(doc.data()).usuarioRef)
+          .whereType<DocumentReference>()
+          .toSet()
+          .toList();
+
+      // Obtén datos de tipos de tarea
+      final tiposSnapshots = await Future.wait(tipoTareaRefs.map((ref) => ref.get()));
+      final tiposMap = <String, TipoTareas>{};
+      for (var snap in tiposSnapshots) {
+        if (snap.exists) {
+          tiposMap[snap.id] = TipoTareas.fromFirestore(snap.data() as Map<String, dynamic>);
+        }
+      }
+
+      // Obtén colores de usuarios
+      final usuariosSnapshots = await Future.wait(usuarioRefs.map((ref) => ref.get()));
+      final coloresUsuarios = <String, Color>{};
+      for (var snap in usuariosSnapshots) {
+        if (snap.exists) {
+          coloresUsuarios[snap.id] = getColorFromEnum(snap.get("colorElegido"));
+        }
+      }
 
       final List<Map<String, dynamic>> resultado = [];
 
-      for (var doc in docs) {
-        final tarea = Tareas.fromFirestore(doc.data());
+      for (var doc in tareasDocs) {
+        try {
+          final tarea = Tareas.fromFirestore2(doc.data());
 
-        final tipoSnapshot = await tarea.tipoTareaRef.get();
-        if (!tipoSnapshot.exists) continue;
+        if (tarea.tipoTareaRef == null) {
+          print("Documento ${doc.id} ERROR: tipoTareaRef es null");
+          continue; // Ignorar documento problemático
+        }
 
-        final tipo = TipoTareas.fromFirestore(tipoSnapshot.data() as Map<String, dynamic>);
+        if (tarea.usuarioRef == null) {
+          print("Documento ${doc.id} ERROR: usuarioRef es null");
+          continue; // Ignorar documento problemático
+        }
+
+        final tipo = tiposMap[tarea.tipoTareaRef!.id];
+        final color = coloresUsuarios[tarea.usuarioRef!.id];
+
+        if (tipo == null) {
+          print("Documento ${doc.id} ERROR: tipo no encontrado en tiposMap");
+          continue;
+        }
+
+        if (color == null) {
+          print("Documento ${doc.id} ERROR: color usuario no encontrado");
+          continue;
+        }
 
         resultado.add({
+          'docRef': doc.reference,
           'tarea': tarea,
           'tipo': tipo,
+          'usuarioId': tarea.usuarioRef!.id,
+          'color': color,
         });
+        } catch (e) {
+          print("Error procesando doc ${doc.id}: $e");
+        }
       }
-// Para ordenar por hora
+
+
       resultado.sort((a, b) {
         final t1 = a['tarea'] as Tareas;
         final t2 = b['tarea'] as Tareas;
         return t1.timestamp.compareTo(t2.timestamp);
       });
 
-      setState(() {
-        tareasConTipo = resultado;
-        cargando = false;
-      });
-
-    }catch (e, stackTrace) {
-  print("Error cargando tareas: $e");
-  print(stackTrace);
-  setState(() {
-  error = "Error al cargar tareas: $e";
-  cargando = false;
-  });
-}
-
-}
+      if (mounted) {
+        setState(() {
+          tareasConTipo = resultado;
+          cargando = false;
+        });
+      }
+    } catch (e, stackTrace) {
+      print("Error cargando tareas: $e");
+      print(stackTrace);
+      if (mounted) {
+        setState(() {
+          error = "Error al cargar tareas: $e";
+          cargando = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,24 +172,100 @@ class _ListaTareasPorDiaState extends State<ListaTareasPorDia> {
 
     return ListView.builder(
       itemCount: tareasConTipo.length,
-      padding: const EdgeInsets.symmetric(vertical: 8),
       itemBuilder: (context, index) {
         final tarea = tareasConTipo[index]['tarea'] as Tareas;
         final tipo = tareasConTipo[index]['tipo'] as TipoTareas;
+        final usuarioId = tareasConTipo[index]['usuarioId'] as String;
+        final color = tareasConTipo[index]['color'] as Color;
         final hora = tarea.timestamp.toDate();
+        final docRef = tareasConTipo[index]['docRef'] as DocumentReference;
 
         final horaFormateada =
             "${hora.hour.toString().padLeft(2, '0')}:${hora.minute.toString().padLeft(2, '0')}";
 
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-          child: ListTile(
-            leading: Icon(
-              widget.mostrarRealizadas ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: widget.mostrarRealizadas ? Colors.green : Colors.orange,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.all(16),
+              elevation: 3,
             ),
-            title: Text("${tipo.nombre} - $horaFormateada"),
-            subtitle: tarea.descripcion.isNotEmpty ? Text(tarea.descripcion) : null,
+            onPressed: () {
+              if (userId == usuarioId) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PantallaCrearEvento(tareaEditar: docRef),
+                  ),
+                );
+              }
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        tipo.nombre,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: color,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          horaFormateada,
+                          style: TextStyle(fontSize: 18, color: color),
+                        ),
+                        if (!widget.mostrarRealizadas)
+                          IconButton(
+                            icon: const Icon(Icons.check),
+                            onPressed: () async {
+                              final confirmar = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text("Confirmar"),
+                                  content: const Text("¿Quieres marcar esta tarea como completada?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(false),
+                                      child: const Text("Cancelar"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(true),
+                                      child: const Text("Sí"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              if (confirmar == true) {
+                                await docRef.update({"realizada": true});
+                                // Recarga las tareas tras actualizar
+                                if (mounted) _cargarTareasDelDia();
+                              }
+                            },
+                          ),
+                      ],
+                    ),
+                  ],
+                ),
+                if (tarea.descripcion.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    tarea.descripcion,
+                    style: TextStyle(color: Colors.grey.shade700),
+                  ),
+                ],
+              ],
+            ),
           ),
         );
       },

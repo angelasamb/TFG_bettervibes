@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/widgets/ListaTareasPorDiaYfinalizacion.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaTODO.dart';
 
+import '../../widgets/ListaTareas.dart';
+
 class PantallaInicio extends StatelessWidget {
   const PantallaInicio({super.key});
 
@@ -41,7 +43,7 @@ class PantallaInicio extends StatelessWidget {
                 child: Container(
                   color: Colors.white,
                   child: Scrollbar(
-                    child: ListaTareasPorDia(
+                    child: ListaTareasPorDiaYFinalizacion(
                       fecha: hoy,
                       mostrarRealizadas: false,
                     ),
