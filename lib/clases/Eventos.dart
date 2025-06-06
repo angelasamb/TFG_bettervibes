@@ -30,10 +30,10 @@ class Eventos extends ClaseBase {
 
   factory Eventos.fromFirestore(Map<String, dynamic> map) {
     return Eventos(
-      descripcion: map["descripcion"] as String,
+      descripcion: map["descripcion"] as String?,
       nombre: map["nombre"] as String,
       timestamp: map["timestamp"] as Timestamp,
-      usuarioRef: map["usuarioRef"] as DocumentReference,
+      usuarioRef: map["usuarioRef"] != null ? map["usuarioRef"] as DocumentReference : null,
     );
   }
 

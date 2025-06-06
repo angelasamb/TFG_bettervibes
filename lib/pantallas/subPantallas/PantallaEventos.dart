@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
 
-import '../../widgets/ListaEventosPorDia.dart';
+import '../../widgets/ListaEventosPorDiaBotones.dart';
 
 class PantallaEventos extends StatefulWidget {
   const PantallaEventos({super.key});
@@ -148,7 +148,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
                       ),
                     ],
                   ),
-                  child: ListaEventosPorDia(fecha: _fechaSeleccionada),
+                  child: ListaEventosPorDiaBotones(fecha: _fechaSeleccionada),
                 ),
               ],
             ),
