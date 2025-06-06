@@ -65,13 +65,13 @@ class _ListaTareasPorDiaYFinalizacionState extends State<ListaTareasPorDiaYFinal
 
       // Obtén referencias únicas de tipoTarea y usuario para hacer menos lecturas
       final tipoTareaRefs = tareasDocs
-          .map((doc) => Tareas.fromFirestore2(doc.data()).tipoTareaRef)
+          .map((doc) => Tareas.fromFirestore(doc.data()).tipoTareaRef)
           .whereType<DocumentReference>()
           .toSet()
           .toList();
 
       final usuarioRefs = tareasDocs
-          .map((doc) => Tareas.fromFirestore2(doc.data()).usuarioRef)
+          .map((doc) => Tareas.fromFirestore(doc.data()).usuarioRef)
           .whereType<DocumentReference>()
           .toSet()
           .toList();
@@ -98,7 +98,7 @@ class _ListaTareasPorDiaYFinalizacionState extends State<ListaTareasPorDiaYFinal
 
       for (var doc in tareasDocs) {
         try {
-          final tarea = Tareas.fromFirestore2(doc.data());
+          final tarea = Tareas.fromFirestore(doc.data());
 
         if (tarea.tipoTareaRef == null) {
           print("Documento ${doc.id} ERROR: tipoTareaRef es null");
