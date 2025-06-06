@@ -5,8 +5,6 @@ import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaEventos.dart';
 import '../../widgets/ListaEventosDia.dart';
 
 class PantallaInicio extends StatelessWidget {
-  const PantallaInicio({super.key});
-
   @override
   Widget build(BuildContext context) {
     final hoy = DateTime.now();

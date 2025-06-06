@@ -20,62 +20,59 @@ Future<void> crearEventoEnUnidadFamiliar({
       usuarioRef: usuarioRefEvento,
     );
 
-    await unidadFamiliarRef?.collection('eventos').add(nuevoEvento.toFirestore());
+    await unidadFamiliarRef
+        !.collection("Eventos")
+        .add(nuevoEvento.toFirestore());
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Evento creado correctamente")),
     );
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Error al crear evento: $e")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Error al crear evento: $e")));
   }
 }
+
 // PARA BORRAR SOLO PASAR EL ID
-Future<void> borrarEventoEnUnidadFamiliar({
+Future<void> borrarDocEnUnidadFamiliar({
   required BuildContext context,
-  required String eventoId,
+  required DocumentReference doc,
 }) async {
   try {
-    final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
-
-    await unidadFamiliarRef?.collection('eventos').doc(eventoId).delete();
+    await doc.delete();
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Evento eliminado correctamente")),
     );
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Error al eliminar evento: $e")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Error al eliminar evento: $e")));
   }
 }
+
 Future<void> editarEventoEnUnidadFamiliar({
   required BuildContext context,
-  required String eventoId,
+  required eventoEditar,
   required String nombre,
   String? descripcion,
   required Timestamp timestamp,
   DocumentReference? usuarioRefEvento,
 }) async {
   try {
-    final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
-
-    final eventoActualizado = Eventos(
-      nombre: nombre,
-      descripcion: descripcion,
-      timestamp: timestamp,
-      usuarioRef: usuarioRefEvento,
-    );
-
-    await unidadFamiliarRef?.collection('eventos').doc(eventoId).update(eventoActualizado.toFirestore());
+    await eventoEditar.update({
+      "nombre": nombre,
+      "timestamp": timestamp,
+      "usuarioRef": usuarioRefEvento,
+    });
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Evento actualizado correctamente")),
     );
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Error al actualizar evento: $e")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Error al actualizar evento: $e")));
   }
 }

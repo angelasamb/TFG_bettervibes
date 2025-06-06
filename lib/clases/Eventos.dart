@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/clases/ClaseBase.dart';
 
 class Eventos extends ClaseBase {
+  String? id;
   String? _descripcion;
   String _nombre;
   Timestamp _timestamp;
@@ -12,6 +13,7 @@ class Eventos extends ClaseBase {
     required String nombre,
     required Timestamp timestamp,
     DocumentReference? usuarioRef,
+    this.id,
   }) : _descripcion = descripcion,
        _nombre = nombre,
        _timestamp = timestamp,
@@ -27,13 +29,14 @@ class Eventos extends ClaseBase {
     };
   }
 
-
-  factory Eventos.fromFirestore(Map<String, dynamic> map) {
+  factory Eventos.fromFirestore(DocumentSnapshot doc) {
+    final map = doc.data() as Map<String, dynamic>;
     return Eventos(
-      descripcion: map["descripcion"] as String?,
+      id: doc.id,
+      descripcion: map["descripcion"] as String,
       nombre: map["nombre"] as String,
       timestamp: map["timestamp"] as Timestamp,
-      usuarioRef: map["usuarioRef"] != null ? map["usuarioRef"] as DocumentReference : null,
+      usuarioRef: map["usuarioRef"],
     );
   }
 

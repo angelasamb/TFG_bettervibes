@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/clases/UnidadFamiliar.dart';
 
-import '../datosDePrueba/tipoDeEventosDePrueba.dart';
-
 final nombreColeccionUnidadFamiliar = 'UnidadFamiliar';
 final nombreColeccionUsuarios = 'Usuario';
 
@@ -38,7 +36,6 @@ Future<bool> crearUnidadFamiliar(String nombre, String contrasena) async {
       'admin': true,
     });
 
-    insertarTareasEjemploEnUnidadFamiliar();
     return true;
   } catch (e) {
     print("ERROR: $e");
