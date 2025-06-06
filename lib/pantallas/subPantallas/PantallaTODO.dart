@@ -15,20 +15,21 @@ class PantallaTODO extends StatefulWidget {
 }
 
 class _PantallaTODOState extends State<PantallaTODO> {
-  late DocumentReference? unidadFamiliarRef;
+  DocumentReference? unidadFamiliarRef;
   String? user = FirebaseAuth.instance.currentUser?.uid;
+
   @override
   void initState() {
     super.initState();
     _cargarUnidadFamiliar();
   }
-Future<void> _cargarUnidadFamiliar()async{
-  final ref = await obtenerUnidadFamiliarRefActual();
-  setState(() {
-    unidadFamiliarRef=ref;
-  });
-}
 
+  Future<void> _cargarUnidadFamiliar() async {
+    final ref = await obtenerUnidadFamiliarRefActual();
+    setState(() {
+      unidadFamiliarRef = ref;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +39,8 @@ Future<void> _cargarUnidadFamiliar()async{
         body: Center(child: CircularProgressIndicator()),
       );
     }
-    final tareasRef = unidadFamiliarRef
-        ?.collection("Tareas");
+
+    final tareasRef = unidadFamiliarRef!.collection("Tareas");
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.gamaColores.shade500,
@@ -111,5 +112,4 @@ Future<void> _cargarUnidadFamiliar()async{
       ),
     );
   }
-
 }

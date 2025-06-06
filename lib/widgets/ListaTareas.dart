@@ -15,35 +15,36 @@ Future<List<Widget>> listaTareasPorDia(
     ) async {
   Map<DateTime, List<DocumentSnapshot>> tareasPorDia = {};
 
-  for (var tarea in tareas) {
+  for (var tarea in tareas) {//iterador sobre cada tarea
+    //fecha de la tarea
     DateTime fechaClave = (tarea["timestamp"] as Timestamp).toDate();
-    DateTime soloFecha = DateTime(
+    DateTime soloFecha = DateTime(//elimina la hora
       fechaClave.year,
       fechaClave.month,
       fechaClave.day,
     );
-    tareasPorDia.putIfAbsent(soloFecha, () => []).add(tarea);
+    tareasPorDia.putIfAbsent(soloFecha, () => []).add(tarea); //tarea agrupada por fecha
   }
   final tareasOrdenadas =
-  tareasPorDia.keys.toList()..sort((a, b) => a.compareTo(b));
+  tareasPorDia.keys.toList()..sort((a, b) => a.compareTo(b));//ordenar tareas cronologicamente
 
   List<Widget> lista = [];
 
-  for (var fecha in tareasOrdenadas) {
+  for (var fecha in tareasOrdenadas) { //iterador sobre cada dia con tareas
     final tareaDia = tareasPorDia[fecha]!;
-    tareaDia.sort(
+    tareaDia.sort(//ordena tareas por hora
           (a, b) => (a["timestamp"] as Timestamp).compareTo(
         b["timestamp"] as Timestamp,
       ),
     );
-    final String fechaFormateada = DateFormat(
+    final String fechaFormateada = DateFormat( //formateo de fecha
       "EEE, dd MMM yyyy",
     ).format(fecha);
     var tipoTareaRef;
     lista.add(
       Padding(padding: const EdgeInsets.all(8), child: Text(fechaFormateada)),
     );
-    for (var tarea in tareasPorDia[fecha]!) {
+    for (var tarea in tareasPorDia[fecha]!) { //iterador de tareas sobre ese dia para mostrarlas por pantalla
       tipoTareaRef = tarea["tipotareaRef"] as DocumentReference;
       final usuarioRef = tarea["usuarioRef"] as DocumentReference;
       final usuario =
@@ -53,7 +54,7 @@ Future<List<Widget>> listaTareasPorDia(
           .get();
       final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
       final tipoTarea =
-      await unidadFamiliarRef?.collection("TipoTareas")
+      await unidadFamiliarRef!.collection("TipoTareas")
           .doc(tipoTareaRef.id)
           .get();
       String nombreTipoTarea;
@@ -143,7 +144,7 @@ Future<List<Widget>> listaTareasPorDia(
                               );
                               if (confirmar == true) {
 
-                                await unidadFamiliarRef?.collection("Tareas")
+                                await unidadFamiliarRef.collection("Tareas")
                                     .doc(tarea.id)
                                     .update({"realizada": true});
                               }
