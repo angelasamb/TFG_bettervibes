@@ -46,7 +46,7 @@ class _ListaEventosDiaState extends State<ListaEventosDia> {
           .get();
 
       final eventosDocs = querySnapshot.docs
-          .map((doc) => Eventos.fromFirestore(doc))
+          .map((doc) => Eventos.fromFirestore(doc.data() as DocumentSnapshot<Object?>))
           .where((evento) => evento.usuarioRef == null || evento.usuarioRef!.id == userId)
           .toList();
 
