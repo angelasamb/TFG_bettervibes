@@ -46,9 +46,10 @@ class _ListaEventosDiaState extends State<ListaEventosDia> {
           .get();
 
       final eventosDocs = querySnapshot.docs
-          .map((doc) => Eventos.fromFirestore(doc.data() as DocumentSnapshot<Object?>))
+          .map((doc) => Eventos.fromFirestore2(doc.data() as Map<String, dynamic>, doc.id))
           .where((evento) => evento.usuarioRef == null || evento.usuarioRef!.id == userId)
           .toList();
+
 
       // Obtener colores de usuarios
       final usuarioRefs = eventosDocs
