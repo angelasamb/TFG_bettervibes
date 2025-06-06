@@ -31,11 +31,12 @@ class Tareas extends ClaseBase {
     };
   }
 
+
   factory Tareas.fromFirestore(Map<String, dynamic> map) {
     return Tareas(
       realizada: map["realizada"] as bool,
       timestamp: map["timestamp"] as Timestamp,
-      tipoTareaRef: map["tipoTareas"] as DocumentReference,
+      tipoTareaRef: map["tipotareaRef"] as DocumentReference, // Corrección aquí
       usuarioRef: map["usuarioRef"] as DocumentReference,
       descripcion: map["descripcion"] as String,
     );

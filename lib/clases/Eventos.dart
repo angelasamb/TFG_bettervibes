@@ -32,13 +32,24 @@ class Eventos extends ClaseBase {
   factory Eventos.fromFirestore(DocumentSnapshot doc) {
     final map = doc.data() as Map<String, dynamic>;
     return Eventos(
-      id: doc.id,
-      descripcion: map["descripcion"] as String,
+      descripcion: map["descripcion"] as String?,
+      id: doc.id, // Assigning Firestore document ID
       nombre: map["nombre"] as String,
       timestamp: map["timestamp"] as Timestamp,
-      usuarioRef: map["usuarioRef"],
+      usuarioRef: map["usuarioRef"] != null ? map["usuarioRef"] as DocumentReference : null,
     );
   }
+
+  factory Eventos.fromFirestore2(Map<String, dynamic> map, String id) {
+    return Eventos(
+      descripcion: map["descripcion"] as String?,
+      id: id, // Passing document ID separately
+      nombre: map["nombre"] as String,
+      timestamp: map["timestamp"] as Timestamp,
+      usuarioRef: map["usuarioRef"] != null ? map["usuarioRef"] as DocumentReference : null,
+    );
+  }
+
 
   DocumentReference? get usuarioRef => _usuarioRef;
 

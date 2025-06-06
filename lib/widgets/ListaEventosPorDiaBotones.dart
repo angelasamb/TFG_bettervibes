@@ -6,16 +6,16 @@ import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/Pantal
 import '../clases/Eventos.dart';
 import '../funcionalidades/MainFunciones.dart';
 
-class ListaEventosPorDia extends StatefulWidget {
+class ListaEventosPorDiaBotones extends StatefulWidget {
   final DateTime fecha;
 
-  const ListaEventosPorDia({super.key, required this.fecha});
+  const ListaEventosPorDiaBotones({super.key, required this.fecha});
 
   @override
-  State<ListaEventosPorDia> createState() => _ListaEventosPorDiaState();
+  State<ListaEventosPorDiaBotones> createState() => _ListaEventosPorDiaBotonesState();
 }
 
-class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
+class _ListaEventosPorDiaBotonesState extends State<ListaEventosPorDiaBotones> {
   List<Eventos> eventosFiltrados = [];
   bool cargando = true;
   String? error;
@@ -27,7 +27,7 @@ class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
   }
 
   @override
-  void didUpdateWidget(covariant ListaEventosPorDia oldWidget) {
+  void didUpdateWidget(covariant ListaEventosPorDiaBotones oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!isSameDay(oldWidget.fecha, widget.fecha)) {
       _cargarEventosDelDia();

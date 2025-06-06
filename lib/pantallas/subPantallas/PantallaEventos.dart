@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
 
-import '../../widgets/ListaEventosPorDia.dart';
+import '../../widgets/ListaEventosPorDiaBotones.dart';
 
 class PantallaEventos extends StatefulWidget {
   const PantallaEventos({super.key});
@@ -13,8 +15,10 @@ class PantallaEventos extends StatefulWidget {
 }
 
 class _PantallaEventosState extends State<PantallaEventos> {
+  Map<DateTime, List<Map<String, dynamic>>> _eventosPorDia = {};
   DateTime _fechaSeleccionada = DateTime.now();
   CalendarFormat _formatoCalendario = CalendarFormat.month;
+
   String _textoFormato(CalendarFormat formato) {
     switch (formato) {
       case CalendarFormat.month:
@@ -28,6 +32,12 @@ class _PantallaEventosState extends State<PantallaEventos> {
     }
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _cargarEventos();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +64,8 @@ class _PantallaEventosState extends State<PantallaEventos> {
                       setState(() {
                         if (_formatoCalendario == CalendarFormat.month) {
                           _formatoCalendario = CalendarFormat.twoWeeks;
-                        } else if (_formatoCalendario == CalendarFormat.twoWeeks) {
+                        } else if (_formatoCalendario ==
+                            CalendarFormat.twoWeeks) {
                           _formatoCalendario = CalendarFormat.week;
                         } else {
                           _formatoCalendario = CalendarFormat.month;
@@ -62,8 +73,10 @@ class _PantallaEventosState extends State<PantallaEventos> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black26,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      backgroundColor: Colors.gamaColores.shade200,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                     child: Text(
                       _textoFormato(_formatoCalendario),
@@ -85,13 +98,23 @@ class _PantallaEventosState extends State<PantallaEventos> {
                   ),
                   padding: const EdgeInsets.all(8),
                   child: TableCalendar(
+
+                    eventLoader: (dia) {
+                      final fechaSinHora = DateTime(
+                        dia.year,
+                        dia.month,
+                        dia.day,
+                      );
+                      return _eventosPorDia[fechaSinHora] ?? [];
+                    },
                     startingDayOfWeek: StartingDayOfWeek.monday,
                     locale: 'es_ES',
                     firstDay: DateTime(2020),
                     lastDay: DateTime(2030),
                     focusedDay: _fechaSeleccionada,
                     calendarFormat: _formatoCalendario,
-                    selectedDayPredicate: (day) => isSameDay(day, _fechaSeleccionada),
+                    selectedDayPredicate:
+                        (day) => isSameDay(day, _fechaSeleccionada),
                     onDaySelected: (selectedDay, focusedDay) {
                       setState(() {
                         _fechaSeleccionada = selectedDay;
@@ -124,9 +147,28 @@ class _PantallaEventosState extends State<PantallaEventos> {
                         color: Colors.black26,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      formatButtonTextStyle: const TextStyle(color: Colors.white),
+                      formatButtonTextStyle: const TextStyle(
+                        color: Colors.white,
+                      ),
                       titleCentered: true,
-                    ),
+                    ),calendarBuilders: CalendarBuilders(
+                    markerBuilder: (context, date, events) {
+                      if (events.isNotEmpty) {
+                        return Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              color: Colors.gamaColores.shade500,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        );
+                      }
+                      return const SizedBox();
+                    },
+                  ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -148,7 +190,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
                       ),
                     ],
                   ),
-                  child: ListaEventosPorDia(fecha: _fechaSeleccionada),
+                  child: ListaEventosPorDiaBotones(fecha: _fechaSeleccionada),
                 ),
               ],
             ),
@@ -156,18 +198,43 @@ class _PantallaEventosState extends State<PantallaEventos> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black87,
+        backgroundColor: Colors.gamaColores.shade500,
         foregroundColor: Colors.white,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PantallaCrearEvento(tipoActividad: "evento",fechaSeleccionada: _fechaSeleccionada,),
+              builder:
+                  (context) => PantallaCrearEvento(
+                    tipoActividad: "evento",
+                    fechaSeleccionada: _fechaSeleccionada,
+                  ),
             ),
           );
         },
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  Future<void> _cargarEventos() async {
+    final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
+    final snapshot = await unidadFamiliarRef!.collection("Eventos").get();
+    final Map<DateTime, List<Map<String, dynamic>>> eventosTemp = {};
+    for (var doc in snapshot.docs) {
+      final data = doc.data();
+      final timestamp = (data["timestamp"] as Timestamp).toDate();
+      if (timestamp != null) {
+        final fecha = DateTime(timestamp.year, timestamp.month, timestamp.day);
+        if (eventosTemp[fecha] == null) {
+          eventosTemp[fecha] = [];
+        }
+        eventosTemp[fecha]!.add(data);
+      }
+
+    }
+    setState(() {
+      _eventosPorDia = eventosTemp;
+    });
   }
 }

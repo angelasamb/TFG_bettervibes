@@ -86,7 +86,7 @@ class _PantallaTODOState extends State<PantallaTODO> {
                     return Center(child: Text("No hay tareas"));
                   }
                   return FutureBuilder<List<Widget>>(
-                    future: listaTareasPorDia(tareas, context, user!),
+                    future: listaTareasPorDia(context, user!),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
