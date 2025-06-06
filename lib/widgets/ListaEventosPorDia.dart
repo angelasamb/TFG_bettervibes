@@ -1,10 +1,9 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import '../clases/Eventos.dart';
+import '../funcionalidades/MainFunciones.dart';
 
 class ListaEventosPorDia extends StatefulWidget {
   final DateTime fecha;
@@ -43,97 +42,39 @@ class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        setState(() {
-          error = "Usuario no autenticado";
-          cargando = false;
-        });
+        error = "Usuario no autenticado";
+        cargando = false;
+        setState(() {});
         return;
       }
 
-      final firestore = FirebaseFirestore.instance;
-      final usuarioRef = firestore.collection('Usuario').doc(user.uid);
-      final docUsuario = await usuarioRef.get();
-
-      if (!docUsuario.exists) {
-        setState(() {
-          error = "Documento de usuario no encontrado";
-          cargando = false;
-        });
+      final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
+      if (unidadFamiliarRef == null) {
+        error = "No se encontró la unidad familiar";
+        cargando = false;
+        setState(() {});
         return;
       }
 
-      final dataUsuario = docUsuario.data()!;
-      if (!dataUsuario.containsKey('unidadFamiliarRef')) {
-        setState(() {
-          error = "Unidad familiar no encontrada en usuario";
-          cargando = false;
-        });
-        return;
-      }
-
-      final unidadFamiliarRef = dataUsuario['unidadFamiliarRef'] as DocumentReference;
-      final docUnidad = await unidadFamiliarRef.get();
-
-      if (!docUnidad.exists) {
-        setState(() {
-          error = "Unidad familiar no encontrada";
-          cargando = false;
-        });
-        return;
-      }
-
-      final dataUnidad = docUnidad.data() as Map<String, dynamic>;
-      final List<dynamic> eventos = dataUnidad['eventos'] ?? [];
-
-      final dia = widget.fecha;
-      final diaInicio = DateTime(dia.year, dia.month, dia.day);
+      final diaInicio = DateTime(widget.fecha.year, widget.fecha.month, widget.fecha.day);
       final diaFin = diaInicio.add(const Duration(days: 1));
 
-      final eventosFiltradosDia = eventos.where((eventoMap) {
-        if (eventoMap is! Map<String, dynamic>) return false;
+      final snapshot = await unidadFamiliarRef
+          .collection('eventos')
+          .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(diaInicio))
+          .where('timestamp', isLessThan: Timestamp.fromDate(diaFin))
+          .get();
 
-        // Aquí manejo el fromFirestore con campos opcionales nulos seguros
-        try {
-          // Mapeo seguro de campos, porque pueden no estar o ser null
-          final descripcion = eventoMap["descripcion"] as String?;
-          final nombre = eventoMap["nombre"] as String?;
-          final timestamp = eventoMap["timestamp"] as Timestamp?;
-          final usuarioRef = eventoMap["usuarioRef"] as DocumentReference?;
-
-          if (nombre == null || timestamp == null) return false;
-
-          final evento = Eventos(
-            descripcion: descripcion,
-            nombre: nombre,
-            timestamp: timestamp,
-            usuarioRef: usuarioRef,
-          );
-
-          final fechaEvento = evento.timestamp.toDate();
-
-          if (fechaEvento.isBefore(diaInicio) || !fechaEvento.isBefore(diaFin)) return false;
-
-          // Filtrar solo eventos sin usuarioRef o que coincidan con el usuario actual
-          return evento.usuarioRef == null || evento.usuarioRef!.id == user.uid;
-        } catch (_) {
-          return false;
-        }
-      }).map((eventoMap) {
-        final descripcion = (eventoMap as Map<String, dynamic>)["descripcion"] as String?;
-        final nombre = eventoMap["nombre"] as String;
-        final timestamp = eventoMap["timestamp"] as Timestamp;
-        final usuarioRef = eventoMap["usuarioRef"] as DocumentReference?;
-
-        return Eventos(
-          descripcion: descripcion,
-          nombre: nombre,
-          timestamp: timestamp,
-          usuarioRef: usuarioRef,
-        );
+      final eventos = snapshot.docs.map((doc) {
+        final data = doc.data();
+        return Eventos.fromFirestore(data);
+      }).where((evento) {
+        // Filtra por usuario si tiene usuarioRef
+        return evento.usuarioRef == null || evento.usuarioRef!.id == user.uid;
       }).toList();
 
       setState(() {
-        eventosFiltrados = eventosFiltradosDia;
+        eventosFiltrados = eventos;
         cargando = false;
       });
     } catch (e) {
@@ -143,7 +84,6 @@ class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -156,23 +96,21 @@ class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
       padding: const EdgeInsets.symmetric(vertical: 8),
       itemBuilder: (context, index) {
         final evento = eventosFiltrados[index];
-        final nombre = evento.nombre;
-        final descripcion = evento.descripcion ?? '';
         final fechaHora = evento.timestamp.toDate();
+        final descripcion = evento.descripcion ?? '';
 
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
           child: ListTile(
-            title: Text(nombre),
+            title: Text(evento.nombre),
             subtitle: descripcion.isNotEmpty ? Text(descripcion) : null,
             trailing: Text(
               "${fechaHora.hour.toString().padLeft(2, '0')}:${fechaHora.minute.toString().padLeft(2, '0')}",
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              // Navegación a pantalla de detalle
-              print('Tocar evento: $nombre');
               // Navigator.push(context, MaterialPageRoute(builder: (_) => PantallaDetalleEvento(evento: evento)));
+              print('Tocar evento: ${evento.nombre}');
             },
           ),
         );
