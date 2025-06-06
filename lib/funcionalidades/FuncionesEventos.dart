@@ -21,7 +21,7 @@ Future<void> crearEventoEnUnidadFamiliar({
     );
 
     await unidadFamiliarRef
-        ?.collection("Eventos")
+        !.collection("Eventos")
         .add(nuevoEvento.toFirestore());
 
     ScaffoldMessenger.of(context).showSnackBar(

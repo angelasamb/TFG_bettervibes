@@ -36,7 +36,7 @@ class Eventos extends ClaseBase {
       descripcion: map["descripcion"] as String,
       nombre: map["nombre"] as String,
       timestamp: map["timestamp"] as Timestamp,
-      usuarioRef: map["usuarioRef"] as DocumentReference,
+      usuarioRef: map["usuarioRef"],
     );
   }
 
