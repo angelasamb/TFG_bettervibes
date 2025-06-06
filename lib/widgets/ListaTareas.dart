@@ -40,12 +40,11 @@ Future<List<Widget>> listaTareasPorDia(
     final String fechaFormateada = DateFormat( //formateo de fecha
       "EEE, dd MMM yyyy",
     ).format(fecha);
-    var tipoTareaRef;
     lista.add(
       Padding(padding: const EdgeInsets.all(8), child: Text(fechaFormateada)),
     );
     for (var tarea in tareasPorDia[fecha]!) { //iterador de tareas sobre ese dia para mostrarlas por pantalla
-      tipoTareaRef = tarea["tipotareaRef"] as DocumentReference;
+      final tipoTareaRef = tarea["tipotareaRef"] as DocumentReference;
       final usuarioRef = tarea["usuarioRef"] as DocumentReference;
       final usuario =
       await FirebaseFirestore.instance
@@ -57,16 +56,11 @@ Future<List<Widget>> listaTareasPorDia(
       await unidadFamiliarRef!.collection("TipoTareas")
           .doc(tipoTareaRef.id)
           .get();
-      String nombreTipoTarea;
-      String descripcionTareas;
-      Color colorUsuario;
-      final hora;
 
-      if (tipoTarea != null) {
-        nombreTipoTarea = tipoTarea.get("nombre");
-        descripcionTareas = tarea["descripcion"] ?? "";
-        colorUsuario = getColorFromEnum(usuario.get("colorElegido"));
-        hora = DateFormat("HH:mm").format(tarea["timestamp"].toDate());
+      String nombreTipoTarea = tipoTarea.get("nombre");
+      String descripcionTareas = tarea["descripcion"] ?? "";
+      Color colorUsuario = getColorFromEnum(usuario.get("colorElegido"));
+       final hora = DateFormat("HH:mm").format(tarea["timestamp"].toDate());
 
 
         lista.add(
@@ -175,6 +169,6 @@ Future<List<Widget>> listaTareasPorDia(
         );
       }
     }
-  }
+
   return lista;
 }

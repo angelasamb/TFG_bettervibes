@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesTareas.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
+import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 
 import '../../../funcionalidades/FuncionesEventos.dart';
 import '../../../widgets/personalizacion.dart';
@@ -28,7 +29,7 @@ class PantallaCrearEvento extends StatefulWidget {
 class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   final TextEditingController _nombreCtrl = TextEditingController();
   final TextEditingController _descripcionCtrl = TextEditingController();
-  late String _tipoActividad;
+  late String _tipoActividad = widget.tipoActividad;
   TimeOfDay? _horaSeleccionada;
   bool _paraTodos = false;
   late DateTime _fechaSeleccionada;
@@ -44,7 +45,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   }
 
   Future<void> cargaDatos() async {
-    cogerTipoTareas();
+    await cogerTipoTareas();
 
     if (widget.tareaEditar != null) {
       _tipoActividad = "tarea";
@@ -53,14 +54,16 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
     } else if (widget.eventoEditar != null) {
       await cargarDatosEvento(widget.eventoEditar!);
       _tipoActividad = "evento";
-    } else{
+    } else {
       _tipoActividad = widget.tipoActividad;
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_tipoActividad.isEmpty) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -325,7 +328,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                         await widget.tareaEditar!.update({
                           "descripcion": descripcion,
                           "timestamp": Timestamp.fromDate(fecha),
-                          "tipotareaRef":_tipoTareaRef
+                          "tipotareaRef": _tipoTareaRef,
                         });
                         //TODO: IMPLEMENTACION EDITAR COMO EN EVENTOS
                       } else {
@@ -395,15 +398,14 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   }
 
   Future<void> cogerTipoTareas() async {
-    final id = await obtenerUnidadFamiliarId();
+    final unidadFamiliarRef= await obtenerUnidadFamiliarRefActual();
     final snapshot =
-        await FirebaseFirestore.instance
-            .collection("UnidadFamiliar")
-            .doc(id)
-            .collection("TipoTareas")
+        await unidadFamiliarRef
+            !.collection("TipoTareas")
             .get();
     final nombres =
-        snapshot.docs.map(          (doc) {
+        snapshot.docs.map(
+          (doc) {
             return {"nombre": doc["nombre"] as String, "ref": doc.reference};
           },
         ).toList(); //obtiene lista de documentos, recorre cada documento y accede al "nombre" de cada uno y convierte el resultado en List<String>
@@ -427,8 +429,8 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
       tipoTareaSeleccionada =
           listaTipoTareas.firstWhere(
             (mapa) => mapa["ref"].id == _tipoTareaRef.id,
-            orElse: () => {"nombre": null},
-          )["nombre"];
+            orElse: () =><String, Object>{"nombre": "Sin nombre"},
+          )["nombre"] as String;
     });
   }
 
