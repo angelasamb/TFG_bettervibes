@@ -37,20 +37,24 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   @override
   void initState() {
     super.initState();
-    _tipoActividad = widget.tipoActividad;
     _fechaSeleccionada = DateTime.now();
     cargaDatos();
-    print(_fechaSeleccionada);
   }
 
   Future<void> cargaDatos() async {
     cogerTipoTareas();
 
     if (widget.tareaEditar != null) {
-      cargarDatosTarea(widget.tareaEditar!);
+      _tipoActividad = "tarea";
+
+      await cargarDatosTarea(widget.tareaEditar!);
     } else if (widget.eventoEditar != null) {
-      cargarDatosEvento(widget.eventoEditar!);
+      await cargarDatosEvento(widget.eventoEditar!);
+      _tipoActividad = "evento";
+    } else{
+      _tipoActividad = widget.tipoActividad;
     }
+
   }
 
   @override
@@ -93,7 +97,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                       onChanged: (value) {
                         setState(() {
                           _tipoActividad = value!;
-                          //TODO: MOSTRAR EL NOMBRE LA TAREA AL EDITARLO Y BORRAR CUANDO SE DA AL BOTON
+                          //TODO: MOSTRAR EL NOMBRE LA TAREA AL EDITARLO
                         });
                       },
                     ),
@@ -109,7 +113,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                 hint: Text("Escoge un tipo de tarea"),
                 items:
                     listaTipoTareas.map((mapa) {
-                      return DropdownMenuItem(
+                      return DropdownMenuItem<String>(
                         value: mapa["nombre"],
                         child: Text(mapa["nombre"]),
                       );
@@ -316,6 +320,12 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                       }
                     } else if (_tipoActividad == "tarea") {
                       if (widget.tareaEditar != null) {
+                        await widget.tareaEditar!.update({
+                          "descripcion": descripcion,
+                          "timestamp": Timestamp.fromDate(fecha),
+                          "tipotareaRef":_tipoTareaRef
+                        });
+                        //TODO: IMPLEMENTACION EDITAR COMO EN EVENTOS
                       } else {
                         await crearTareaEnUnidadFamiliar(
                           context: context,
@@ -343,7 +353,33 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    onPressed: () => {},
+                    onPressed: () async {
+                      final doc = widget.eventoEditar ?? widget.tareaEditar;
+                      final confirmar = await showDialog(
+                        context: context,
+                        builder:
+                            (context) => AlertDialog(
+                              title: Text("Confirmar"),
+                              content: Text("¿Quieres borrar este elemento?"),
+                              actions: [
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.of(context).pop(false),
+                                  child: Text("Cancelar"),
+                                ),
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.of(context).pop(true),
+                                  child: Text("Sí"),
+                                ),
+                              ],
+                            ),
+                      );
+                      if (doc != null && confirmar) {
+                        await doc.delete();
+                        Navigator.pop(context);
+                      }
+                    },
                     child: Text("Borrar"),
                   ),
               ],
@@ -365,8 +401,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
             .collection("TipoTareas")
             .get();
     final nombres =
-        snapshot.docs.map(
-          (doc) {
+        snapshot.docs.map(          (doc) {
             return {"nombre": doc["nombre"] as String, "ref": doc.reference};
           },
         ).toList(); //obtiene lista de documentos, recorre cada documento y accede al "nombre" de cada uno y convierte el resultado en List<String>
@@ -405,7 +440,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
       _horaSeleccionada = TimeOfDay.fromDateTime(
         (datos["timestamp"] as Timestamp).toDate(),
       );
-      _fechaSeleccionada = datos["timestamp" as Timestamp].toDate();
+      _fechaSeleccionada = (datos["timestamp"] as Timestamp).toDate();
       _paraTodos = datos["usuarioRefEvento"] == null;
     });
   }
