@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesTareas.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
+import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 
 import '../../../funcionalidades/FuncionesEventos.dart';
 import '../../../widgets/personalizacion.dart';
@@ -28,7 +29,7 @@ class PantallaCrearEvento extends StatefulWidget {
 class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   final TextEditingController _nombreCtrl = TextEditingController();
   final TextEditingController _descripcionCtrl = TextEditingController();
-  late String _tipoActividad;
+  late String _tipoActividad = widget.tipoActividad;
   TimeOfDay? _horaSeleccionada;
   bool _paraTodos = false;
   late DateTime _fechaSeleccionada;
@@ -44,23 +45,25 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   }
 
   Future<void> cargaDatos() async {
-    cogerTipoTareas();
+    await cogerTipoTareas();
 
     if (widget.tareaEditar != null) {
       _tipoActividad = "tarea";
 
-      await cargarDatosTarea(widget.tareaEditar!);
+      await cargarDatosTarea();
     } else if (widget.eventoEditar != null) {
-      await cargarDatosEvento(widget.eventoEditar!);
       _tipoActividad = "evento";
-    } else{
+      await cargarDatosEvento();
+    } else {
       _tipoActividad = widget.tipoActividad;
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_tipoActividad.isEmpty) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -114,19 +117,19 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                 value: tipoTareaSeleccionada,
                 hint: Text("Escoge un tipo de tarea"),
                 items:
-                    listaTipoTareas.map((mapa) {
-                      return DropdownMenuItem<String>(
-                        value: mapa["nombre"],
-                        child: Text(mapa["nombre"]),
-                      );
-                    }).toList(),
+                listaTipoTareas.map((mapa) {
+                  return DropdownMenuItem<String>(
+                    value: mapa["nombre"],
+                    child: Text(mapa["nombre"]),
+                  );
+                }).toList(),
                 onChanged: (value) {
                   setState(() {
                     tipoTareaSeleccionada = value as String;
                     _tipoTareaRef =
-                        listaTipoTareas.firstWhere(
+                    listaTipoTareas.firstWhere(
                           (mapa) => mapa["nombre"] == value,
-                        )["ref"];
+                    )["ref"];
                   });
                 },
               ),
@@ -153,7 +156,8 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
               children: [
                 const Text('Fecha: '),
                 Text(
-                  '${_fechaSeleccionada.day}/${_fechaSeleccionada.month}/${_fechaSeleccionada.year}',
+                  '${_fechaSeleccionada.day}/${_fechaSeleccionada
+                      .month}/${_fechaSeleccionada.year}',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 10),
@@ -291,19 +295,22 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
 
                     if (_tipoActividad == "evento") {
                       if (widget.eventoEditar != null) {
-                        await widget.eventoEditar!.update({
-                          "nombre": nombre,
-                          "descripcion": descripcion,
-                          "timestamp": Timestamp.fromDate(fecha),
-                          "usuarioRefEvento":
-                              _paraTodos
-                                  ? null
-                                  : FirebaseFirestore.instance
-                                      .collection("Usuario")
-                                      .doc(
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                      ),
-                        });
+                        final usuarioRef =
+                        _paraTodos
+                            ? null
+                            : FirebaseFirestore.instance
+                            .collection("Usuario")
+                            .doc(
+                          FirebaseAuth.instance.currentUser!.uid,
+                        );
+
+                        await editarEventoEnUnidadFamiliar(
+                          context: context,
+                          eventoEditar: widget.eventoEditar,
+                          nombre: nombre,
+                          timestamp: Timestamp.fromDate(fecha),
+                          usuarioRefEvento: usuarioRef,
+                        );
                       } else {
                         await crearEventoEnUnidadFamiliar(
                           context: context,
@@ -311,23 +318,24 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                           descripcion: descripcion.isEmpty ? "" : descripcion,
                           timestamp: Timestamp.fromDate(fecha),
                           usuarioRefEvento:
-                              _paraTodos
-                                  ? null
-                                  : FirebaseFirestore.instance
-                                      .collection('Usuario')
-                                      .doc(
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                      ),
+                          _paraTodos
+                              ? null
+                              : FirebaseFirestore.instance
+                              .collection('Usuario')
+                              .doc(
+                            FirebaseAuth.instance.currentUser!.uid,
+                          ),
                         );
                       }
                     } else if (_tipoActividad == "tarea") {
                       if (widget.tareaEditar != null) {
-                        await widget.tareaEditar!.update({
-                          "descripcion": descripcion,
-                          "timestamp": Timestamp.fromDate(fecha),
-                          "tipotareaRef":_tipoTareaRef
-                        });
-                        //TODO: IMPLEMENTACION EDITAR COMO EN EVENTOS
+                        await editarTareaEnUnidadFamiliar(
+                          context,
+                          widget.tareaEditar,
+                          fecha,
+                          descripcion,
+                          _tipoTareaRef,
+                        );
                       } else {
                         await crearTareaEnUnidadFamiliar(
                           context: context,
@@ -360,7 +368,8 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                       final confirmar = await showDialog(
                         context: context,
                         builder:
-                            (context) => AlertDialog(
+                            (context) =>
+                            AlertDialog(
                               title: Text("Confirmar"),
                               content: Text("¿Quieres borrar este elemento?"),
                               actions: [
@@ -378,7 +387,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                             ),
                       );
                       if (doc != null && confirmar) {
-                        await doc.delete();
+                        borrarDocEnUnidadFamiliar(doc: doc, context: context);
                         Navigator.pop(context);
                       }
                     },
@@ -395,25 +404,22 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   }
 
   Future<void> cogerTipoTareas() async {
-    final id = await obtenerUnidadFamiliarId();
-    final snapshot =
-        await FirebaseFirestore.instance
-            .collection("UnidadFamiliar")
-            .doc(id)
-            .collection("TipoTareas")
-            .get();
+    final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
+    final snapshot = await unidadFamiliarRef!.collection("TipoTareas").get();
     final nombres =
-        snapshot.docs.map(          (doc) {
-            return {"nombre": doc["nombre"] as String, "ref": doc.reference};
-          },
-        ).toList(); //obtiene lista de documentos, recorre cada documento y accede al "nombre" de cada uno y convierte el resultado en List<String>
+    snapshot.docs.map(
+          (doc) {
+        return {"nombre": doc["nombre"] as String, "ref": doc.reference};
+      },
+    )
+        .toList(); //obtiene lista de documentos, recorre cada documento y accede al "nombre" de cada uno y convierte el resultado en List<String>
     setState(() {
       listaTipoTareas = nombres;
     });
   }
 
-  Future<void> cargarDatosTarea(DocumentReference<Object?> tareaRef) async {
-    final doc = await tareaRef.get();
+  Future<void> cargarDatosTarea() async {
+    final doc = await widget.tareaEditar!.get();
     final datos = doc.data() as Map<String, dynamic>;
     setState(() {
       _tipoActividad = "tarea";
@@ -425,15 +431,16 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
       _fechaSeleccionada = (datos["timestamp"] as Timestamp).toDate();
       _tipoTareaRef = datos["tipotareaRef"] as DocumentReference;
       tipoTareaSeleccionada =
-          listaTipoTareas.firstWhere(
+      listaTipoTareas.firstWhere(
             (mapa) => mapa["ref"].id == _tipoTareaRef.id,
-            orElse: () => {"nombre": null},
-          )["nombre"];
+        orElse: () => <String, Object>{"nombre": "Sin nombre"},
+      )["nombre"]
+      as String;
     });
   }
 
-  Future<void> cargarDatosEvento(DocumentReference<Object?> eventoRef) async {
-    final doc = await eventoRef.get();
+  Future<void> cargarDatosEvento() async {
+    final doc = await widget.eventoEditar!.get();
     final datos = doc.data() as Map<String, dynamic>;
     setState(() {
       _tipoActividad = "evento";
@@ -443,7 +450,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
         (datos["timestamp"] as Timestamp).toDate(),
       );
       _fechaSeleccionada = (datos["timestamp"] as Timestamp).toDate();
-      _paraTodos = datos["usuarioRefEvento"] == null;
+      _paraTodos = datos["usuarioRef"] == null;
     });
   }
 }

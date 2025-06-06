@@ -35,7 +35,7 @@ Future<void> crearTareaEnUnidadFamiliar({
     }
 
     final unidadFamiliarRef =
-        usuarioData["unidadFamiliarRef"] as DocumentReference;
+    usuarioData["unidadFamiliarRef"] as DocumentReference;
 
     final nuevaTarea = Tareas(
       descripcion: descripcion,
@@ -57,15 +57,23 @@ Future<void> crearTareaEnUnidadFamiliar({
   }
 }
 
-Future<void> actualizarTareaEnUnidadFamiliar({
-  required BuildContext context,
-  required bool realizada,
-  required Timestamp timestamp,
-  required DocumentReference tipoTareaRef,
-  required String descripcion,
-  required DocumentReference tarea,
-}) async {
-
+Future<void> editarTareaEnUnidadFamiliar(context,
+    tareaEditar,
+    fecha,
+    String descripcion,
+    DocumentReference<Object?> _tipoTareaRef,) async {
+  try {
+    tareaEditar.update({
+      "descripcion": descripcion,
+      "timestamp": Timestamp.fromDate(fecha),
+      "tipotareaRef": _tipoTareaRef,
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Tarea actualizado correctamente")),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error al actualizar tarea: $e")),
+    );
+  }
 }
-
-
