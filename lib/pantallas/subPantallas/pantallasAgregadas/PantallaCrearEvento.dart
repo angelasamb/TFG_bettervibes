@@ -50,13 +50,14 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
     if (widget.tareaEditar != null) {
       _tipoActividad = "tarea";
 
-      await cargarDatosTarea(widget.tareaEditar!);
+      await cargarDatosTarea();
     } else if (widget.eventoEditar != null) {
-      await cargarDatosEvento(widget.eventoEditar!);
       _tipoActividad = "evento";
+      await cargarDatosEvento();
     } else {
       _tipoActividad = widget.tipoActividad;
     }
+
   }
 
   @override
@@ -294,19 +295,22 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
 
                     if (_tipoActividad == "evento") {
                       if (widget.eventoEditar != null) {
-                        await widget.eventoEditar!.update({
-                          "nombre": nombre,
-                          "descripcion": descripcion,
-                          "timestamp": Timestamp.fromDate(fecha),
-                          "usuarioRefEvento":
-                              _paraTodos
-                                  ? null
-                                  : FirebaseFirestore.instance
-                                      .collection("Usuario")
-                                      .doc(
-                                        FirebaseAuth.instance.currentUser!.uid,
-                                      ),
-                        });
+                        final usuarioRef =
+                            _paraTodos
+                                ? null
+                                : FirebaseFirestore.instance
+                                    .collection("Usuario")
+                                    .doc(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    );
+
+                        await editarEventoEnUnidadFamiliar(
+                          context: context,
+                          eventoEditar: widget.eventoEditar,
+                          nombre: nombre,
+                          timestamp: Timestamp.fromDate(fecha),
+                          usuarioRefEvento: usuarioRef,
+                        );
                       } else {
                         await crearEventoEnUnidadFamiliar(
                           context: context,
@@ -325,12 +329,13 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                       }
                     } else if (_tipoActividad == "tarea") {
                       if (widget.tareaEditar != null) {
-                        await widget.tareaEditar!.update({
-                          "descripcion": descripcion,
-                          "timestamp": Timestamp.fromDate(fecha),
-                          "tipotareaRef": _tipoTareaRef,
-                        });
-                        //TODO: IMPLEMENTACION EDITAR COMO EN EVENTOS
+                        await editarTareaEnUnidadFamiliar(
+                          context,
+                          widget.tareaEditar,
+                          fecha,
+                          descripcion,
+                          _tipoTareaRef,
+                        );
                       } else {
                         await crearTareaEnUnidadFamiliar(
                           context: context,
@@ -381,7 +386,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                             ),
                       );
                       if (doc != null && confirmar) {
-                        await doc.delete();
+                        borrarDocEnUnidadFamiliar(doc: doc, context: context);
                         Navigator.pop(context);
                       }
                     },
@@ -398,11 +403,8 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   }
 
   Future<void> cogerTipoTareas() async {
-    final unidadFamiliarRef= await obtenerUnidadFamiliarRefActual();
-    final snapshot =
-        await unidadFamiliarRef
-            !.collection("TipoTareas")
-            .get();
+    final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
+    final snapshot = await unidadFamiliarRef!.collection("TipoTareas").get();
     final nombres =
         snapshot.docs.map(
           (doc) {
@@ -414,8 +416,8 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
     });
   }
 
-  Future<void> cargarDatosTarea(DocumentReference<Object?> tareaRef) async {
-    final doc = await tareaRef.get();
+  Future<void> cargarDatosTarea() async {
+    final doc = await widget.tareaEditar!.get();
     final datos = doc.data() as Map<String, dynamic>;
     setState(() {
       _tipoActividad = "tarea";
@@ -428,24 +430,37 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
       _tipoTareaRef = datos["tipotareaRef"] as DocumentReference;
       tipoTareaSeleccionada =
           listaTipoTareas.firstWhere(
-            (mapa) => mapa["ref"].id == _tipoTareaRef.id,
-            orElse: () =><String, Object>{"nombre": "Sin nombre"},
-          )["nombre"] as String;
+                (mapa) => mapa["ref"].id == _tipoTareaRef.id,
+                orElse: () => <String, Object>{"nombre": "Sin nombre"},
+              )["nombre"]
+              as String;
     });
   }
-
-  Future<void> cargarDatosEvento(DocumentReference<Object?> eventoRef) async {
-    final doc = await eventoRef.get();
-    final datos = doc.data() as Map<String, dynamic>;
-    setState(() {
-      _tipoActividad = "evento";
-      _nombreCtrl.text = datos["nombre"] ?? "";
-      _descripcionCtrl.text = datos["descripcion"] ?? "";
-      _horaSeleccionada = TimeOfDay.fromDateTime(
-        (datos["timestamp"] as Timestamp).toDate(),
-      );
-      _fechaSeleccionada = (datos["timestamp"] as Timestamp).toDate();
-      _paraTodos = datos["usuarioRefEvento"] == null;
-    });
+  Future<void> cargarDatosEvento() async {
+    print(widget.eventoEditar);
+    final doc = await widget.eventoEditar!.get();
+    if (doc.exists) { // Add this check
+      final datos = doc.data() as Map<String, dynamic>;
+      setState(() {
+        _tipoActividad = "evento";
+        _nombreCtrl.text = datos["nombre"] ?? "";
+        _descripcionCtrl.text = datos["descripcion"] ?? "";
+        _horaSeleccionada = TimeOfDay.fromDateTime(
+          (datos["timestamp"] as Timestamp).toDate(),
+        );
+        _fechaSeleccionada = (datos["timestamp"] as Timestamp).toDate();
+        _paraTodos = datos["usuarioRefEvento"] == null;
+      });
+    } else {
+      // Handle the case where the document doesn't exist
+      // You could show a message to the user,
+      // navigate back, or set default values.
+      print("Error: El evento no existe en Firestore.");
+      // Optionally, navigate back or show an error message
+      // Navigator.pop(context);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text("El evento que intentas editar no existe.")),
+      // );
+    }
   }
 }

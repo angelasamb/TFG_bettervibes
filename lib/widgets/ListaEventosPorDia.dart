@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
 import '../clases/Eventos.dart';
 import '../funcionalidades/MainFunciones.dart';
 
@@ -18,7 +19,7 @@ class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
   List<Eventos> eventosFiltrados = [];
   bool cargando = true;
   String? error;
-
+  late DocumentReference? unidadFamiliarRef;
   @override
   void initState() {
     super.initState();
@@ -48,7 +49,7 @@ class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
         return;
       }
 
-      final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
+      unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
       if (unidadFamiliarRef == null) {
         error = "No se encontró la unidad familiar";
         cargando = false;
@@ -60,14 +61,13 @@ class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
       final diaFin = diaInicio.add(const Duration(days: 1));
 
       final snapshot = await unidadFamiliarRef
-          .collection('eventos')
+          !.collection('Eventos')
           .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(diaInicio))
           .where('timestamp', isLessThan: Timestamp.fromDate(diaFin))
           .get();
 
       final eventos = snapshot.docs.map((doc) {
-        final data = doc.data();
-        return Eventos.fromFirestore(data);
+        return Eventos.fromFirestore(doc);
       }).where((evento) {
         // Filtra por usuario si tiene usuarioRef
         return evento.usuarioRef == null || evento.usuarioRef!.id == user.uid;
@@ -98,7 +98,7 @@ class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
         final evento = eventosFiltrados[index];
         final fechaHora = evento.timestamp.toDate();
         final descripcion = evento.descripcion ?? '';
-
+        DocumentReference eventoEditar = unidadFamiliarRef!.collection("Eventos").doc(evento.id);
         return Card(
           margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
           child: ListTile(
@@ -109,8 +109,8 @@ class _ListaEventosPorDiaState extends State<ListaEventosPorDia> {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             onTap: () {
-              // Navigator.push(context, MaterialPageRoute(builder: (_) => PantallaDetalleEvento(evento: evento)));
-              print('Tocar evento: ${evento.nombre}');
+              Navigator.push(context, MaterialPageRoute(builder: (_) => PantallaCrearEvento(eventoEditar: eventoEditar,)));
+
             },
           ),
         );
