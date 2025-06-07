@@ -118,37 +118,43 @@ class _PantallaTODOState extends State<PantallaTODO> {
           Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600),
-              child: StreamBuilder(
-                stream: tareasRef.snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData)
-                    return Center(child: CircularProgressIndicator());
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: StreamBuilder(
+                  stream: tareasRef.snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData)
+                      return const Center(child: CircularProgressIndicator());
 
-                  final tareas = snapshot.data!.docs;
+                    final tareas = snapshot.data!.docs;
 
-                  if (tareas.isEmpty) {
-                    return Center(child: Text("No hay tareas"));
-                  }
-                  return FutureBuilder<List<Widget>>(
-                    future: listaTareasPorDia(context, user!),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      if (snapshot.hasError) {
-                        return Center(
-                          child: Text(
-                            "Error al cargar tareas ${snapshot.error}",
-                          ),
+                    if (tareas.isEmpty) {
+                      return const Center(child: Text("No hay tareas"));
+                    }
+                    return FutureBuilder<List<Widget>>(
+                      future: listaTareasPorDia(context, user!),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              "Error al cargar tareas ${snapshot.error}",
+                            ),
+                          );
+                        }
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(child: Text("No hay tareas disponibles"));
+                        }
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.7,
+                          child: ListView(children: snapshot.data!),
                         );
-                      }
-                      if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(child: Text("No hay tareas disponibles"));
-                      }
-                      return ListView(children: snapshot.data!);
-                    },
-                  );
-                },
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ),
