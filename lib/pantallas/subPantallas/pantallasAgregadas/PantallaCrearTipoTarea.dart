@@ -129,7 +129,6 @@ class _TipoTareaFormState extends State<TipoTareaForm> {
           ),
         ),
         const SizedBox(height: 20),
-        // ContadorNumerico es un widget personalizado que debes tener en tu proyecto
         ContadorNumerico(
           valor: _puntuacionSeleccionada,
           onChanged: (val) => setState(() => _puntuacionSeleccionada = val),
