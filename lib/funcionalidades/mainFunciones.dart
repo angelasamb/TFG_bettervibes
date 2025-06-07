@@ -19,3 +19,12 @@ Future<DocumentReference?> obtenerUnidadFamiliarRefActual() async {
     return null;
   }
 }
+Future<bool> esUsuarioActualAdmin() async {
+  final uid = FirebaseAuth.instance.currentUser?.uid;
+  if (uid == null) return false;
+
+  final doc = await FirebaseFirestore.instance.collection("Usuario").doc(uid).get();
+  final datos = doc.data();
+  return datos?["admin"] == true;
+}
+

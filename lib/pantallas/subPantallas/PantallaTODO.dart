@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearTipoTarea.dart';
 
 import '../../widgets/ListaTareas.dart';
 
@@ -45,13 +46,56 @@ class _PantallaTODOState extends State<PantallaTODO> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.gamaColores.shade500,
         foregroundColor: Colors.white,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PantallaCrearEvento(tipoActividad: "tarea"),
-            ),
-          );
+        onPressed: () async {
+          final esAdmin = await esUsuarioActualAdmin();
+
+          if (esAdmin) {
+            // Para admins, mostramos un bottom sheet con dos opciones
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.task_alt),
+                      title: Text('Crear tarea'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PantallaCrearEvento(tipoActividad: "tarea"),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.task),
+                      title: Text('Crear TipoTarea'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PantallaCrearTipoTarea(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          } else {
+            // Para usuarios normales, solo crear tarea
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => PantallaCrearEvento(tipoActividad: "tarea"),
+              ),
+            );
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -75,7 +119,7 @@ class _PantallaTODOState extends State<PantallaTODO> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600),
               child: StreamBuilder(
-                stream: tareasRef?.snapshots(),
+                stream: tareasRef.snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData)
                     return Center(child: CircularProgressIndicator());
