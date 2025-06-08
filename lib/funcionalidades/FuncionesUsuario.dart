@@ -71,20 +71,3 @@ Future<bool> existeElUsuario() async {
   }
 }
 
-Future<String?> obtenerUnidadFamiliarId() async {
-  final usuario = FirebaseAuth.instance.currentUser;
-  if (usuario != null) {
-    final docUsuario =
-        await FirebaseFirestore.instance
-            .collection("Usuario")
-            .doc(usuario.uid)
-            .get();
-    if (docUsuario.exists) {
-      final unidadRef = docUsuario.data()?["unidadFamiliarRef"];
-      if (unidadRef != null && unidadRef is DocumentReference) {
-        return unidadRef.id;
-      }
-    }
-  }
-  return null;
-}

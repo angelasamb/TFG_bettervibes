@@ -21,14 +21,12 @@ class PlantillaSelector extends StatelessWidget {
   ];
 
   final Map<ColorElegido, Color> mapaColores = {
-    ColorElegido.Rojo: Color(0xff75181f),
-    ColorElegido.Naranja: Color(0xfff36135),
-    ColorElegido.Amarillo: Color(0xfff8df64),
-    ColorElegido.Verde: Color(0xff7aa85e),
-    ColorElegido.VerdeOscuro: Color(0xff366421),
-    ColorElegido.AzulClaro: Color(0xff6cd9de),
+    ColorElegido.Rojo: Color(0xffd73027),
+    ColorElegido.Amarillo: Color(0xFFFFFF00),
+    ColorElegido.VerdeAzulado: Color(0xff008080),
+    ColorElegido.AzulClaro: Color(0xFF87CEEB),
     ColorElegido.AzulOscuro: Color(0xff173370),
-    ColorElegido.Morado: Color(0xFF562A77),
+    ColorElegido.Morado: Color(0xFF762A83),
     ColorElegido.Rosa: Color(0xFFD986E3),
     ColorElegido.Gris: Color(0xFF97919B),
   };

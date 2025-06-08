@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaModificarPerfil.dart';
 import 'package:tfg_bettervibes/widgets/PlantillaSelector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -67,24 +68,6 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
         }
         setState(() {});
       }
-    }
-  }
-
-  Future<void> _guardarCambios() async {
-    final auth = FirebaseAuth.instance;
-    final firestore = FirebaseFirestore.instance;
-    final user = auth.currentUser;
-
-    if (user != null) {
-      await firestore.collection('Usuario').doc(user.uid).update({
-        'nombre': nombreController.text.trim(),
-        'fotoPerfil': imagenSeleccionada,
-        'colorElegido': colorSeleccionado.name,
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Cambios guardados correctamente")),
-      );
     }
   }
 
@@ -248,7 +231,6 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                         final colorElegido = getColorFromEnum(color);
                         final esAdmin = datos['admin'] ?? false;
                         final uid = doc.id;
-                        print("Foto perfil: $foto");
 
                         final esUsuarioActual =
                             FirebaseAuth.instance.currentUser?.uid == uid;
@@ -397,55 +379,6 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
     );
   }
 
-  Widget _seccionModificarPerfil() {
-    return Card(
-      color: Colors.white,
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Modificar perfil",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text("Nombre"),
-            TextField(controller: nombreController),
-            const SizedBox(height: 10),
-            Text("Selecciona una imagen"),
-            PlantillaSelector(
-              esIcono: true,
-              itemSeleccionado: imagenSeleccionada,
-              onSelect: (dynamic value) {
-                setState(() {
-                  imagenSeleccionada = value as String;
-                });
-              },
-            ),
-            PlantillaSelector(
-              esIcono: false,
-              itemSeleccionado: colorSeleccionado,
-              onSelect: (dynamic value) {
-                setState(() {
-                  colorSeleccionado = value as ColorElegido;
-                });
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _guardarCambios,
-              child: Text("Guardar cambios"),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _seccionSalirUnidadFamiliar() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -577,6 +510,27 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _seccionModificarPerfil() {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: ElevatedButton(
+        child: Text("Modificar perfil"),
+        onPressed:
+            () async => await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (_) => PantallaModificarPerfil(
+                      nombreController,
+                      imagenSeleccionada,
+                      colorSeleccionado,
+                    ),
+              ),
+            ),
       ),
     );
   }
