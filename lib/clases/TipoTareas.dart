@@ -36,9 +36,4 @@ class TipoTareas extends ClaseBase {
   set nombre(String value) {
     _nombre = value;
   }
-
-
-
-
-
 }
