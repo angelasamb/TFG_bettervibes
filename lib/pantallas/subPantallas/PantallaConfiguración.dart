@@ -52,7 +52,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
         nombreController.text = datos["nombre"] ?? "";
         imagenSeleccionada = datos["fotoPerfil"] ?? "";
         colorSeleccionado = ColorElegido.values.firstWhere(
-          (e) => e.name == datos["fotoPerfil"],
+          (e) => e.name == datos["colorElegido"],
           orElse: () => ColorElegido.Rojo,
         );
 
@@ -521,7 +521,9 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
       child: ElevatedButton(
         child: Text("Modificar perfil"),
         onPressed:
-            () async => await Navigator.push(
+            () async {
+          await _cargarDatosUsuario();//si no hay que refrescar la pagina en la que estas para que se muestren los cambios desntro dew modificar perfil
+          await Navigator.push(
               context,
               MaterialPageRoute(
                 builder:
@@ -531,7 +533,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                       colorSeleccionado,
                     ),
               ),
-            ),
+            );}
       ),
     );
   }
