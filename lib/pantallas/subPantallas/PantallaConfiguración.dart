@@ -31,6 +31,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
 
   DocumentReference? unidadFamiliarRef;
   bool esUsuarioActualAdmin = false;
+  String nombreUnidadFamiliar="";
 
   @override
   void initState() {
@@ -44,27 +45,28 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
     final user = auth.currentUser;
 
     if (user != null) {
-      final doc = await firestore.collection('Usuario').doc(user.uid).get();
+      final doc = await firestore.collection("Usuario").doc(user.uid).get();
       final datos = doc.data();
 
       if (datos != null) {
-        nombreController.text = datos['nombre'] ?? '';
-        imagenSeleccionada = datos['fotoPerfil'] ?? '';
+        nombreController.text = datos["nombre"] ?? "";
+        imagenSeleccionada = datos["fotoPerfil"] ?? "";
         colorSeleccionado = ColorElegido.values.firstWhere(
-          (e) => e.name == datos['colorElegido'],
+          (e) => e.name == datos["fotoPerfil"],
           orElse: () => ColorElegido.Rojo,
         );
 
         esUsuarioActualAdmin = datos['admin'] ?? false;
 
-        final unidadRef = datos['unidadFamiliarRef'];
+        final unidadRef = datos["unidadFamiliarRef"];
         if (unidadRef != null && unidadRef is DocumentReference) {
           unidadFamiliarRef = unidadRef;
           final unidadDoc = await unidadRef.get();
 
           final datosUnidad = unidadDoc.data() as Map<String, dynamic>?;
           unidadFamiliarId = unidadRef.id;
-          contraseniaUnidad = datosUnidad?['contrasenia'] ?? '';
+          contraseniaUnidad = datosUnidad?["contrasenia"] ?? "";
+          nombreUnidadFamiliar = datosUnidad?["nombre"]??"";
         }
         setState(() {});
       }
@@ -193,7 +195,6 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
             .collection('Usuario')
             .where('unidadFamiliarRef', isEqualTo: unidadFamiliarRef)
             .snapshots();
-
     return Card(
       color: Colors.white,
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -205,7 +206,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Usuarios en la unidad familiar",
+              "Usuarios en $nombreUnidadFamiliar",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
