@@ -138,7 +138,7 @@ Future<List<Widget>> listaTareasPorDia(
                         style: TextStyle(fontSize: 18, color: colorUsuario),
                       ),
 
-                      if (tarea["realizada"] == false)
+                      if (tarea["realizada"] == false && user == usuarioRef.id)
                         IconButton(
                           onPressed: () async {
                             final confirmar = await showDialog(

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaInicio.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaPagos.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaTODO.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaEventos.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaConfiguración.dart';
@@ -19,9 +20,10 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
     PantallaInicio(),
     PantallaTODO(),
     PantallaEventos(),
-    PantallaConfiguracion(),
+    PantallaPagos(),
   ];
 
+  late String unidadFamiliarNombre = "";
   void _alElegirVentana(int indice) {
     setState(() {
       _indiceSeleccionado = indice;
@@ -31,12 +33,26 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
   @override
   void initState() {
     super.initState();
+    _cargarUnidadFamiliar();
   }
 
   @override
   Widget build(BuildContext context) {
     //mover el appbar a cada pantalla para que el fondo pueda ocupar todo el espacio
-    return Scaffold(
+    return Scaffold(extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        leading: IconButton(onPressed: () {
+          Navigator.push(context, MaterialPageRoute(
+            builder: (_) => PantallaConfiguracion(),
+          ));
+
+        }, icon: Icon(Icons.settings), ),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Text(unidadFamiliarNombre),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.gamaColores.shade500,
+      ),
       body: _pantallas[_indiceSeleccionado],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _indiceSeleccionado,
@@ -55,13 +71,24 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
             label: 'Eventos',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Configuración',
+            icon: Icon(Icons.monetization_on_outlined),
+            label: 'Pagos',
           ),
         ],
       ),
     );
   }
 
+  Future<void> _cargarUnidadFamiliar() async {
+    final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
+    final snapshot = await unidadFamiliarRef!.get();
+    print(snapshot);
+    final datos = snapshot.data() as Map<String, dynamic>;
+    if (snapshot.exists) {
+      setState(() {
+        unidadFamiliarNombre = datos["nombre"] ?? "";
+      });
+    }
+  }
 
 }

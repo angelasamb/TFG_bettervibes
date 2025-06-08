@@ -100,13 +100,7 @@ class _PantallaTODOState extends State<PantallaTODO> {
         child: const Icon(Icons.add),
       ),
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text('TODO'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-      ),
+
       body: Stack(
         children: [
           SvgPicture.asset(

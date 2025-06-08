@@ -31,7 +31,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
 
   DocumentReference? unidadFamiliarRef;
   bool esUsuarioActualAdmin = false;
-  String nombreUnidadFamiliar="";
+  String nombreUnidadFamiliar = "";
 
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
           final datosUnidad = unidadDoc.data() as Map<String, dynamic>?;
           unidadFamiliarId = unidadRef.id;
           contraseniaUnidad = datosUnidad?["contrasenia"] ?? "";
-          nombreUnidadFamiliar = datosUnidad?["nombre"]??"";
+          nombreUnidadFamiliar = datosUnidad?["nombre"] ?? "";
         }
         setState(() {});
       }
@@ -446,7 +446,13 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("Configuración"),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.gamaColores.shade500,
+      ),
       body: Stack(
         children: [
           SvgPicture.asset(
@@ -462,7 +468,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                 padding: const EdgeInsets.all(12),
                 child: Column(
                   children: [
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 80),
                     _seccionInvitacion(),
                     _seccionModificarPerfil(),
                     _listaUsuarios(),
@@ -520,20 +526,20 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
       alignment: Alignment.bottomLeft,
       child: ElevatedButton(
         child: Text("Modificar perfil"),
-        onPressed:
-            () async {
-          await _cargarDatosUsuario();//si no hay que refrescar la pagina en la que estas para que se muestren los cambios desntro dew modificar perfil
+        onPressed: () async {
+          await _cargarDatosUsuario(); //si no hay que refrescar la pagina en la que estas para que se muestren los cambios desntro dew modificar perfil
           await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (_) => PantallaModificarPerfil(
-                      nombreController,
-                      imagenSeleccionada,
-                      colorSeleccionado,
-                    ),
-              ),
-            );}
+            context,
+            MaterialPageRoute(
+              builder:
+                  (_) => PantallaModificarPerfil(
+                    nombreController,
+                    imagenSeleccionada,
+                    colorSeleccionado,
+                  ),
+            ),
+          );
+        },
       ),
     );
   }

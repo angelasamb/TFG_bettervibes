@@ -7,33 +7,14 @@ import '../../widgets/ListaEventosDia.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
-class PantallaInicio extends StatefulWidget {
-  const PantallaInicio({super.key});
+class PantallaInicio extends StatelessWidget {
 
-  @override
-  State<PantallaInicio> createState() => _PantallaInicio();
-}
-
-class _PantallaInicio extends State<PantallaInicio> {
-  late String unidadFamiliarNombre = "";
-@override
-  void initState() {
-    super.initState();
-    _cargarUnidadFamiliar();
-  }
   @override
   Widget build(BuildContext context) {
     final hoy = DateTime.now();
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Text(unidadFamiliarNombre),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.gamaColores.shade500,
-      ),
       body: Stack(
         children: [
           SvgPicture.asset(
@@ -141,18 +122,6 @@ class _PantallaInicio extends State<PantallaInicio> {
         ],
       ),
     );
-  }
-
-  Future<void> _cargarUnidadFamiliar() async {
-    final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
-    final snapshot = await unidadFamiliarRef!.get();
-    print(snapshot);
-    final datos = snapshot.data() as Map<String, dynamic>;
-    if (snapshot.exists) {
-      setState(() {
-        unidadFamiliarNombre = datos["nombre"] ?? "";
-      });
-    }
   }
 
   Widget seccionCaja({required Widget hijo}) {
