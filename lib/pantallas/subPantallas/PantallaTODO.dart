@@ -115,7 +115,8 @@ class _PantallaTODOState extends State<PantallaTODO> {
             width: double.infinity,
             height: double.infinity,
           ),
-          Center(
+          Align(
+            alignment: Alignment.topCenter,
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600),
               child: Padding(
