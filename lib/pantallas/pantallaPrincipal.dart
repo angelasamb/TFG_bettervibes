@@ -38,7 +38,6 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    //mover el appbar a cada pantalla para que el fondo pueda ocupar todo el espacio
     return Scaffold(extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(onPressed: () {
@@ -72,7 +71,7 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.monetization_on_outlined),
-            label: 'Pagos',
+            label: 'pagos',
           ),
         ],
       ),

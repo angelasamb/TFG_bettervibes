@@ -88,9 +88,18 @@ class FuncionesPagos {
   static Future<List<DocumentSnapshot>> obtenerUsuariosParticipantes(DocumentReference unidadFamiliarRef) async {
     final unidadSnap = await unidadFamiliarRef.get();
     final unidad = unidadSnap.data() as Map<String, dynamic>;
-    List<DocumentReference> participantes = (unidad['participantes'] as List<dynamic>).cast<DocumentReference>();
+    List<DocumentReference> participantes = (unidad['participantes'] as List<
+        dynamic>).cast<DocumentReference>();
 
-    final usuariosSnapshots = await Future.wait(participantes.map((ref) => ref.get()));
+    final usuariosSnapshots = await Future.wait(
+        participantes.map((ref) => ref.get()));
     return usuariosSnapshots;
   }
+  static Stream<QuerySnapshot> obtenerStreamPagosUnidadFamiliar(DocumentReference unidadFamiliarRef) {
+    return unidadFamiliarRef
+        .collection('pagos')
+        .orderBy('timestamp', descending: true)
+        .snapshots();
+  }
 }
+
