@@ -25,10 +25,12 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
 
   bool _cargandoDatos = true;
 
-  bool get esEdicion => widget.idPago != null && widget.idPago!.isNotEmpty;
+  bool get esEdicion => widget.idPago?.trim().isNotEmpty == true;
 
   @override
   void initState() {
+    print('idPago: "${widget.idPago}"');
+    print('esEdicion: $esEdicion');
     super.initState();
     _inicializar();
   }
@@ -169,25 +171,22 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    if (_cargandoDatos) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text(esEdicion ? 'Editar Pago' : 'Nuevo Pago'),
         actions: [
-          if (esEdicion)
+          if (esEdicion && !_cargandoDatos)
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: _eliminarPago,
             )
         ],
       ),
-      body: Padding(
+      body: _cargandoDatos
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
