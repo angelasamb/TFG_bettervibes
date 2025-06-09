@@ -24,7 +24,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
 
   bool _cargandoDatos = true;
 
-  bool get esEdicion => widget.idPago != null;
+  bool get esEdicion => widget.idPago != null && widget.idPago!.isNotEmpty;
 
   @override
   void initState() {
@@ -58,7 +58,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
           );
           Navigator.pop(context);
         }
-        return; // 🔁 OJO: si no haces `return`, igual llegas a setState con datos incompletos
+        return;
       }
 
       _descripcionController.text = pago.descripcion ?? '';
@@ -109,7 +109,6 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
     }
     return true;
   }
-
 
   Future<void> _guardarPago() async {
     if (!_validarCampos() || _unidadFamiliarRef == null) return;

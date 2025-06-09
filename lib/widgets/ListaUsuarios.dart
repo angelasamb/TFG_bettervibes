@@ -64,14 +64,12 @@ class _SelectorUsuarioPagadorState extends State<SelectorUsuarioPagador> {
   @override
   Widget build(BuildContext context) {
     String textoMostrar = "Selecciona pagador";
-    if (widget.pagadorSeleccionado != null) {
+    if (widget.pagadorSeleccionado != null && _usuarios.isNotEmpty) {
       final usuario = _usuarios.firstWhere(
             (u) => u.reference == widget.pagadorSeleccionado,
         orElse: () => _usuarios.first,
       );
-      if (usuario != null) {
-        textoMostrar = (usuario.data() as Map<String, dynamic>?)?['nombre'] ?? textoMostrar;
-      }
+      textoMostrar = (usuario.data() as Map<String, dynamic>?)?['nombre'] ?? textoMostrar;
     }
 
     return ListTile(
