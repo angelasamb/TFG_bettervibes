@@ -50,18 +50,29 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
         unidadFamiliarRef: unidadRef,
         idPago: widget.idPago!,
       );
-      if (pago != null) {
-        _descripcionController.text = pago.descripcion ?? '';
-        _precioController.text = pago.precio.toString();
-        _fechaSeleccionada = pago.timestamp.toDate();
-        _pagador = pago.pagadorRef;
-        _participantes = pago.participantes;
+
+      if (pago == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Pago no encontrado')),
+          );
+          Navigator.pop(context);
+        }
+        return; // 🔁 OJO: si no haces `return`, igual llegas a setState con datos incompletos
       }
+
+      _descripcionController.text = pago.descripcion ?? '';
+      _precioController.text = pago.precio.toString();
+      _fechaSeleccionada = pago.timestamp.toDate();
+      _pagador = pago.pagadorRef;
+      _participantes = pago.participantes;
     }
 
-    setState(() {
-      _cargandoDatos = false;
-    });
+    if (mounted) {
+      setState(() {
+        _cargandoDatos = false;
+      });
+    }
   }
 
   Future<void> _seleccionarFecha() async {

@@ -50,12 +50,11 @@ class _PantallaPagosState extends State<PantallaPagos> {
           }
 
           return StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
+            stream: unidadFamiliarRef
                 .collection('pagos')
-                .where('unidadFamiliarRef', isEqualTo: unidadFamiliarRef)
                 .orderBy('timestamp', descending: true)
                 .snapshots(),
-            builder: (context, pagosSnapshot) {
+              builder: (context, pagosSnapshot) {
               if (pagosSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
