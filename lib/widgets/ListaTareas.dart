@@ -10,20 +10,26 @@ import '../pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
 Future<List<Widget>> listaTareasPorDia(
   BuildContext context,
   String user,
+  bool todas,
 ) async {
   final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
   if (unidadFamiliarRef == null) return [];
   final hoy = DateTime.now();
-  final hoySoloFecha = DateTime(hoy.year,hoy.month,hoy.day );
+  final hoySoloFecha = DateTime(hoy.year, hoy.month, hoy.day);
 
-  final queryTareas =
-      await unidadFamiliarRef
-          .collection("Tareas")
-          .where(
-            "timestamp",
-            isGreaterThanOrEqualTo: Timestamp.fromDate(hoySoloFecha),
-          )
-          .get();
+  final QuerySnapshot queryTareas;
+  if (todas) {
+    queryTareas = await unidadFamiliarRef.collection("Tareas").get();
+  } else {
+    queryTareas =
+        await unidadFamiliarRef
+            .collection("Tareas")
+            .where(
+              "timestamp",
+              isGreaterThanOrEqualTo: Timestamp.fromDate(hoySoloFecha),
+            )
+            .get();
+  }
   final tareas = queryTareas.docs;
   //sets para las referencias
   final tipoTareaIds =
@@ -91,7 +97,7 @@ Future<List<Widget>> listaTareasPorDia(
       final usuario = usuariosMap[usuarioRef.id];
       final tipoTarea = tipoTareasMap[tipoTareaRef.id];
 
-      final String nombreTipoTarea = tipoTarea?["nombre"] ??"Sin tipo";
+      final String nombreTipoTarea = tipoTarea?["nombre"] ?? "Sin tipo";
       final String descripcionTareas = tarea["descripcion"] ?? "";
       final Color colorUsuario = getColorFromEnum(usuario?["colorElegido"]);
       final hora = DateFormat("HH:mm").format(tarea["timestamp"].toDate());
@@ -186,7 +192,7 @@ Future<List<Widget>> listaTareasPorDia(
                   descripcionTareas,
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.normal,
                     color: Colors.grey.shade700,
                   ),
                 ),
@@ -197,8 +203,6 @@ Future<List<Widget>> listaTareasPorDia(
           ),
         ),
       );
-
-
     }
   }
 
