@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+
 import '../../../funcionalidades/FuncionesPagos.dart';
 import '../../../funcionalidades/MainFunciones.dart';
-import '../../../widgets/ListaUsuarios.dart';
+import 'package:tfg_bettervibes/widgets/ListaUsuarios.dart';
 
 class PantallaEditarPago extends StatefulWidget {
   final String? idPago;
@@ -138,8 +139,14 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
         title: const Text('¿Eliminar pago?'),
         content: const Text('Esta acción no se puede deshacer.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Eliminar')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Eliminar'),
+          ),
         ],
       ),
     );
