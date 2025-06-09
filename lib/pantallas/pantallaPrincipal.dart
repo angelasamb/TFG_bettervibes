@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaInicio.dart';
@@ -38,7 +37,6 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    //mover el appbar a cada pantalla para que el fondo pueda ocupar todo el espacio
     return Scaffold(extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(onPressed: () {
@@ -72,7 +70,7 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.monetization_on_outlined),
-            label: 'Pagos',
+            label: 'pagos',
           ),
         ],
       ),
