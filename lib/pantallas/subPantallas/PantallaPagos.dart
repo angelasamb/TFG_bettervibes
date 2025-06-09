@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tfg_bettervibes/widgets/ListaTareasPorDiaYfinalizacion.dart';
-import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaTODO.dart';
-import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaEventos.dart';
-import '../../funcionalidades/MainFunciones.dart';
-import '../../widgets/ListaEventosDia.dart';
-
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaEditarPago.dart';
+import '../../funcionalidades/MainFunciones.dart';
 
 class PantallaPagos extends StatefulWidget {
   const PantallaPagos({super.key});
@@ -16,14 +12,29 @@ class PantallaPagos extends StatefulWidget {
 
 class _PantallaPagos extends State<PantallaPagos> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
+          if (unidadFamiliarRef == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("No se pudo obtener la unidad familiar")),
+            );
+            return;
+          }
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => PantallaEditarPago(),
+            ),
+          );
+        },
+        child: Icon(Icons.add),
+        tooltip: "Añadir nuevo pago",
+      ),
       body: Stack(
         children: [
           SvgPicture.asset(
@@ -37,24 +48,14 @@ class _PantallaPagos extends State<PantallaPagos> {
               constraints: const BoxConstraints(maxWidth: 600),
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text("Pagos", style: TextStyle(fontSize: 40),),
+                child: Text(
+                  "Pagos",
+                  style: TextStyle(fontSize: 40),
+                ),
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget seccionCaja({required Widget hijo}) {
-    return SizedBox(
-      height: 200,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Material(
-          elevation: 2,
-          child: Container(color: Colors.white, child: Scrollbar(child: hijo)),
-        ),
       ),
     );
   }
