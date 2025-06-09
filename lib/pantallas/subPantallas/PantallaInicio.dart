@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaRanking.dart';
 import 'package:tfg_bettervibes/widgets/ListaTareasPorDiaYfinalizacion.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaTODO.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaEventos.dart';
@@ -31,22 +32,14 @@ class PantallaInicio extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const PantallaTODO(),
-                          ),
-                        );
-                      },
-                      child: const Text(
+
+                       const Text(
                         'TAREAS HOY',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
+
                     ),
                     const SizedBox(height: 12),
 
@@ -59,46 +52,34 @@ class PantallaInicio extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const PantallaEventos(),
-                          ),
-                        );
-                      },
-                      child: const Text(
+                     const Text(
                         'EVENTOS HOY',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
                     const SizedBox(height: 12),
                     seccionCaja(hijo: ListaEventosDia(fecha: hoy)),
 
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const PantallaEventos(),
-                          ),
-                        );
-                      },
-                      child: const Text(
+                    const SizedBox(height: 12),
+                     Text(
                         'RANKING',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
                     const SizedBox(height: 12),
-
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PantallaRanking(),
+                      ),
+                    );
+                  },child:
                     SizedBox(
                       height: 200,
                       child: ClipRRect(
@@ -114,6 +95,7 @@ class PantallaInicio extends StatelessWidget {
                         ),
                       ),
                     ),
+                )
                   ],
                 ),
               ),

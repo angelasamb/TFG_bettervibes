@@ -29,8 +29,8 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
     return Scaffold(
       appBar: AppBar(title: const Text("Modificar perfil"),backgroundColor: Colors.transparent,
         foregroundColor: Colors.gamaColores.shade500,),
-      body: Padding(
-    padding: const EdgeInsets.all(16.0),
+      body: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
     child: Align(
         alignment: Alignment.topCenter,
         child: Card(
