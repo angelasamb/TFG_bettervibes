@@ -2,109 +2,89 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tfg_bettervibes/widgets/MostrarTareas.dart';
 import '../../../clases/ColorElegido.dart';
-import '../../../funcionalidades/FuncionesTipoTareas.dart';
-import '../../../widgets/ContadorNumerico.dart';
-import '../../../widgets/PlantillaSelector.dart';
+import '../../../funcionalidades/MainFunciones.dart';
 
 class PantallaRanking extends StatefulWidget {
   TextEditingController nombreController = TextEditingController();
   String imagenSeleccionada = "";
   ColorElegido colorSeleccionado = ColorElegido.Rojo;
 
-  PantallaRanking(
-  );
+  PantallaRanking();
 
   @override
   State<PantallaRanking> createState() => _PantallaRankingState();
 }
 
 class _PantallaRankingState extends State<PantallaRanking> {
-  DocumentReference? _tipoTareaEditando;
+  DocumentReference? unidadFamiliarRef;
+  String? user = FirebaseAuth.instance.currentUser?.uid;
+  final todas = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarUnidadFamiliar();
+  }
+
+  Future<void> _cargarUnidadFamiliar() async {
+    final ref = await obtenerUnidadFamiliarRefActual();
+    setState(() {
+      unidadFamiliarRef = ref;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (unidadFamiliarRef == null) {
+      return Scaffold(
+        extendBodyBehindAppBar: true,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final tareasRef = unidadFamiliarRef!.collection("Tareas");
+
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text("Ranking"),
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.gamaColores.shade500,
+        automaticallyImplyLeading: true,
       ),
-      body: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 600),
-        child: Align(
-          alignment: Alignment.topCenter,
-          child: Card(
-            color: Colors.white,
-            elevation: 2,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: const EdgeInsets.symmetric(vertical: 10),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        children: [
+          SvgPicture.asset(
+            'assets/imagenes/fondo1.svg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SafeArea(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 600),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start ,
                 children: [
-                  Text(
-                    "Modificar perfil",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: Text("Tareas realizadas:", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                   ),
-                  const SizedBox(height: 10),
-                  Text("Nombre"),
-                  TextField(controller: widget.nombreController),
-                  const SizedBox(height: 10),
-                  Text("Selecciona una imagen"),
-                  PlantillaSelector(
-                    esIcono: true,
-                    itemSeleccionado: widget.imagenSeleccionada,
-                    onSelect: (dynamic value) {
-                      setState(() {
-                        widget.imagenSeleccionada = value as String;
-                      });
-                    },
-                  ),
-                  PlantillaSelector(
-                    esIcono: false,
-                    itemSeleccionado: widget.colorSeleccionado,
-                    onSelect: (dynamic value) {
-                      setState(() {
-                        widget.colorSeleccionado = value as ColorElegido;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await _guardarCambios();
-                      Navigator.pop(context, false);
-                    },
-                    child: Text("Guardar cambios"),
-                  ),
+                  Expanded(child:
+                  MostrarTareas(
+                    unidadFamiliarRef: unidadFamiliarRef,
+                    user: user,
+                    tipo: 3,
+                    tareasRef: tareasRef,
+                  ),)
                 ],
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
-  }
-
-  Future<void> _guardarCambios() async {
-    final auth = FirebaseAuth.instance;
-    final firestore = FirebaseFirestore.instance;
-    final user = auth.currentUser;
-
-    if (user != null) {
-      await firestore.collection('Usuario').doc(user.uid).update({
-        'nombre': widget.nombreController.text.trim(),
-        'fotoPerfil': widget.imagenSeleccionada,
-        'colorElegido': widget.colorSeleccionado.name,
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Cambios guardados correctamente")),
-      );
-    }
   }
 }

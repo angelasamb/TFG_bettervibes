@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
 import '../../../funcionalidades/FuncionesPagos.dart';
 import '../../../funcionalidades/MainFunciones.dart';
@@ -56,9 +57,9 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
 
       if (pago == null) {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Pago no encontrado')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Pago no encontrado')));
           Navigator.pop(context);
         }
         return;
@@ -106,7 +107,9 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
     }
     if (_participantes.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Debes seleccionar al menos un participante')),
+        const SnackBar(
+          content: Text('Debes seleccionar al menos un participante'),
+        ),
       );
       return false;
     }
@@ -121,7 +124,10 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
     await FuncionesPagos.guardarPago(
       unidadFamiliarRef: _unidadFamiliarRef!,
       idPago: widget.idPago,
-      descripcion: _descripcionController.text.isEmpty ? null : _descripcionController.text,
+      descripcion:
+          _descripcionController.text.isEmpty
+              ? null
+              : _descripcionController.text,
       precio: precio,
       fecha: _fechaSeleccionada,
       pagadorRef: _pagador!,
@@ -137,20 +143,21 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
 
     final confirmar = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('¿Eliminar pago?'),
-        content: const Text('Esta acción no se puede deshacer.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+      builder:
+          (_) => AlertDialog(
+            title: const Text('¿Eliminar pago?'),
+            content: const Text('Esta acción no se puede deshacer.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('Eliminar'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Eliminar'),
-          ),
-        ],
-      ),
     );
 
     if (confirmar == true) {
@@ -181,59 +188,60 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
             IconButton(
               icon: const Icon(Icons.delete),
               onPressed: _eliminarPago,
-            )
+            ),
         ],
       ),
-      body: _cargandoDatos
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView(
-          children: [
-            TextField(
-              controller: _descripcionController,
-              decoration: const InputDecoration(labelText: "Descripción (opcional)"),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _precioController,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: "Precio"),
-            ),
-            const SizedBox(height: 12),
-            ListTile(
-              title: Text('Fecha: ${DateFormat('dd/MM/yyyy').format(_fechaSeleccionada)}'),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: _seleccionarFecha,
-            ),
-            const SizedBox(height: 12),
-            SelectorUsuarioPagador(
-              unidadFamiliarRef: _unidadFamiliarRef!,
-              pagadorSeleccionado: _pagador,
-              onUsuarioSeleccionado: (nuevoPagador) {
-                setState(() {
-                  _pagador = nuevoPagador;
-                });
-              },
-            ),
-            const SizedBox(height: 12),
-            SelectorUsuariosParticipantes(
-              unidadFamiliarRef: _unidadFamiliarRef!,
-              participantesSeleccionados: _participantes,
-              onSeleccionCambiada: (nuevosParticipantes) {
-                setState(() {
-                  _participantes = nuevosParticipantes;
-                });
-              },
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: _guardarPago,
-              child: Text(esEdicion ? 'Guardar cambios' : 'Crear pago'),
-            ),
-          ],
-        ),
-      ),
+      body:
+          _cargandoDatos
+              ? const Center(child: CircularProgressIndicator())
+              : ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: ListView(
+                    children: [
+                      plantillaField(_descripcionController, "Descripcion (opcional)"),
+                      const SizedBox(height: 12),
+                      plantillaField(_precioController, "Precio"),
+                      const SizedBox(height: 12),
+                      ListTile(
+                        title: Text(
+                          'Fecha: ${DateFormat('dd/MM/yyyy').format(_fechaSeleccionada)}',
+                        ),
+                        trailing: const Icon(Icons.calendar_today),
+                        onTap: _seleccionarFecha,
+                      ),
+                      const SizedBox(height: 12),
+                      SelectorUsuarioPagador(
+                        unidadFamiliarRef: _unidadFamiliarRef!,
+                        pagadorSeleccionado: _pagador,
+                        onUsuarioSeleccionado: (nuevoPagador) {
+                          setState(() {
+                            _pagador = nuevoPagador;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 12),
+                      SelectorUsuariosParticipantes(
+                        unidadFamiliarRef: _unidadFamiliarRef!,
+                        participantesSeleccionados: _participantes,
+                        onSeleccionCambiada: (nuevosParticipantes) {
+                          setState(() {
+                            _participantes = nuevosParticipantes;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: _guardarPago,
+                        child: Text(
+                          esEdicion ? 'Guardar cambios' : 'Crear pago',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
     );
   }
 }

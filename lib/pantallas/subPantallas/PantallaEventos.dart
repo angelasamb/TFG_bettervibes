@@ -27,14 +27,11 @@ class _PantallaEventosState extends State<PantallaEventos> {
         return '2 semanas';
       case CalendarFormat.week:
         return 'Semana';
-      default:
-        return '';
-    }
+      }
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _cargarEventos();
   }
@@ -55,7 +52,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 50),
+                const SizedBox(height: 80),
                 Container(
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(top: 8, right: 12),
@@ -178,7 +175,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  height: 300,
+                  height: 200,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),

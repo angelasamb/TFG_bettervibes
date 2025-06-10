@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaInicio.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaPagos.dart';
-import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaTODO.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaTareas.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaEventos.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaConfiguración.dart';
 
@@ -17,7 +17,7 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
   int _indiceSeleccionado = 0;
   final List<Widget> _pantallas = [
     PantallaInicio(),
-    PantallaTODO(),
+    PantallaTareas(),
     PantallaEventos(),
     PantallaPagos(),
   ];
@@ -47,7 +47,7 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
         }, icon: Icon(Icons.settings), ),
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text(unidadFamiliarNombre),
+        title: Text(unidadFamiliarNombre, style: TextStyle(fontWeight: FontWeight.bold),),
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.gamaColores.shade500,
       ),
@@ -62,7 +62,7 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(
             icon: Icon(Icons.access_time_filled),
-            label: 'TODO',
+            label: 'Tareas',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
@@ -70,7 +70,7 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.monetization_on_outlined),
-            label: 'pagos',
+            label: 'Pagos',
           ),
         ],
       ),

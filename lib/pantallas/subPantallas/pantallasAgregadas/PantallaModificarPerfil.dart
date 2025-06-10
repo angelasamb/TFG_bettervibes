@@ -22,7 +22,6 @@ class PantallaModificarPerfil extends StatefulWidget {
 }
 
 class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
-  DocumentReference? _tipoTareaEditando;
 
   @override
   Widget build(BuildContext context) {

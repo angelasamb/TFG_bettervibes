@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tfg_bettervibes/funcionalidades/PuntuacionSemanal.dart';
 
 import '../clases/ColorElegido.dart';
 import '../funcionalidades/MainFunciones.dart';
@@ -10,23 +12,42 @@ import '../pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
 Future<List<Widget>> listaTareasPorDia(
   BuildContext context,
   String user,
-  bool todas,
+  int tipo,
 ) async {
   final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
   if (unidadFamiliarRef == null) return [];
   final hoy = DateTime.now();
   final hoySoloFecha = DateTime(hoy.year, hoy.month, hoy.day);
-
+  final inicioSemana = hoy.subtract(
+    Duration(days: hoy.weekday - 1),
+  ); //calcular para que sea lunes
+  final finalSemana = inicioSemana.add(
+    Duration(days: 6, hours: 23, minutes: 59, seconds: 59),
+  );
   final QuerySnapshot queryTareas;
-  if (todas) {
+  if (tipo == 1) {
     queryTareas = await unidadFamiliarRef.collection("Tareas").get();
-  } else {
+  } else if (tipo == 2) {
     queryTareas =
         await unidadFamiliarRef
             .collection("Tareas")
             .where(
               "timestamp",
               isGreaterThanOrEqualTo: Timestamp.fromDate(hoySoloFecha),
+            )
+            .get();
+  } else {
+    queryTareas =
+        await unidadFamiliarRef
+            .collection("Tareas")
+            .where("realizada", isEqualTo: true)
+            .where(
+              "timestamp",
+              isGreaterThanOrEqualTo: Timestamp.fromDate(inicioSemana),
+            )
+            .where(
+              "timestamp",
+              isLessThanOrEqualTo: Timestamp.fromDate(finalSemana),
             )
             .get();
   }
@@ -164,9 +185,9 @@ Future<List<Widget>> listaTareasPorDia(
                                         child: Text("Cancelar"),
                                       ),
                                       TextButton(
-                                        onPressed:
-                                            () =>
-                                                Navigator.of(context).pop(true),
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
                                         child: Text("Sí"),
                                       ),
                                     ],
@@ -177,6 +198,7 @@ Future<List<Widget>> listaTareasPorDia(
                                   .collection("Tareas")
                                   .doc(tarea.id)
                                   .update({"realizada": true});
+                              CalculoPuntuacionSemanal(usuarioRef);
                             }
                           },
                           icon: Icon(Icons.check),
