@@ -6,20 +6,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/widgets/MostrarTareas.dart';
 import '../../../clases/ColorElegido.dart';
 import '../../../funcionalidades/MainFunciones.dart';
-import '../../../widgets/PieChartRanking.dart';
 
-class PantallaRanking extends StatefulWidget {
+class PantallaTodasTareas extends StatefulWidget {
   TextEditingController nombreController = TextEditingController();
   String imagenSeleccionada = "";
   ColorElegido colorSeleccionado = ColorElegido.Rojo;
 
-  PantallaRanking();
+  PantallaTodasTareas();
 
   @override
-  State<PantallaRanking> createState() => _PantallaRankingState();
+  State<PantallaTodasTareas> createState() => _Pantallatodastareas();
 }
 
-class _PantallaRankingState extends State<PantallaRanking> {
+class _Pantallatodastareas extends State<PantallaTodasTareas> {
   DocumentReference? unidadFamiliarRef;
   String? user = FirebaseAuth.instance.currentUser?.uid;
   final todas = true;
@@ -51,7 +50,7 @@ class _PantallaRankingState extends State<PantallaRanking> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("Ranking"),
+        title: const Text("Todas las tareas"),
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.gamaColores.shade500,
         automaticallyImplyLeading: true,
@@ -67,34 +66,11 @@ class _PantallaRankingState extends State<PantallaRanking> {
           SafeArea(
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: 600),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(flex: 3,
-                    child: PieChartRanking(
-                      unidadFamiliarRef: unidadFamiliarRef,
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      "Tareas realizadas:",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Expanded(flex: 4,
-                    child: MostrarTareas(
-                      unidadFamiliarRef: unidadFamiliarRef,
-                      user: user,
-                      tipo: 3,
-                      tareasRef: tareasRef,
-                    ),
-                  ),
-                ],
+              child: MostrarTareas(
+                unidadFamiliarRef: unidadFamiliarRef,
+                user: user,
+                tipo: 1,
+                tareasRef: tareasRef,
               ),
             ),
           ),
