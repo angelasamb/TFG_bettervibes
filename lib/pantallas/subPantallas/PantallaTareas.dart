@@ -56,9 +56,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
               onPressed: () async {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => PantallaTodasTareas(),
-                  ),
+                  MaterialPageRoute(builder: (_) => PantallaTodasTareas()),
                 );
               },
               child: const Text("Todas"),
@@ -88,13 +86,15 @@ class _PantallaTareasState extends State<PantallaTareas> {
             width: double.infinity,
             height: double.infinity,
           ),
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 600),
-            child: MostrarTareas(
-              unidadFamiliarRef: unidadFamiliarRef,
-              user: user,
-              tipo: 2,
-              tareasRef: tareasRef,
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 600),
+              child: MostrarTareas(
+                unidadFamiliarRef: unidadFamiliarRef,
+                user: user,
+                tipo: 2,
+                tareasRef: tareasRef,
+              ),
             ),
           ),
         ],

@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../funcionalidades/MainFunciones.dart';
 
 enum ColorElegido{
   Rojo,
@@ -12,7 +16,7 @@ enum ColorElegido{
   VerdeAzulado,
   Gris;
 }
-Color getColorFromEnum(String color) {
+Color getColorFromString(String color) {
   switch (color) {
     case "Rojo":
       return Color(0xffd73027);
@@ -33,4 +37,33 @@ Color getColorFromEnum(String color) {
     default:
       return Color(0xFF97919B);
   }
+}
+ColorElegido? getColorElegidoFromString(String color) {
+  switch (color) {
+    case "Rojo":
+      return ColorElegido.Rojo;
+    case "Amarillo":
+      return ColorElegido.Amarillo;
+    case "VerdeAzulado":
+      return ColorElegido.VerdeAzulado;
+    case "AzulClaro":
+      return ColorElegido.AzulClaro;
+    case "AzulOscuro":
+      return ColorElegido.AzulOscuro;
+    case "Morado":
+      return ColorElegido.Morado;
+    case "Rosa":
+      return ColorElegido.Rosa;
+    case "Gris":
+      return ColorElegido.Gris;
+    default:
+      return null;
+  }
+}
+
+Future<List<ColorElegido>> listaColoresOcupados() async {
+  final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
+  final idUsuario = await FirebaseAuth.instance.currentUser?.uid;
+  final snapshot = await FirebaseFirestore.instance.collection("Usuario").where("unidadFamiliarRef", isEqualTo: unidadFamiliarRef).get();
+  return snapshot.docs.where((doc)=>doc.id!=idUsuario).map((doc)=> getColorElegidoFromString(doc["colorElegido"]as String)).whereType<ColorElegido>().toList();
 }

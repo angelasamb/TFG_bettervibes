@@ -90,7 +90,7 @@ class _ListaTareasPorDiaYFinalizacionState extends State<ListaTareasPorDiaYFinal
       final coloresUsuarios = <String, Color>{};
       for (var snap in usuariosSnapshots) {
         if (snap.exists) {
-          coloresUsuarios[snap.id] = getColorFromEnum(snap.get("colorElegido"));
+          coloresUsuarios[snap.id] = getColorFromString(snap.get("colorElegido"));
         }
       }
 

@@ -54,6 +54,7 @@ class _Pantallatodastareas extends State<PantallaTodasTareas> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.gamaColores.shade500,
         automaticallyImplyLeading: true,
+        centerTitle: true,
       ),
       body: Stack(
         children: [
@@ -64,13 +65,15 @@ class _Pantallatodastareas extends State<PantallaTodasTareas> {
             height: double.infinity,
           ),
           SafeArea(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600),
-              child: MostrarTareas(
-                unidadFamiliarRef: unidadFamiliarRef,
-                user: user,
-                tipo: 1,
-                tareasRef: tareasRef,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 600),
+                child: MostrarTareas(
+                  unidadFamiliarRef: unidadFamiliarRef,
+                  user: user,
+                  tipo: 1,
+                  tareasRef: tareasRef,
+                ),
               ),
             ),
           ),

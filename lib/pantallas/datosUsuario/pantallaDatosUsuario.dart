@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
-import 'package:tfg_bettervibes/widgets/PlantillaSelector.dart';
 
+import '../../widgets/PlantillaSelector.dart';
 import '../../widgets/personalizacion.dart';
 
 class PantallaDatosUsuario extends StatefulWidget {
@@ -18,10 +18,20 @@ class PantallaDatosUsuario extends StatefulWidget {
 class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
   TextEditingController nombre = TextEditingController();
   String imagenSeleccionada = "";
-  ColorElegido colorSeleccionado = ColorElegido.Rojo;
+  ColorElegido? colorSeleccionado;
 
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    asignarColorAleatorio();
+  }
   @override
   Widget build(BuildContext context) {
+    if (colorSeleccionado == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     return Scaffold(
       extendBodyBehindAppBar: true, //para que la imagen de las lineas se vea detras de la appBar tambien
       appBar: AppBar(
@@ -72,16 +82,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
                       });
                     },
                   ),
-                  _texto("Seleccione un color"),
-                  PlantillaSelector(
-                    esIcono: false,
-                    itemSeleccionado: colorSeleccionado,
-                    onSelect: (value) {
-                      setState(() {
-                        colorSeleccionado = value;
-                      });
-                    },
-                  ),
+
                   _texto("*Se podrá modificar en la configuracion del perfil"),
                   const SizedBox(height: 10),
                   ElevatedButton(
@@ -94,8 +95,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
                       String nombreUsuario = nombre.text.trim();
 
                       if (nombreUsuario.isEmpty ||
-                          imagenSeleccionada.isEmpty ||
-                          colorSeleccionado.name.isEmpty ) {
+                          imagenSeleccionada.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -106,7 +106,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
                         );
                       } else {
                         crearUsuarioBaseDeDatos(
-                          colorSeleccionado.name,
+                          colorSeleccionado!.name,
                           imagenSeleccionada,
                           nombreUsuario,
                         );
@@ -135,6 +135,19 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       textAlign: TextAlign.left,
     );
+  }
+
+  void asignarColorAleatorio() async {
+  final coloresOcupados = await listaColoresOcupados();
+  final disponibles = ColorElegido.values.where((color)=>!coloresOcupados.contains(color)).toList();
+  if(disponibles.isNotEmpty){
+    disponibles.shuffle();
+    setState(() {
+      colorSeleccionado = disponibles.first;
+    });
+  }else{
+    colorSeleccionado=ColorElegido.Rojo;
+  }
   }
 
 }

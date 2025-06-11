@@ -47,7 +47,7 @@ class _PieChartRankingState extends State<PieChartRanking> {
         final List<Color> colores = [];
         for (var usuario in usuarios) {
           nombres.add(usuario["nombre"]);
-          colores.add(getColorFromEnum(usuario["colorElegido"]));
+          colores.add(getColorFromString(usuario["colorElegido"]));
           puntuaciones.add(usuario["puntuacion"] ?? 0);
         }
 

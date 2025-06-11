@@ -182,7 +182,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(esEdicion ? 'Editar Pago' : 'Nuevo Pago'),
+        title: Text(esEdicion ? 'Editar Pago' : 'Nuevo Pago', style: TextStyle(color: Colors.gamaColores.shade500),),
         actions: [
           if (esEdicion && !_cargandoDatos)
             IconButton(
@@ -190,55 +190,61 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
               onPressed: _eliminarPago,
             ),
         ],
+        centerTitle: true,
       ),
       body:
           _cargandoDatos
               ? const Center(child: CircularProgressIndicator())
-              : ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 600),
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: ListView(
-                    children: [
-                      plantillaField(_descripcionController, "Descripcion (opcional)"),
-                      const SizedBox(height: 12),
-                      plantillaField(_precioController, "Precio"),
-                      const SizedBox(height: 12),
-                      ListTile(
-                        title: Text(
-                          'Fecha: ${DateFormat('dd/MM/yyyy').format(_fechaSeleccionada)}',
+              : Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 600),
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: ListView(
+                      children: [
+                        plantillaField(
+                          _descripcionController,
+                          "Descripcion (opcional)",
                         ),
-                        trailing: const Icon(Icons.calendar_today),
-                        onTap: _seleccionarFecha,
-                      ),
-                      const SizedBox(height: 12),
-                      SelectorUsuarioPagador(
-                        unidadFamiliarRef: _unidadFamiliarRef!,
-                        pagadorSeleccionado: _pagador,
-                        onUsuarioSeleccionado: (nuevoPagador) {
-                          setState(() {
-                            _pagador = nuevoPagador;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 12),
-                      SelectorUsuariosParticipantes(
-                        unidadFamiliarRef: _unidadFamiliarRef!,
-                        participantesSeleccionados: _participantes,
-                        onSeleccionCambiada: (nuevosParticipantes) {
-                          setState(() {
-                            _participantes = nuevosParticipantes;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: _guardarPago,
-                        child: Text(
-                          esEdicion ? 'Guardar cambios' : 'Crear pago',
+                        const SizedBox(height: 12),
+                        plantillaField(_precioController, "Precio"),
+                        const SizedBox(height: 12),
+                        ListTile(
+                          title: Text(
+                            'Fecha: ${DateFormat('dd/MM/yyyy').format(_fechaSeleccionada)}',
+                          ),
+                          trailing: const Icon(Icons.calendar_today),
+                          onTap: _seleccionarFecha,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 12),
+                        SelectorUsuarioPagador(
+                          unidadFamiliarRef: _unidadFamiliarRef!,
+                          pagadorSeleccionado: _pagador,
+                          onUsuarioSeleccionado: (nuevoPagador) {
+                            setState(() {
+                              _pagador = nuevoPagador;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        SelectorUsuariosParticipantes(
+                          unidadFamiliarRef: _unidadFamiliarRef!,
+                          participantesSeleccionados: _participantes,
+                          onSeleccionCambiada: (nuevosParticipantes) {
+                            setState(() {
+                              _participantes = nuevosParticipantes;
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: _guardarPago,
+                          child: Text(
+                            esEdicion ? 'Guardar cambios' : 'Crear pago',
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

@@ -51,10 +51,11 @@ class _PantallaRankingState extends State<PantallaRanking> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text("Ranking"),
+        title: const Text("Ranking semanal"),
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.gamaColores.shade500,
         automaticallyImplyLeading: true,
+        centerTitle: true,
       ),
       body: Stack(
         children: [
@@ -65,36 +66,40 @@ class _PantallaRankingState extends State<PantallaRanking> {
             height: double.infinity,
           ),
           SafeArea(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(flex: 3,
-                    child: PieChartRanking(
-                      unidadFamiliarRef: unidadFamiliarRef,
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      "Tareas realizadas:",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 600),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: PieChartRanking(
+                        unidadFamiliarRef: unidadFamiliarRef,
                       ),
                     ),
-                  ),
-                  Expanded(flex: 4,
-                    child: MostrarTareas(
-                      unidadFamiliarRef: unidadFamiliarRef,
-                      user: user,
-                      tipo: 3,
-                      tareasRef: tareasRef,
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        "Tareas realizadas:",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      flex: 4,
+                      child: MostrarTareas(
+                        unidadFamiliarRef: unidadFamiliarRef,
+                        user: user,
+                        tipo: 3,
+                        tareasRef: tareasRef,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
