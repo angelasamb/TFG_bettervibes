@@ -7,6 +7,7 @@ import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
 
 import '../../widgets/PlantillaSelector.dart';
 import '../../widgets/personalizacion.dart';
+import '../registroUsuario/pantallaAutentification.dart';
 
 class PantallaDatosUsuario extends StatefulWidget {
   const PantallaDatosUsuario({super.key});
@@ -41,7 +42,10 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => pantallaAutentification()),
+            );
           },
         ),
       ),

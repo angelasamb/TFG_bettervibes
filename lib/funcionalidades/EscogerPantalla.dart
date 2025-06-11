@@ -37,12 +37,16 @@ class _EscogerPantallaState extends State<EscogerPantalla>{
             "Usuario").doc(idUsuario).get();
         if (usuarioBaseDatos.exists) {
           final datosUsuario = usuarioBaseDatos.data();
-          if (datosUsuario?["unidadFamiliarRef"] != null) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => PantallaPrincipal()),
-            );
-          } else {
+          final unidadRef = datosUsuario?["unidadFamiliarRef"];
+          if (unidadRef is DocumentReference) {
+            final unidadSnapshot = await unidadRef.get();
+            if (unidadRef != null && unidadRef.toString().isNotEmpty && unidadSnapshot.exists) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => PantallaPrincipal()),
+              );
+            }
+          }else {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => PantallaCrearUnidadFamiliar()),
