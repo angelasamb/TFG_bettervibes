@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tfg_bettervibes/pantallas/datosUsuario/pantallaDatosUsuario.dart';
 import 'package:tfg_bettervibes/pantallas/datosUsuario/pantallaUnirteUnidadFamiliar.dart';
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesCrearUnidadFamiliar.dart';
@@ -23,7 +24,10 @@ class PantallaCrearUnidadFamiliar extends StatelessWidget {
         automaticallyImplyLeading: Navigator.canPop(context),
         leading: Navigator.canPop(context) ? IconButton(icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PantallaDatosUsuario()),
+            );
           },) :null,
       ),
       body: Stack(

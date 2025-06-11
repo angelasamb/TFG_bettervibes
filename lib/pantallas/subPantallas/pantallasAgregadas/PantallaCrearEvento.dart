@@ -37,7 +37,10 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   List<Map<String, dynamic>> listaTipoTareas = [];
   String? tipoTareaSeleccionada;
   late DocumentReference _tipoTareaRef;
-  final usuarioRef = FirebaseFirestore.instance.collection("Usuario").doc(FirebaseAuth.instance.currentUser!.uid);
+  final usuarioRef = FirebaseFirestore.instance
+      .collection("Usuario")
+      .doc(FirebaseAuth.instance.currentUser!.uid);
+  bool _tareaRealizada = false;
 
   @override
   void initState() {
@@ -73,171 +76,195 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
         ),
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.gamaColores.shade500,
+        centerTitle: true,
       ),
-      body: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: 600),
-        child: Padding(
-          padding: EdgeInsets.all(25),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  if (widget.tareaEditar == null)
-                    Expanded(
-                      child: RadioListTile<String>(
-                        title: const Text("Evento"),
-                        value: "evento",
-                        groupValue: _tipoActividad,
-                        activeColor: Colors.gamaColores.shade100,
-                        onChanged: (value) {
-                          setState(() {
-                            _tipoActividad = value!;
-                          });
-                        },
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 600),
+          child: Padding(
+            padding: EdgeInsets.all(25),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    if (widget.tareaEditar == null)
+                      Expanded(
+                        child: RadioListTile<String>(
+                          title: const Text("Evento"),
+                          value: "evento",
+                          groupValue: _tipoActividad,
+                          activeColor: Colors.gamaColores.shade100,
+                          onChanged: (value) {
+                            setState(() {
+                              _tipoActividad = value!;
+                            });
+                          },
+                        ),
                       ),
-                    ),
-                  if (widget.eventoEditar == null)
-                    Expanded(
-                      child: RadioListTile<String>(
-                        title: const Text("Tarea"),
-                        value: "tarea",
-                        groupValue: _tipoActividad,
-                        activeColor: Colors.gamaColores.shade100,
-                        onChanged: (value) {
-                          setState(() {
-                            _tipoActividad = value!;
-                          });
-                        },
+                    if (widget.eventoEditar == null)
+                      Expanded(
+                        child: RadioListTile<String>(
+                          title: const Text("Tarea"),
+                          value: "tarea",
+                          groupValue: _tipoActividad,
+                          activeColor: Colors.gamaColores.shade100,
+                          onChanged: (value) {
+                            setState(() {
+                              _tipoActividad = value!;
+                            });
+                          },
+                        ),
                       ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                if (_tipoActividad == "evento")
+                  plantillaField(_nombreCtrl, "Nombre del evento"),
+                if (_tipoActividad == "tarea")
+                  DropdownButton(
+                    value: tipoTareaSeleccionada,
+                    hint: Text(
+                      "Escoge un tipo de tarea",
+                      style: TextStyle(fontWeight: FontWeight.normal),
                     ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              if (_tipoActividad == "evento")
-                plantillaField(_nombreCtrl, "Nombre del evento"),
-              if (_tipoActividad == "tarea")
-                DropdownButton(
-                  value: tipoTareaSeleccionada,
-                  hint: Text(
-                    "Escoge un tipo de tarea",
-                    style: TextStyle(fontWeight: FontWeight.normal),
-                  ),
-                  items:
-                      listaTipoTareas.map((mapa) {
-                        return DropdownMenuItem<String>(
-                          value: mapa["nombre"],
-                          child: Text(mapa["nombre"]),
-                        );
-                      }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      tipoTareaSeleccionada = value as String;
-                      _tipoTareaRef =
-                          listaTipoTareas.firstWhere(
-                            (mapa) => mapa["nombre"] == value,
-                          )["ref"];
-                    });
-                  },
-                ),
-              const SizedBox(height: 20),
-              plantillaField(_descripcionCtrl, "Descripción"),
-
-              const SizedBox(height: 16),
-              ListTile(
-                title: Text(
-                  'Fecha: ${DateFormat("dd/MM/yyyy").format(_fechaSeleccionada)}',
-                ),
-                trailing: const Icon(Icons.calendar_today),
-                onTap: _seleccionarFecha,
-              ),
-              const SizedBox(width: 16),
-              ListTile(
-                title: Text(
-                  'Hora: ${_horaSeleccionada != null ? _horaSeleccionada!.format(context) : 'No seleccionada'}',
-                ),
-                trailing: const Icon(Icons.timelapse_outlined),
-                onTap: _seleccionarHora,
-              ),
-
-              const SizedBox(height: 16),
-              if (_tipoActividad == "evento")
-                CheckboxListTile(
-                  title: const Text("Evento para toda la familia"),
-                  activeColor: Colors.gamaColores.shade100,
-                  value: _paraTodos,
-                  onChanged: (value) {
-                    setState(() {
-                      _paraTodos = value ?? false;
-                    });
-                  },
-                ),
-
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.gamaColores.shade500,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () async {
-                      _guardarDatos();
+                    items:
+                        listaTipoTareas.map((mapa) {
+                          return DropdownMenuItem<String>(
+                            value: mapa["nombre"],
+                            child: Text(mapa["nombre"]),
+                          );
+                        }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        tipoTareaSeleccionada = value as String;
+                        _tipoTareaRef =
+                            listaTipoTareas.firstWhere(
+                              (mapa) => mapa["nombre"] == value,
+                            )["ref"];
+                      });
                     },
-                    child: const Text('Guardar'),
+                  ),
+                const SizedBox(height: 20),
+                plantillaField(_descripcionCtrl, "Descripción"),
+
+                const SizedBox(height: 16),
+                ListTile(
+                  title: Text(
+                    'Fecha: ${DateFormat("dd/MM/yyyy").format(_fechaSeleccionada)}',
+                  ),
+                  trailing: const Icon(Icons.calendar_today),
+                  onTap: _seleccionarFecha,
+                ),
+                const SizedBox(width: 16),
+                ListTile(
+                  title: Text(
+                    'Hora: ${_horaSeleccionada != null ? _horaSeleccionada!.format(context) : 'No seleccionada'}',
+                  ),
+                  trailing: const Icon(Icons.timelapse_outlined),
+                  onTap: _seleccionarHora,
+                ),
+
+                const SizedBox(height: 16),
+                if (_tipoActividad == "evento")
+                  CheckboxListTile(
+                    title: const Text("Evento para toda la familia"),
+                    activeColor: Colors.gamaColores.shade100,
+                    value: _paraTodos,
+                    onChanged: (value) {
+                      setState(() {
+                        _paraTodos = value ?? false;
+                      });
+                    },
                   ),
 
-                  if (widget.tareaEditar != null || widget.eventoEditar != null)
-                    const SizedBox(width: 60),
-                  if (widget.tareaEditar != null || widget.eventoEditar != null)
+                const Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+
+                  children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor: Colors.gamaColores.shade500,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       onPressed: () async {
-                        final doc = widget.eventoEditar ?? widget.tareaEditar;
-                        final confirmar = await showDialog(
-                          context: context,
-                          builder:
-                              (context) => AlertDialog(
-                                title: Text("Confirmar"),
-                                content: Text("¿Quieres borrar este elemento?"),
-                                actions: [
-                                  TextButton(
-                                    onPressed:
-                                        () => Navigator.of(context).pop(false),
-                                    child: Text("Cancelar"),
-                                  ),
-                                  TextButton(
-                                    onPressed:
-                                        () => Navigator.of(context).pop(true),
-                                    child: Text("Sí"),
-                                  ),
-                                ],
-                              ),
-                        );
-                        if (doc != null && confirmar) {
-                          borrarDocEnUnidadFamiliar(doc: doc, context: context);
-
-                          CalculoPuntuacionSemanal(usuarioRef);
-                          Navigator.pop(context);
-                        }
+                        _guardarDatos();
                       },
-                      child: Text("Borrar"),
+                      child: const Text('Guardar'),
                     ),
-                ],
-              ),
+                    if (widget.tareaEditar != null ||
+                        widget.eventoEditar != null)//para que no salga el espacio si esto no ocurre
+                    const SizedBox(width: 60),
+                    if (widget.tareaEditar != null ||
+                        widget.eventoEditar != null)
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: () async {
+                          final doc = widget.eventoEditar ?? widget.tareaEditar;
+                          final confirmar = await showDialog(
+                            context: context,
+                            builder:
+                                (context) => AlertDialog(
+                                  title: Text("Confirmar"),
+                                  content: Text(
+                                    "¿Quieres borrar este elemento?",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed:
+                                          () =>
+                                              Navigator.of(context).pop(false),
+                                      child: Text("Cancelar"),
+                                    ),
+                                    TextButton(
+                                      onPressed:
+                                          () => Navigator.of(context).pop(true),
+                                      child: Text("Sí"),
+                                    ),
+                                  ],
+                                ),
+                          );
+                          if (doc != null && confirmar) {
+                            borrarDocEnUnidadFamiliar(
+                              doc: doc,
+                              context: context,
+                            );
 
-              const SizedBox(height: 16),
-            ],
+                            CalculoPuntuacionSemanal(usuarioRef);
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Text("Borrar"),
+                      ),
+                    if (widget.tareaEditar != null && _tareaRealizada)
+                      const SizedBox(width: 60),
+                    if (widget.tareaEditar != null && _tareaRealizada)
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.gamaColores.shade200,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        onPressed: marcarComoNoCompletada,
+                        child: Text("Desmarcar como realizada"),
+                      ),
+                  ],
+                ),
+
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
@@ -265,6 +292,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
       _tipoActividad = "tarea";
       _nombreCtrl.text = datos["nombre"] ?? "";
       _descripcionCtrl.text = datos["descripcion"] ?? "";
+      _tareaRealizada = datos["realizada"] ?? false;
       _horaSeleccionada = TimeOfDay.fromDateTime(
         (datos["timestamp"] as Timestamp).toDate(),
       );
@@ -292,6 +320,11 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
       _fechaSeleccionada = (datos["timestamp"] as Timestamp).toDate();
       _paraTodos = datos["usuarioRef"] == null;
     });
+  }
+
+  void marcarComoNoCompletada() async {
+    widget.tareaEditar?.update({"realizada": false});
+    Navigator.pop(context);
   }
 
   void _guardarDatos() async {
@@ -364,7 +397,6 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
       }
     } else if (_tipoActividad == "tarea") {
       if (widget.tareaEditar != null) {
-
         await editarTareaEnUnidadFamiliar(
           context,
           widget.tareaEditar,

@@ -1,1 +1,0 @@
-//poner el mapa de colores que el usuario puede elegir

@@ -15,14 +15,9 @@ class PantallaPrincipal extends StatefulWidget {
 
 class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
   int _indiceSeleccionado = 0;
-  final List<Widget> _pantallas = [
-    PantallaInicio(),
-    PantallaTareas(),
-    PantallaEventos(),
-    PantallaPagos(),
-  ];
 
   late String unidadFamiliarNombre = "";
+
   void _alElegirVentana(int indice) {
     setState(() {
       _indiceSeleccionado = indice;
@@ -37,17 +32,43 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        leading: IconButton(onPressed: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (_) => PantallaConfiguracion(),
-          ));
+    final List<Widget> _pantallas = [
+      PantallaInicio(
+        irATareas: () {
+          setState(() {
+            _indiceSeleccionado=1;
+          });
+        },
+        irAEventos: () {setState(() {
+          _indiceSeleccionado=2;
+        });},
+      ),
 
-        }, icon: Icon(Icons.settings), ),
+      PantallaTareas(),
+
+      PantallaEventos(),
+
+      PantallaPagos(),
+    ];
+
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => PantallaConfiguracion()),
+            );
+          },
+          icon: Icon(Icons.settings),
+        ),
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: Text(unidadFamiliarNombre, style: TextStyle(fontWeight: FontWeight.bold),),
+        title: Text(
+          unidadFamiliarNombre,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.gamaColores.shade500,
       ),
@@ -88,5 +109,4 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
       });
     }
   }
-
 }

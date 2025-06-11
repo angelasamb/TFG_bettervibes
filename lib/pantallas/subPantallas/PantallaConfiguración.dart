@@ -229,7 +229,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                         final nombre = datos['nombre'] ?? "Sin nombre";
                         final foto = datos['fotoPerfil'] ?? "";
                         final color = datos["colorElegido"];
-                        final colorElegido = getColorFromEnum(color);
+                        final colorElegido = getColorFromString(color);
                         final esAdmin = datos['admin'] ?? false;
                         final uid = doc.id;
 

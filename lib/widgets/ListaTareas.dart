@@ -120,7 +120,7 @@ Future<List<Widget>> listaTareasPorDia(
 
       final String nombreTipoTarea = tipoTarea?["nombre"] ?? "Sin tipo";
       final String descripcionTareas = tarea["descripcion"] ?? "";
-      final Color colorUsuario = getColorFromEnum(usuario?["colorElegido"]);
+      final Color colorUsuario = getColorFromString(usuario?["colorElegido"]);
       final hora = DateFormat("HH:mm").format(tarea["timestamp"].toDate());
 
       lista.add(

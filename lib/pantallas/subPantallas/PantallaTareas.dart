@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearTipoTarea.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaTodasTareas.dart';
 
 import '../../widgets/MostrarTareas.dart';
 
@@ -44,13 +45,36 @@ class _PantallaTareasState extends State<PantallaTareas> {
 
     final tareasRef = unidadFamiliarRef!.collection("Tareas");
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.gamaColores.shade500,
-        foregroundColor: Colors.white,
-        onPressed: () async {
-          _accionesBotones();
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: Stack(
+        children: [
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton(
+              backgroundColor: Colors.gamaColores.shade500,
+              foregroundColor: Colors.white,
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => PantallaTodasTareas()),
+                );
+              },
+              child: const Text("Todas"),
+            ),
+          ),
+          Positioned(
+            bottom: 90, // un poco más arriba que el anterior
+            right: 16,
+            child: FloatingActionButton(
+              backgroundColor: Colors.gamaColores.shade500,
+              foregroundColor: Colors.white,
+              onPressed: () async {
+                _accionesBotones();
+              },
+              child: const Icon(Icons.add),
+            ),
+          ),
+        ],
       ),
       extendBodyBehindAppBar: true,
 
@@ -62,13 +86,15 @@ class _PantallaTareasState extends State<PantallaTareas> {
             width: double.infinity,
             height: double.infinity,
           ),
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 600),
-            child: MostrarTareas(
-              unidadFamiliarRef: unidadFamiliarRef,
-              user: user,
-              tipo: 1,
-              tareasRef: tareasRef,
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: 600),
+              child: MostrarTareas(
+                unidadFamiliarRef: unidadFamiliarRef,
+                user: user,
+                tipo: 2,
+                tareasRef: tareasRef,
+              ),
             ),
           ),
         ],

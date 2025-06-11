@@ -1,17 +1,28 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import '../clases/ColorElegido.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class PlantillaSelector extends StatelessWidget {
+class PlantillaSelector extends StatefulWidget {
   final bool esIcono;
   final dynamic itemSeleccionado;
   final Function(dynamic seleccionado) onSelect;
 
-  PlantillaSelector(
-      {required this.esIcono, required this.itemSeleccionado, required this.onSelect});
+  PlantillaSelector({
+    required this.esIcono,
+    this.itemSeleccionado,
+    required this.onSelect,
+  });
 
+  @override
+  State<PlantillaSelector> createState() => _PlantillaSelectorState();
+}
+
+class _PlantillaSelectorState extends State<PlantillaSelector> {
   final List<String> _rutasImagenes = [
     "assets/imagenes/fotoPerfil/icon_1.svg",
     "assets/imagenes/fotoPerfil/icon_2.svg",
@@ -31,56 +42,98 @@ class PlantillaSelector extends StatelessWidget {
     ColorElegido.Gris: Color(0xFF97919B),
   };
 
+  List<ColorElegido> coloresOcupados = [];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cargarColoresOcupados();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final listaRutas = esIcono ? _rutasImagenes : mapaColores.keys.toList();
+    final listaRutas =
+        widget.esIcono ? _rutasImagenes : mapaColores.keys.toList();
+    return SingleChildScrollView(
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: listaRutas.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: widget.esIcono ? 3 : 5,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+        ),
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: listaRutas.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: esIcono ? 3 : 5,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
-      ),
+        itemBuilder: (context, index) {
+          final ruta = listaRutas[index];
+          bool seleccionada = false;
+          Widget contenido;
+          bool estaOcupado = false;
 
-      itemBuilder: (context, index) {
-        final ruta = listaRutas[index];
-        bool seleccionada = false;
-        Widget contenido;
+          if (ruta is String) {
+            seleccionada = ruta == widget.itemSeleccionado;
+            contenido = SvgPicture.asset(ruta);
+          } else if (ruta is ColorElegido) {
+            final color = mapaColores[ruta]!;
+            seleccionada = ruta == widget.itemSeleccionado;
 
-        if (ruta is String) {
-          seleccionada = ruta == itemSeleccionado;
-          contenido = SvgPicture.asset(ruta);
-        } else if (ruta is ColorElegido) {
-          final color = mapaColores[ruta]!;
-          seleccionada = ruta == itemSeleccionado;
-          contenido = Container(
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          );
-        } else {
-          contenido = const SizedBox();
-        }
-        ;
-        return GestureDetector(
-          onTap: () => onSelect(ruta),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color:
-
-                seleccionada
-                    ? Colors.gamaColores.shade50
-                    : Colors.transparent,
-                width: 3,
+            estaOcupado = coloresOcupados.contains(ruta);
+            contenido = Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                if (estaOcupado)
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: color,
+                    ),
+                    child: Center(child: Icon(Icons.lock, color: Colors.white)),
+                  ),
+              ],
+            );
+          } else {
+            contenido = const SizedBox();
+          }
+          ;
+          return GestureDetector(
+            onTap: () {
+              if (ruta is ColorElegido && !estaOcupado) {
+                widget.onSelect(ruta);
+              }
+              if (ruta is String) {
+                widget.onSelect(ruta);
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color:
+                      seleccionada
+                          ? Colors.gamaColores.shade50
+                          : Colors.transparent,
+                  width: 3,
+                ),
+                borderRadius: BorderRadius.circular(8),
               ),
-              borderRadius: BorderRadius.circular(8),
+              child: contenido,
             ),
-            child: contenido,
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
+  }
+
+  Future<void> cargarColoresOcupados() async {
+    final lista = await listaColoresOcupados();
+    setState(() {
+      coloresOcupados = lista;
+    });
   }
 }

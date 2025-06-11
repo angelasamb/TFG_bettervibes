@@ -84,7 +84,7 @@ class _ListaEventosDiaState extends State<ListaEventosDia> {
 
       for (var snap in usuariosSnapshots) {
         if (snap.exists) {
-          coloresUsuarios[snap.id] = getColorFromEnum(snap.get("colorElegido"));
+          coloresUsuarios[snap.id] = getColorFromString(snap.get("colorElegido"));
         }
       }
 
