@@ -83,15 +83,15 @@ class _PantallaPrincipalEstado extends State<PantallaPrincipal> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
           BottomNavigationBarItem(
             icon: Icon(Icons.access_time_filled),
-            label: 'Tareas',
+            label: "Tareas",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
-            label: 'Eventos',
+            label: "Eventos",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.monetization_on_outlined),
-            label: 'Pagos',
+            label: "Pagos",
           ),
         ],
       ),
