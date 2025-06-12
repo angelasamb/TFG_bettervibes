@@ -4,6 +4,9 @@ import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/clases/Usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../funcionalidades/FuncionesPagos.dart';
+import '../../../funcionalidades/FuncionesUsuario.dart';
+
 class PantallaBalances extends StatefulWidget {
   const PantallaBalances({super.key});
 
@@ -67,9 +70,13 @@ class _PantallaBalancesState extends State<PantallaBalances> {
           return const Center(child: Text("No hay usuarios en la unidad familiar."));
         }
 
-        final usuarios = snapshotUsuarios.data!.docs
+        final usuariosDocs = snapshotUsuarios.data!.docs;
+        final usuarios = usuariosDocs
             .map((doc) => Usuario.fromFirestore(doc.data() as Map<String, dynamic>))
             .toList();
+        final usuariosId = usuariosDocs.map((doc) => doc.id).toList();
+        final usuariosData = usuariosDocs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+
 
         return ListView(
           padding: const EdgeInsets.all(16),
@@ -92,7 +99,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                   icon: const Icon(Icons.refresh),
                   tooltip: "Generar Bizums",
                   onPressed: () async {
-                    await generarBizums(usuarios, unidadRef);
+                    await generarBizums(usuariosData, usuariosId, unidadRef);
                     setState(() {}); // Forzar recarga
                   },
                 ),

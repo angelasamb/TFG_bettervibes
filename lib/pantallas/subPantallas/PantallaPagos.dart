@@ -29,8 +29,8 @@ class _PantallaPagosState extends State<PantallaPagos> {
         title: const Text("Pagos"),
         centerTitle: true,
         backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-
       backgroundColor: Colors.transparent,
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
@@ -76,7 +76,7 @@ class _PantallaPagosState extends State<PantallaPagos> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600),
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: FutureBuilder<DocumentReference?>(
                   future: _unidadFamiliarRefFuture,
                   builder: (context, snapshot) {
@@ -109,6 +109,7 @@ class _PantallaPagosState extends State<PantallaPagos> {
                         }
                         if (pagosSnapshot.hasError) {
                           print("Error SNAPSHOT StreamBuilder: ${pagosSnapshot.error}");
+
                           return Center(
                             child: Text("Error: ${pagosSnapshot.error}"),
                           );
