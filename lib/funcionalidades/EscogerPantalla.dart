@@ -27,7 +27,7 @@ class _EscogerPantallaState extends State<EscogerPantalla>{
       final usuarioFirebase = FirebaseAuth.instance.currentUser;
 
       if (usuarioFirebase == null) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => pantallaAutentification()),
         );
@@ -67,6 +67,7 @@ class _EscogerPantallaState extends State<EscogerPantalla>{
 
 
   }
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
