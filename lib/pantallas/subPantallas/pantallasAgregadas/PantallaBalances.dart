@@ -4,6 +4,9 @@ import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/clases/Usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../funcionalidades/FuncionesPagos.dart';
+import '../../../funcionalidades/FuncionesUsuario.dart';
+
 class PantallaBalances extends StatefulWidget {
   const PantallaBalances({super.key});
 
@@ -40,9 +43,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
               }
 
               if (!snapshot.hasData || snapshot.data == null) {
-                return const Center(
-                  child: Text('Unidad familiar no encontrada.'),
-                );
+                return const Center(child: Text("Unidad familiar no encontrada."));
               }
 
               final unidadRef = snapshot.data!;
@@ -72,13 +73,14 @@ class _PantallaBalancesState extends State<PantallaBalances> {
           );
         }
 
-        final usuarios =
-            snapshotUsuarios.data!.docs
-                .map(
-                  (doc) =>
-                      Usuario.fromFirestore(doc.data() as Map<String, dynamic>),
-                )
-                .toList();
+        final usuariosDocs = snapshotUsuarios.data!.docs;
+        final usuarios = usuariosDocs
+            .map((doc) => Usuario.fromFirestore(doc.data() as Map<String, dynamic>))
+            .toList();
+        final usuariosId = usuariosDocs.map((doc) => doc.id).toList();
+        final usuariosData = usuariosDocs.map((doc) => doc.data() as Map<String, dynamic>).toList();
+
+
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
@@ -115,7 +117,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                   icon: const Icon(Icons.refresh),
                   tooltip: "Generar Bizums",
                   onPressed: () async {
-                    await generarBizums(usuarios, unidadRef);
+                    await generarBizums(usuariosData, usuariosId, unidadRef);
                     setState(() {}); // Forzar recarga
                   },
                 ),
@@ -132,28 +134,21 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                 final bizums = snapshotBizums.data?.docs ?? [];
 
                 return Column(
-                  children:
-                      bizums.map((bizumDoc) {
-                        final data = bizumDoc.data() as Map<String, dynamic>;
-                        return FutureBuilder<List<String>>(
-                          future: obtenerNombresUsuarios(
-                            data["personaPaga"],
-                            data["personaRecibe"],
-                          ),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData)
-                              return const SizedBox.shrink();
-                            final nombres = snapshot.data!;
-                            return CheckboxListTile(
-                              value: data['hecho'] ?? false,
-                              title: Text('${nombres[0]} → ${nombres[1]}'),
-                              onChanged: (value) async {
-                                await actualizarEstadoBizum(
-                                  bizumDoc.reference,
-                                  data,
-                                  value!,
-                                );
-                              },
+                  children: bizums.map((bizumDoc) {
+                    final data = bizumDoc.data() as Map<String, dynamic>;
+                    return FutureBuilder<List<String>>(
+                      future: obtenerNombresUsuarios(data["personaPaga"], data["personaRecibe"]),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) return const SizedBox.shrink();
+                        final nombres = snapshot.data!;
+                        return CheckboxListTile(
+                          value: data['hecho'] ?? false,
+                          title: Text("${nombres[0]} -> ${nombres[1]}"),
+                          onChanged: (value) async {
+                            await actualizarEstadoBizum(
+                              bizumDoc.reference,
+                              data,
+                              value!,
                             );
                           },
                         );

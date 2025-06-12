@@ -151,7 +151,7 @@ class _SelectorUsuariosParticipantesState extends State<SelectorUsuariosParticip
                   ),
                 ),
                 ElevatedButton(
-                  child: const Text('Aceptar'),
+                  child: const Text("Aceptar"),
                   onPressed: () {
                     widget.onSeleccionCambiada(seleccionados);
                     Navigator.pop(context);
@@ -168,7 +168,7 @@ class _SelectorUsuariosParticipantesState extends State<SelectorUsuariosParticip
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text('${widget.participantesSeleccionados.length} participantes seleccionados'),
+      title: Text("${widget.participantesSeleccionados.length} participantes seleccionados"),
       leading: const Icon(Icons.group),
       trailing: const Icon(Icons.arrow_drop_down),
       onTap: _mostrarSelector,

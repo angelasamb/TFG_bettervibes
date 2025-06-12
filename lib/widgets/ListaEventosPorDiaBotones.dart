@@ -61,9 +61,9 @@ class _ListaEventosPorDiaBotonesState extends State<ListaEventosPorDiaBotones> {
       final diaFin = diaInicio.add(const Duration(days: 1));
 
       final snapshot = await unidadFamiliarRef
-          !.collection('Eventos')
-          .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(diaInicio))
-          .where('timestamp', isLessThan: Timestamp.fromDate(diaFin))
+          !.collection("Eventos")
+          .where("timestamp", isGreaterThanOrEqualTo: Timestamp.fromDate(diaInicio))
+          .where("timestamp", isLessThan: Timestamp.fromDate(diaFin))
           .get();
 
       final eventos = snapshot.docs.map((doc) {

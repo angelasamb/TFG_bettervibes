@@ -70,4 +70,13 @@ Future<bool> existeElUsuario() async {
     return (false);
   }
 }
+Future<List<String>> obtenerNombresUsuarios(DocumentReference ref1, DocumentReference ref2) async {
+  final snapshot1 = await ref1.get();
+  final snapshot2 = await ref2.get();
+
+  final nombre1 = (snapshot1.data() as Map<String, dynamic>)['nombre'] ?? 'Desconocido';
+  final nombre2 = (snapshot2.data() as Map<String, dynamic>)['nombre'] ?? 'Desconocido';
+
+  return [nombre1, nombre2];
+}
 

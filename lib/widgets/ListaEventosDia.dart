@@ -46,12 +46,12 @@ class _ListaEventosDiaState extends State<ListaEventosDia> {
 
       final querySnapshot =
           await unidadFamiliarRef
-              .collection('Eventos')
+              .collection("Eventos")
               .where(
-                'timestamp',
+                "timestamp",
                 isGreaterThanOrEqualTo: Timestamp.fromDate(inicio),
               )
-              .where('timestamp', isLessThan: Timestamp.fromDate(fin))
+              .where("timestamp", isLessThan: Timestamp.fromDate(fin))
               .get();
 
       final eventosDocs =

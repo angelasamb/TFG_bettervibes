@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../clases/Usuario.dart';
+
 Future<DocumentReference?> obtenerUnidadFamiliarRefActual() async {
   try {
     final auth = FirebaseAuth.instance;
@@ -9,7 +11,7 @@ Future<DocumentReference?> obtenerUnidadFamiliarRefActual() async {
 
     if (user == null) return null;
 
-    final usuarioRef = firestore.collection('Usuario').doc(user.uid);
+    final usuarioRef = firestore.collection("Usuario").doc(user.uid);
     final usuarioSnapshot = await usuarioRef.get();
     final usuarioData = usuarioSnapshot.data();
 
@@ -27,4 +29,11 @@ Future<bool> esUsuarioActualAdmin() async {
   final datos = doc.data();
   return datos?["admin"] == true;
 }
+
+Future<Usuario?> obtenerUsuarioDesdeId(String idUsuario) async {
+  final doc = await FirebaseFirestore.instance.collection('Usuario').doc(idUsuario).get();
+  if (!doc.exists) return null;
+  return Usuario.fromFirestore(doc.data() as Map<String, dynamic>);
+}
+
 

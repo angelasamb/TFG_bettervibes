@@ -99,7 +99,7 @@ class PantallaCrearUnidadFamiliar extends StatelessWidget {
                       if (contrasena != contrasenaRepetida) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Las contraseñas no son iguales'),
+                            content: Text("Las contraseñas no son iguales"),
                           ),
                         );
                         return;
@@ -126,7 +126,7 @@ class PantallaCrearUnidadFamiliar extends StatelessWidget {
                         return;
                       }
                     },
-                    child: const Text('Crear unidad familiar'),
+                    child: const Text("Crear unidad familiar"),
                   ),
                   SizedBox(height: 15),
                   TextButton(
@@ -142,7 +142,7 @@ class PantallaCrearUnidadFamiliar extends StatelessWidget {
                         ),
                       );
                     },
-                    child: const Text('Unirse a una unidad familiar'),
+                    child: const Text("Unirse a una unidad familiar"),
                   ),
                 ],
               ),
