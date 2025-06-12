@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'registroUsuario/pantallaAutentification.dart';
 
+
 class PantallaCerrarSesion extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
 
@@ -59,6 +60,7 @@ class PantallaCerrarSesion extends StatelessWidget {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
               child: const Text("Añadir usuario"),
+
             ),
           ],
         ),

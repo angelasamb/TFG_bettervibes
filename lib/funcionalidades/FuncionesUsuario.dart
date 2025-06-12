@@ -10,6 +10,7 @@ Future<bool> crearUsuarioBaseDeDatos(
   String imagenEscogida,
   String nombreEscogidod,
 ) async {
+
   try {
     final autentificacion = FirebaseAuth.instance;
     final baseDatos = FirebaseFirestore.instance;
@@ -43,6 +44,7 @@ Future<bool> crearUsuarioBaseDeDatos(
   } catch (e) {
     print("ERROR: Error en FuncionesUsuario: $e");
     return (false);
+
   }
 }
 

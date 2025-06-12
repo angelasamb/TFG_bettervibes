@@ -13,12 +13,14 @@ class Tareas extends ClaseBase {
     required Timestamp timestamp,
     required DocumentReference tipoTareaRef,
     required DocumentReference usuarioRef,
+
     required String descripcion,
   }) : _realizada = realizada,
         _timestamp = timestamp,
        _tipoTareaRef = tipoTareaRef,
        _usuarioRef = usuarioRef,
   _descripcion = descripcion;
+
 
   @override
   Map<String, dynamic> toFirestore() {
@@ -27,15 +29,16 @@ class Tareas extends ClaseBase {
       "timestamp": _timestamp,
       "tipotareaRef": _tipoTareaRef,
       "usuarioRef": _usuarioRef,
+
       "descripcion":_descripcion,
     };
   }
-
 
   factory Tareas.fromFirestore(Map<String, dynamic> map) {
     return Tareas(
       realizada: map["realizada"] as bool,
       timestamp: map["timestamp"] as Timestamp,
+
       tipoTareaRef: map["tipotareaRef"] as DocumentReference, // Corrección aquí
       usuarioRef: map["usuarioRef"] as DocumentReference,
       descripcion: map["descripcion"] as String,
@@ -75,5 +78,6 @@ class Tareas extends ClaseBase {
   @override
   String toString() {
     return 'Tareas{_realizada: $_realizada, _timestamp: $_timestamp, _tipoTareaRef: $_tipoTareaRef, _usuarioRef: $_usuarioRef, _descripcion: $_descripcion}';
+
   }
 }

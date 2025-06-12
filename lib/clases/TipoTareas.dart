@@ -1,6 +1,7 @@
 import 'package:tfg_bettervibes/clases/ClaseBase.dart';
 
 class TipoTareas extends ClaseBase {
+
   String _nombre;
   num _puntuacion;
 
@@ -8,6 +9,7 @@ class TipoTareas extends ClaseBase {
     required String nombre,
     required num puntuacion,
   }) : _nombre = nombre,
+
        _puntuacion = puntuacion;
 
   @override
@@ -20,6 +22,7 @@ class TipoTareas extends ClaseBase {
 
   factory TipoTareas.fromFirestore(Map<String, dynamic> map){
     return TipoTareas(
+
       nombre: map["nombre"] as String,
       puntuacion: map["puntuacion"] as num
     );
