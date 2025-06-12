@@ -52,13 +52,13 @@ class _PantallaPagosState extends State<PantallaPagos> {
             backgroundColor: Colors.gamaColores.shade500,
             foregroundColor: Colors.white,
             onPressed: () {
-             /* Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const PantallaBalances()),
-              );*/
+              );
             },
             tooltip: "Balances",
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.attach_money),
           ),
         ],
       ),
@@ -89,7 +89,7 @@ class _PantallaPagosState extends State<PantallaPagos> {
                     final unidadFamiliarRef = snapshot.data;
                     if (unidadFamiliarRef == null) {
                       return const Center(
-                        child: Text('No se encontró unidad familiar'),
+                        child: Text("No se encontró unidad familiar"),
                       );
                     }
 

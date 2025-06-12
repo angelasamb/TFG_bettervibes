@@ -7,7 +7,7 @@ class FuncionesPagos {
     required DocumentReference unidadFamiliarRef,
     required String idPago,
   }) async {
-    final doc = await unidadFamiliarRef.collection('pagos').doc(idPago).get();
+    final doc = await unidadFamiliarRef.collection("Pagos").doc(idPago).get();
     if (!doc.exists) return null;
     return Pagos.fromFirestore(doc.data()!);
   }
@@ -42,7 +42,7 @@ class FuncionesPagos {
     );
 
     if (idPago == null) {
-      await unidadFamiliarRef.collection('pagos').add(pagoNuevo.toFirestore());
+      await unidadFamiliarRef.collection("Pagos").add(pagoNuevo.toFirestore());
 
       await actualizarBalanceUsuario(pagadorRef, precio);
       final reparto = precio / participantes.length;
@@ -59,7 +59,7 @@ class FuncionesPagos {
         }
       }
 
-      await unidadFamiliarRef.collection('pagos').doc(idPago).update(pagoNuevo.toFirestore());
+      await unidadFamiliarRef.collection('Pagos').doc(idPago).update(pagoNuevo.toFirestore());
 
       await actualizarBalanceUsuario(pagadorRef, precio);
       final repartoNuevo = precio / participantes.length;
@@ -82,7 +82,7 @@ class FuncionesPagos {
       await actualizarBalanceUsuario(participante, reparto);
     }
 
-    await unidadFamiliarRef.collection('pagos').doc(idPago).delete();
+    await unidadFamiliarRef.collection('Pagos').doc(idPago).delete();
   }
 
   static Future<List<DocumentSnapshot>> obtenerUsuariosParticipantes(DocumentReference unidadFamiliarRef) async {
@@ -97,7 +97,7 @@ class FuncionesPagos {
   }
   static Stream<QuerySnapshot> obtenerStreamPagosUnidadFamiliar(DocumentReference unidadFamiliarRef) {
     return unidadFamiliarRef
-        .collection('pagos')
+        .collection('Pagos')
         .orderBy('timestamp', descending: true)
         .snapshots();
   }
