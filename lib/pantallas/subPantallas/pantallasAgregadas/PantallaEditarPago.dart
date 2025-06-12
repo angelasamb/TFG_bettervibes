@@ -30,8 +30,8 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
 
   @override
   void initState() {
-    print('idPago: "${widget.idPago}"');
-    print('esEdicion: $esEdicion');
+    print("idPago: ${widget.idPago}");
+    print("esEdicion: $esEdicion");
     super.initState();
     _inicializar();
   }
@@ -41,7 +41,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
     if (unidadRef == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No se pudo obtener unidad familiar')),
+          const SnackBar(content: Text("No se pudo obtener unidad familiar")),
         );
         Navigator.pop(context);
       }
@@ -59,7 +59,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
         if (mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(const SnackBar(content: Text('Pago no encontrado')));
+          ).showSnackBar(const SnackBar(content: Text("Pago no encontrado")));
           Navigator.pop(context);
         }
         return;
@@ -95,20 +95,20 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
     final precio = double.tryParse(_precioController.text);
     if (precio == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('El precio debe ser un número válido')),
+        const SnackBar(content: Text("El precio debe ser un número válido")),
       );
       return false;
     }
     if (_pagador == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Debes seleccionar un pagador')),
+        const SnackBar(content: Text("Debes seleccionar un pagador")),
       );
       return false;
     }
     if (_participantes.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Debes seleccionar al menos un participante'),
+          content: Text("Debes seleccionar al menos un participante"),
         ),
       );
       return false;
@@ -145,16 +145,16 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
       context: context,
       builder:
           (_) => AlertDialog(
-            title: const Text('¿Eliminar pago?'),
-            content: const Text('Esta acción no se puede deshacer.'),
+            title: const Text("¿Eliminar pago?"),
+            content: const Text("Esta acción no se puede deshacer."),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancelar'),
+                child: const Text("Cancelar"),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: const Text('Eliminar'),
+                child: const Text("Eliminar"),
               ),
             ],
           ),
@@ -211,7 +211,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
                         const SizedBox(height: 12),
                         ListTile(
                           title: Text(
-                            'Fecha: ${DateFormat('dd/MM/yyyy').format(_fechaSeleccionada)}',
+                            "Fecha: ${DateFormat("dd/MM/yyyy").format(_fechaSeleccionada)}",
                           ),
                           trailing: const Icon(Icons.calendar_today),
                           onTap: _seleccionarFecha,
@@ -240,7 +240,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
                         ElevatedButton(
                           onPressed: _guardarPago,
                           child: Text(
-                            esEdicion ? 'Guardar cambios' : 'Crear pago',
+                            esEdicion ? "Guardar cambios" : "Crear pago",
                           ),
                         ),
                       ],

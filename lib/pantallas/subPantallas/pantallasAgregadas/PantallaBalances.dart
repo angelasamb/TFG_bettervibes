@@ -40,7 +40,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
               }
 
               if (!snapshot.hasData || snapshot.data == null) {
-                return const Center(child: Text('Unidad familiar no encontrada.'));
+                return const Center(child: Text("Unidad familiar no encontrada."));
               }
 
               final unidadRef = snapshot.data!;
@@ -118,7 +118,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                         final nombres = snapshot.data!;
                         return CheckboxListTile(
                           value: data['hecho'] ?? false,
-                          title: Text('${nombres[0]} → ${nombres[1]}'),
+                          title: Text("${nombres[0]} -> ${nombres[1]}"),
                           onChanged: (value) async {
                             await actualizarEstadoBizum(
                               bizumDoc.reference,

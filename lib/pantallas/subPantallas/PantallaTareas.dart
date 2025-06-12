@@ -115,7 +115,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
             children: [
               ListTile(
                 leading: Icon(Icons.task_alt),
-                title: Text('Crear tarea'),
+                title: Text("Crear tarea"),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -129,7 +129,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
               ),
               ListTile(
                 leading: Icon(Icons.task),
-                title: Text('Crear TipoTarea'),
+                title: Text("Crear TipoTarea"),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(

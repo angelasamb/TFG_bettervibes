@@ -205,7 +205,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                       onPressed: () async {
                         _guardarDatos();
                       },
-                      child: const Text('Guardar'),
+                      child: const Text("Guardar"),
                     ),
                     if (widget.tareaEditar != null ||
                         widget.eventoEditar != null)//para que no salga el espacio si esto no ocurre
@@ -392,7 +392,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
               _paraTodos
                   ? null
                   : FirebaseFirestore.instance
-                      .collection('Usuario')
+                      .collection("Usuario")
                       .doc(FirebaseAuth.instance.currentUser!.uid),
         );
       }

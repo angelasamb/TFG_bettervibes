@@ -104,10 +104,10 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
     final user = auth.currentUser;
 
     if (user != null) {
-      await firestore.collection('Usuario').doc(user.uid).update({
-        'nombre': widget.nombreController.text.trim(),
-        'fotoPerfil': widget.imagenSeleccionada,
-        'colorElegido': widget.colorSeleccionado.name,
+      await firestore.collection("Usuario").doc(user.uid).update({
+        "nombre": widget.nombreController.text.trim(),
+        "fotoPerfil": widget.imagenSeleccionada,
+        "colorElegido": widget.colorSeleccionado.name,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(

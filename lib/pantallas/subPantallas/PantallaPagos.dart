@@ -49,6 +49,7 @@ class _PantallaPagosState extends State<PantallaPagos> {
           ),
           const SizedBox(height: 12,),
           FloatingActionButton(
+            heroTag: "btnAñadirPago",
             backgroundColor: Colors.gamaColores.shade500,
             foregroundColor: Colors.white,
             onPressed: () {
@@ -62,6 +63,7 @@ class _PantallaPagosState extends State<PantallaPagos> {
           ),
         ],
       ),
+
       body: Stack(
         children: [
           SvgPicture.asset(
@@ -82,14 +84,14 @@ class _PantallaPagosState extends State<PantallaPagos> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (snapshot.hasError) {
-                      print('Error SNAPSHOT FutureBuilder: ${snapshot.error}');
-                      return Center(child: Text('Error: ${snapshot.error}'));
+                      print("Error SNAPSHOT FutureBuilder: ${snapshot.error}");
+                      return Center(child: Text("Error: ${snapshot.error}"));
                     }
 
                     final unidadFamiliarRef = snapshot.data;
                     if (unidadFamiliarRef == null) {
                       return const Center(
-                        child: Text('No se encontró unidad familiar'),
+                        child: Text("No se encontró unidad familiar"),
                       );
                     }
 
@@ -100,16 +102,13 @@ class _PantallaPagosState extends State<PantallaPagos> {
                               .orderBy("timestamp", descending: true)
                               .snapshots(),
                       builder: (context, pagosSnapshot) {
-                        if (pagosSnapshot.connectionState ==
-                            ConnectionState.waiting) {
+                        if (pagosSnapshot.connectionState == ConnectionState.waiting) {
                           return const Center(
                             child: CircularProgressIndicator(),
                           );
                         }
                         if (pagosSnapshot.hasError) {
-                          print(
-                            "Error SNAPSHOT StreamBuilder: ${pagosSnapshot.error}",
-                          );
+                          print("Error SNAPSHOT StreamBuilder: ${pagosSnapshot.error}");
                           return Center(
                             child: Text("Error: ${pagosSnapshot.error}"),
                           );
@@ -126,22 +125,16 @@ class _PantallaPagosState extends State<PantallaPagos> {
                           itemCount: pagosDocs.length,
                           itemBuilder: (context, index) {
                             final pagoDoc = pagosDocs[index];
-                            final pagoData =
-                                pagoDoc.data()! as Map<String, dynamic>;
+                            final pagoData = pagoDoc.data()! as Map<String, dynamic>;
 
-                            final descripcion =
-                                pagoData["descripcion"] ?? "Sin descripción";
-                            final precio =
-                                pagoData["precio"]?.toString() ?? "N/A";
-                            final timestamp =
-                                pagoData["timestamp"] as Timestamp?;
-                            final fecha =
-                                timestamp != null
-                                    ? DateTime.fromMillisecondsSinceEpoch(
-                                      timestamp.millisecondsSinceEpoch,
-                                    )
-                                    : null;
-
+                            final descripcion = pagoData["descripcion"] ?? "Sin descripción";
+                            final precio = pagoData["precio"]?.toString() ?? "N/A";
+                            final timestamp = pagoData["timestamp"] as Timestamp?;
+                            final fecha = timestamp != null
+                                ? DateTime.fromMillisecondsSinceEpoch(
+                              timestamp.millisecondsSinceEpoch,
+                            )
+                                : null;
                             return SingleChildScrollView(
                               child: ListTile(
                                 title: Text(descripcion),

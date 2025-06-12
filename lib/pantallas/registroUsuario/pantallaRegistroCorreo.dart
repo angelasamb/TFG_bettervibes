@@ -110,13 +110,13 @@ class PantallaRegistroCorreo extends StatelessWidget {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('Las contraseñas no coinciden'),
+                          content: Text("Las contraseñas no coinciden"),
                           backgroundColor: Colors.red,
                         ),
                       );
                     }
                   },
-                  child: const Text('Registrarse'),
+                  child: const Text("Registrarse"),
                 ), // BOTON REGISTRARSE
               ],
             ),
