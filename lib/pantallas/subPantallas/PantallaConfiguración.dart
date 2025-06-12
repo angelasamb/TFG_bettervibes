@@ -39,6 +39,87 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
     _cargarDatosUsuario();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("Configuración"),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.gamaColores.shade500,
+      ),
+      body: Stack(
+        children: [
+          SvgPicture.asset(
+            'assets/imagenes/fondo1.svg',
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          Center(
+            child: Align(
+              alignment: AlignmentDirectional.topStart,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 80),
+                      _seccionInvitacion(),
+                      _seccionModificarPerfil(),
+                      _listaUsuarios(),
+                      _seccionSalirUnidadFamiliar(),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final confirmar = await showDialog<bool>(
+                            context: context,
+                            builder:
+                                (context) => AlertDialog(
+                                  title: Text("Confirmar cerrar sesión"),
+                                  content: Text(
+                                    "¿Seguro que quieres cerrar sesión?",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed:
+                                          () => Navigator.pop(context, false),
+                                      child: Text("Cancelar"),
+                                    ),
+                                    TextButton(
+                                      onPressed:
+                                          () => Navigator.pop(context, true),
+                                      child: Text("Aceptar"),
+                                    ),
+                                  ],
+                                ),
+                          );
+
+                          if (confirmar == true) {
+                            await FirebaseAuth.instance.signOut();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => pantallaAutentification(),
+                              ),
+                              (route) => false,
+                            );
+                          }
+                        },
+                        child: Text("Cerrar sesión"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _cargarDatosUsuario() async {
     final auth = FirebaseAuth.instance;
     final firestore = FirebaseFirestore.instance;
@@ -441,83 +522,6 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
         repetirContraseniaController.clear();
         setState(() {});
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Text("Configuración"),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.gamaColores.shade500,
-      ),
-      body: Stack(
-        children: [
-          SvgPicture.asset(
-            'assets/imagenes/fondo1.svg',
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 80),
-                    _seccionInvitacion(),
-                    _seccionModificarPerfil(),
-                    _listaUsuarios(),
-                    _seccionSalirUnidadFamiliar(),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final confirmar = await showDialog<bool>(
-                          context: context,
-                          builder:
-                              (context) => AlertDialog(
-                                title: Text("Confirmar cerrar sesión"),
-                                content: Text(
-                                  "¿Seguro que quieres cerrar sesión?",
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed:
-                                        () => Navigator.pop(context, false),
-                                    child: Text("Cancelar"),
-                                  ),
-                                  TextButton(
-                                    onPressed:
-                                        () => Navigator.pop(context, true),
-                                    child: Text("Aceptar"),
-                                  ),
-                                ],
-                              ),
-                        );
-
-                        if (confirmar == true) {
-                          await FirebaseAuth.instance.signOut();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => pantallaAutentification(),
-                            ),
-                            (route) => false,
-                          );
-                        }
-                      },
-                      child: Text("Cerrar sesión"),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 

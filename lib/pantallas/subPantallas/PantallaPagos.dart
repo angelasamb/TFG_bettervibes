@@ -29,7 +29,7 @@ class _PantallaPagosState extends State<PantallaPagos> {
         title: const Text("Pagos"),
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        elevation: 0,
+        elevation: 0,automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.transparent,
       floatingActionButton: Column(

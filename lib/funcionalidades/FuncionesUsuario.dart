@@ -6,9 +6,8 @@ import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 final nombreColeccionUsuarios = 'Usuario';
 
 Future<bool> crearUsuarioBaseDeDatos(
-  String colorEscogido,
   String imagenEscogida,
-  String nombreEscogidod,
+  String nombreEscogido,
 ) async {
   try {
     final autentificacion = FirebaseAuth.instance;
@@ -22,16 +21,11 @@ Future<bool> crearUsuarioBaseDeDatos(
 
     final idUsuario = usuarioConectado.uid;
 
-    ColorElegido colorEnum = ColorElegido.values.firstWhere(
-      (color) => color.name == colorEscogido,
-      orElse: () => ColorElegido.AzulOscuro,
-    ); // Color predeterminado
-
     Usuario usuarioNuevo = Usuario(
       admin: false,
       fotoPerfil: imagenEscogida,
-      nombre: nombreEscogidod,
-      colorElegido: colorEnum,
+      nombre: nombreEscogido,
+      colorElegido: ColorElegido.Rojo,
     );
 
     await baseDatos

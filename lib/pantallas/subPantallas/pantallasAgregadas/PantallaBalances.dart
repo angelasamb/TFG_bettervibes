@@ -28,7 +28,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Balances"), foregroundColor: Colors.gamaColores.shade500,),
+      appBar: AppBar(title: const Text("Balances"), centerTitle:true , foregroundColor: Colors.gamaColores.shade500,),
       body: Stack(
         children: [
           SvgPicture.asset(

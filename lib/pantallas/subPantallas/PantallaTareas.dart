@@ -53,7 +53,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
             child: FloatingActionButton(
               backgroundColor: Colors.gamaColores.shade500,
               foregroundColor: Colors.white,
-              onPressed: () async {
+              onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) => PantallaTodasTareas()),

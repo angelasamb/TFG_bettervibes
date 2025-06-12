@@ -40,6 +40,23 @@ class _PantallaEventosState extends State<PantallaEventos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.gamaColores.shade500,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => PantallaCrearEvento(
+                    tipoActividad: "evento",
+                    fechaSeleccionada: _fechaSeleccionada,
+                  ),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       body: Stack(
         children: [
           SvgPicture.asset(
@@ -212,23 +229,6 @@ class _PantallaEventosState extends State<PantallaEventos> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.gamaColores.shade500,
-        foregroundColor: Colors.white,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => PantallaCrearEvento(
-                    tipoActividad: "evento",
-                    fechaSeleccionada: _fechaSeleccionada,
-                  ),
-            ),
-          );
-        },
-        child: const Icon(Icons.add),
       ),
     );
   }

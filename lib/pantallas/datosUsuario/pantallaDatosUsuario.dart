@@ -25,7 +25,6 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    asignarColorAleatorio();
   }
   @override
   Widget build(BuildContext context) {
@@ -110,7 +109,6 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
                         );
                       } else {
                         crearUsuarioBaseDeDatos(
-                          colorSeleccionado!.name,
                           imagenSeleccionada,
                           nombreUsuario,
                         );
@@ -139,19 +137,6 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       textAlign: TextAlign.left,
     );
-  }
-
-  void asignarColorAleatorio() async {
-  final coloresOcupados = await listaColoresOcupados();
-  final disponibles = ColorElegido.values.where((color)=>!coloresOcupados.contains(color)).toList();
-  if(disponibles.isNotEmpty){
-    disponibles.shuffle();
-    setState(() {
-      colorSeleccionado = disponibles.first;
-    });
-  }else{
-    colorSeleccionado=ColorElegido.Rojo;
-  }
   }
 
 }

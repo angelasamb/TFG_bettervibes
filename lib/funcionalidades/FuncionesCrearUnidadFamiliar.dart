@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/clases/UnidadFamiliar.dart';
 
+import '../clases/ColorElegido.dart';
 import '../datosDePrueba/tipoDeEventosDePrueba.dart';
 
 final nombreColeccionUnidadFamiliar = 'UnidadFamiliar';
@@ -37,7 +38,7 @@ Future<bool> crearUnidadFamiliar(String nombre, String contrasena) async {
       'unidadFamiliarRef': unidadRef,
       'admin': true,
     });
-
+    await asignarColorAleatorio(unidadRef);
     insertarTareasEjemploEnUnidadFamiliar();
     return true;
   } catch (e) {
@@ -73,6 +74,7 @@ Future<bool> unirseUnidadFamiliar(String unidadFamiliarId, String contrasenaInte
       await unidadRef.update({
         'participantes': FieldValue.arrayUnion([usuarioRef]),
       });
+     await asignarColorAleatorio(unidadRef);
     } catch (e) {
       print("ERROR: $e");
     }
@@ -81,5 +83,16 @@ Future<bool> unirseUnidadFamiliar(String unidadFamiliarId, String contrasenaInte
   } catch (e) {
     print("ERROR: $e");
     return false;
+  }
+}
+
+
+Future<void> asignarColorAleatorio(DocumentReference<Object?> unidadRef) async {
+  final coloresOcupados = await listaColoresOcupados();
+  final disponibles = ColorElegido.values.where((color)=>!coloresOcupados.contains(color)).toList();
+
+  if(disponibles.isNotEmpty){
+    disponibles.shuffle();
+    await unidadRef.update({"colorElegido":disponibles.first.toString()});
   }
 }

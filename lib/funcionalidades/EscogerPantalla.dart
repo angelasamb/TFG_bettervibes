@@ -27,7 +27,7 @@ class _EscogerPantallaState extends State<EscogerPantalla>{
       final usuarioFirebase = FirebaseAuth.instance.currentUser;
 
       if (usuarioFirebase == null) {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (_) => pantallaAutentification()),
         );
@@ -40,20 +40,25 @@ class _EscogerPantallaState extends State<EscogerPantalla>{
           final unidadRef = datosUsuario?["unidadFamiliarRef"];
           if (unidadRef is DocumentReference) {
             final unidadSnapshot = await unidadRef.get();
-            if (unidadRef != null && unidadRef.toString().isNotEmpty && unidadSnapshot.exists) {
-              Navigator.pushReplacement(
+            if (unidadRef.toString().isNotEmpty && unidadSnapshot.exists) {
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => PantallaPrincipal()),
               );
+            }else{
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => PantallaCrearUnidadFamiliar()),
+              );
             }
           }else {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => PantallaCrearUnidadFamiliar()),
             );
           }
         } else {
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => PantallaDatosUsuario()),
           );

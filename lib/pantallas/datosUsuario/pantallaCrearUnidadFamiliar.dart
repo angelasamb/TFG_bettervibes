@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/pantallas/datosUsuario/pantallaDatosUsuario.dart';
 import 'package:tfg_bettervibes/pantallas/datosUsuario/pantallaUnirteUnidadFamiliar.dart';
+import 'package:tfg_bettervibes/pantallas/registroUsuario/pantallaAutentification.dart';
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesCrearUnidadFamiliar.dart';
 import 'package:tfg_bettervibes/pantallas/pantallaPrincipal.dart';
@@ -21,14 +22,30 @@ class PantallaCrearUnidadFamiliar extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        automaticallyImplyLeading: Navigator.canPop(context),
-        leading: Navigator.canPop(context) ? IconButton(icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PantallaDatosUsuario()),
-            );
-          },) :null,
+        leading:
+            Navigator.canPop(context)
+                ? IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => pantallaAutentification(),
+                      ),
+                    );
+                  },
+                )
+                : IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PantallaDatosUsuario(),
+                      ),
+                    );
+                  },
+                ),
       ),
       body: Stack(
         children: [
@@ -135,7 +152,7 @@ class PantallaCrearUnidadFamiliar extends StatelessWidget {
                       minimumSize: const Size(260, 40),
                     ),
                     onPressed: () async {
-                      Navigator.pushReplacement(
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => PantallaUnirteUnidadfamiliar(),
