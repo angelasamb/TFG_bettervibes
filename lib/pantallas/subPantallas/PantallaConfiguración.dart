@@ -98,7 +98,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => pantallaAutentification(),
+                                builder: (context) => PantallaAutentification(),
                               ),
                               (route) => false,
                             );
@@ -533,9 +533,9 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
             MaterialPageRoute(
               builder:
                   (_) => PantallaModificarPerfil(
-                    nombreController,
-                    imagenSeleccionada,
-                    colorSeleccionado,
+                    nombreController: nombreController,
+                    imagenSeleccionada: imagenSeleccionada,
+                    colorSeleccionado: colorSeleccionado,
                   ),
             ),
           );

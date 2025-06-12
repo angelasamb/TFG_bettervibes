@@ -29,7 +29,7 @@ class _EscogerPantallaState extends State<EscogerPantalla>{
       if (usuarioFirebase == null) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => pantallaAutentification()),
+          MaterialPageRoute(builder: (_) => PantallaAutentification()),
         );
       } else {
         final idUsuario = usuarioFirebase.uid;

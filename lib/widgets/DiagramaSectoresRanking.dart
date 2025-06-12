@@ -5,9 +5,9 @@ import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 
 class DiagramaSectoresRanking extends StatefulWidget {
-  DocumentReference? unidadFamiliarRef;
+  final DocumentReference? unidadFamiliarRef;
 
-  DiagramaSectoresRanking({this.unidadFamiliarRef});
+  const DiagramaSectoresRanking({super.key, this.unidadFamiliarRef});
 
   @override
   State<DiagramaSectoresRanking> createState() => _DiagramaSectoresRankingState();
@@ -16,12 +16,17 @@ class DiagramaSectoresRanking extends StatefulWidget {
 class _DiagramaSectoresRankingState extends State<DiagramaSectoresRanking> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  DocumentReference? unidadFamiliarRef;
   int? touchedIndex;
 
   @override
   void initState() {
     super.initState();
-    cargarUnidadFamiliarRef();
+    if (widget.unidadFamiliarRef != null) {
+      unidadFamiliarRef = widget.unidadFamiliarRef;
+    } else {
+      cargarUnidadFamiliarRef();
+    }
   }
 
   @override
@@ -138,7 +143,7 @@ class _DiagramaSectoresRankingState extends State<DiagramaSectoresRanking> {
   Future<void> cargarUnidadFamiliarRef() async {
     final ref = await obtenerUnidadFamiliarRefActual();
     setState(() {
-      widget.unidadFamiliarRef = ref!;
+      unidadFamiliarRef = ref!;
     });
   }
 }

@@ -2,20 +2,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
-
 import '../../../clases/ColorElegido.dart';
 import '../../../widgets/PlantillaSelector.dart';
 
 class PantallaModificarPerfil extends StatefulWidget {
-  TextEditingController nombreController = TextEditingController();
-  String imagenSeleccionada = "";
-  ColorElegido colorSeleccionado = ColorElegido.Rojo;
+  final TextEditingController nombreController;
+  final String imagenSeleccionada;
+  final ColorElegido colorSeleccionado;
 
-  PantallaModificarPerfil(
-    this.nombreController,
-    this.imagenSeleccionada,
-    this.colorSeleccionado,
-  );
+
+  const PantallaModificarPerfil({
+    required this.nombreController,
+    required this.imagenSeleccionada,
+    required this.colorSeleccionado,
+    super.key,
+  });
 
   @override
   State<PantallaModificarPerfil> createState() =>
@@ -23,6 +24,17 @@ class PantallaModificarPerfil extends StatefulWidget {
 }
 
 class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
+  late String imagenSeleccionada;
+  late ColorElegido colorSeleccionado;
+
+  @override
+  void initState() {
+    super.initState();
+    imagenSeleccionada = widget.imagenSeleccionada;
+    colorSeleccionado = widget.colorSeleccionado;
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,19 +73,19 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
                     Text("Selecciona una imagen"),
                     PlantillaSelector(
                       esIcono: true,
-                      itemSeleccionado: widget.imagenSeleccionada,
+                      itemSeleccionado: imagenSeleccionada,
                       onSelect: (dynamic value) {
                         setState(() {
-                          widget.imagenSeleccionada = value as String;
+                          imagenSeleccionada = value as String;
                         });
                       },
                     ),
                     PlantillaSelector(
                       esIcono: false,
-                      itemSeleccionado: widget.colorSeleccionado,
+                      itemSeleccionado: colorSeleccionado,
                       onSelect: (dynamic value) {
                         setState(() {
-                          widget.colorSeleccionado = value as ColorElegido;
+                          colorSeleccionado = value as ColorElegido;
                         });
                       },
                     ),
@@ -104,8 +116,8 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
     if (user != null) {
       await firestore.collection("Usuario").doc(user.uid).update({
         "nombre": widget.nombreController.text.trim(),
-        "fotoPerfil": widget.imagenSeleccionada,
-        "colorElegido": widget.colorSeleccionado.name,
+        "fotoPerfil": imagenSeleccionada,
+        "colorElegido": colorSeleccionado.name,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(

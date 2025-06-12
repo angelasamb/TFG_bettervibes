@@ -40,7 +40,7 @@ class PantallaCerrarSesion extends StatelessWidget {
               onPressed: () async {
                 await _autentificacionFirebase.cerrarSesion();
                 Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => pantallaAutentification()),
+                  MaterialPageRoute(builder: (context) => PantallaAutentification()),
                       (route) => false,
                 );
               },
