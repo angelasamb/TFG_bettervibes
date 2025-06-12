@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 
-class PieChartRanking extends StatefulWidget {
+class DiagramaSectoresRanking extends StatefulWidget {
   DocumentReference? unidadFamiliarRef;
 
-  PieChartRanking({this.unidadFamiliarRef});
+  DiagramaSectoresRanking({this.unidadFamiliarRef});
 
   @override
-  State<PieChartRanking> createState() => _PieChartRankingState();
+  State<DiagramaSectoresRanking> createState() => _DiagramaSectoresRankingState();
 }
 
-class _PieChartRankingState extends State<PieChartRanking> {
+class _DiagramaSectoresRankingState extends State<DiagramaSectoresRanking> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   int? touchedIndex;

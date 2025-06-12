@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/widgets/MostrarTareas.dart';
 import '../../../clases/ColorElegido.dart';
 import '../../../funcionalidades/MainFunciones.dart';
-import '../../../widgets/PieChartRanking.dart';
+import '../../../widgets/DiagramaSectoresRanking.dart';
 
 class PantallaRanking extends StatefulWidget {
   TextEditingController nombreController = TextEditingController();
@@ -74,7 +74,7 @@ class _PantallaRankingState extends State<PantallaRanking> {
                   children: [
                     Expanded(
                       flex: 3,
-                      child: PieChartRanking(
+                      child: DiagramaSectoresRanking(
                         unidadFamiliarRef: unidadFamiliarRef,
                       ),
                     ),
