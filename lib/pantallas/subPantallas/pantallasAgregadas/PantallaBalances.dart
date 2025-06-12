@@ -15,12 +15,12 @@ class PantallaBalances extends StatefulWidget {
 }
 
 class _PantallaBalancesState extends State<PantallaBalances> {
-  late Future<DocumentReference?> _unidadFamiliarRefFuture;
+  late Future<DocumentReference?> _unidadFamiliarRef;
 
   @override
   void initState() {
     super.initState();
-    _unidadFamiliarRefFuture = obtenerUnidadFamiliarRefActual();
+    _unidadFamiliarRef = obtenerUnidadFamiliarRefActual();
   }
 
   @override
@@ -36,14 +36,14 @@ class _PantallaBalancesState extends State<PantallaBalances> {
             height: double.infinity,
           ),
           FutureBuilder<DocumentReference?>(
-            future: _unidadFamiliarRefFuture,
+            future: _unidadFamiliarRef,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
 
               if (!snapshot.hasData || snapshot.data == null) {
-                return const Center(child: Text('Unidad familiar no encontrada.'));
+                return const Center(child: Text("Unidad familiar no encontrada."));
               }
 
               final unidadRef = snapshot.data!;
@@ -58,8 +58,8 @@ class _PantallaBalancesState extends State<PantallaBalances> {
   Widget _contenidoBalances(DocumentReference unidadRef) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('Usuario')
-          .where('unidadFamiliarRef', isEqualTo: unidadRef)
+          .collection("Usuario")
+          .where("unidadFamiliarRef", isEqualTo: unidadRef)
           .snapshots(),
       builder: (context, snapshotUsuarios) {
         if (snapshotUsuarios.connectionState == ConnectionState.waiting) {
@@ -67,7 +67,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
         }
 
         if (!snapshotUsuarios.hasData || snapshotUsuarios.data!.docs.isEmpty) {
-          return const Center(child: Text('No hay usuarios en la unidad familiar.'));
+          return const Center(child: Text("No hay usuarios en la unidad familiar."));
         }
 
         final usuariosDocs = snapshotUsuarios.data!.docs;
@@ -107,7 +107,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
             ),
             const SizedBox(height: 8),
             StreamBuilder<QuerySnapshot>(
-              stream: unidadRef.collection('bizums').snapshots(),
+              stream: unidadRef.collection("bizums").snapshots(),
               builder: (context, snapshotBizums) {
                 if (snapshotBizums.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -119,13 +119,13 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                   children: bizums.map((bizumDoc) {
                     final data = bizumDoc.data() as Map<String, dynamic>;
                     return FutureBuilder<List<String>>(
-                      future: obtenerNombresUsuarios(data['personaPaga'], data['personaRecibe']),
+                      future: obtenerNombresUsuarios(data["personaPaga"], data["personaRecibe"]),
                       builder: (context, snapshot) {
                         if (!snapshot.hasData) return const SizedBox.shrink();
                         final nombres = snapshot.data!;
                         return CheckboxListTile(
                           value: data['hecho'] ?? false,
-                          title: Text('${nombres[0]} → ${nombres[1]}'),
+                          title: Text("${nombres[0]} -> ${nombres[1]}"),
                           onChanged: (value) async {
                             await actualizarEstadoBizum(
                               bizumDoc.reference,

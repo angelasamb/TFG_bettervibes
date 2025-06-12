@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
 import '../../../clases/ColorElegido.dart';
 import '../../../funcionalidades/FuncionesTipoTareas.dart';
@@ -35,7 +36,7 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
-          child: Align(
+          child: Padding(padding: EdgeInsets.all(20),child: Align(
             alignment: Alignment.topCenter,
             child: Card(
               color: Colors.white,
@@ -57,8 +58,7 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Text("Nombre"),
-                    TextField(controller: widget.nombreController),
+                    plantillaField(widget.nombreController,"Nombre"),
                     const SizedBox(height: 10),
                     Text("Selecciona una imagen"),
                     PlantillaSelector(
@@ -92,6 +92,7 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
               ),
             ),
           ),
+          )
         ),
       ),
     );
@@ -103,10 +104,10 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
     final user = auth.currentUser;
 
     if (user != null) {
-      await firestore.collection('Usuario').doc(user.uid).update({
-        'nombre': widget.nombreController.text.trim(),
-        'fotoPerfil': widget.imagenSeleccionada,
-        'colorElegido': widget.colorSeleccionado.name,
+      await firestore.collection("Usuario").doc(user.uid).update({
+        "nombre": widget.nombreController.text.trim(),
+        "fotoPerfil": widget.imagenSeleccionada,
+        "colorElegido": widget.colorSeleccionado.name,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(

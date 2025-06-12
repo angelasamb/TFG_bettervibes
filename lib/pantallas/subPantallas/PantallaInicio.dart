@@ -71,7 +71,7 @@ class PantallaInicio extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'RANKING',
+                        'PUNTUACIÓN SEMANAL',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

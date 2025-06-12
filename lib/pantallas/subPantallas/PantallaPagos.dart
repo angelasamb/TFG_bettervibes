@@ -32,26 +32,10 @@ class _PantallaPagosState extends State<PantallaPagos> {
         elevation: 0,
       ),
       backgroundColor: Colors.transparent,
-
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
-            heroTag: 'btnBalances',
-            backgroundColor: Colors.blueGrey.shade700,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const PantallaBalances()),
-              );
-            },
-            tooltip: 'Balances',
-            child: const Icon(Icons.attach_money),
-          ),
-          const SizedBox(height: 12),
-          FloatingActionButton(
-            heroTag: 'btnAñadirPago',
             backgroundColor: Colors.gamaColores.shade500,
             foregroundColor: Colors.white,
             onPressed: () {
@@ -61,6 +45,20 @@ class _PantallaPagosState extends State<PantallaPagos> {
               );
             },
             tooltip: "Añadir nuevo pago",
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(height: 12,),
+          FloatingActionButton(
+            heroTag: "btnAñadirPago",
+            backgroundColor: Colors.gamaColores.shade500,
+            foregroundColor: Colors.white,
+            onPressed: () {
+             /* Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PantallaBalances()),
+              );*/
+            },
+            tooltip: "Balances",
             child: const Icon(Icons.add),
           ),
         ],
@@ -86,22 +84,23 @@ class _PantallaPagosState extends State<PantallaPagos> {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (snapshot.hasError) {
-                      print('Error SNAPSHOT FutureBuilder: ${snapshot.error}');
-                      return Center(child: Text('Error: ${snapshot.error}'));
+                      print("Error SNAPSHOT FutureBuilder: ${snapshot.error}");
+                      return Center(child: Text("Error: ${snapshot.error}"));
                     }
 
                     final unidadFamiliarRef = snapshot.data;
                     if (unidadFamiliarRef == null) {
                       return const Center(
-                        child: Text('No se encontró unidad familiar'),
+                        child: Text("No se encontró unidad familiar"),
                       );
                     }
 
                     return StreamBuilder<QuerySnapshot>(
-                      stream: unidadFamiliarRef
-                          .collection('pagos')
-                          .orderBy('timestamp', descending: true)
-                          .snapshots(),
+                      stream:
+                          unidadFamiliarRef
+                              .collection("Pagos")
+                              .orderBy("timestamp", descending: true)
+                              .snapshots(),
                       builder: (context, pagosSnapshot) {
                         if (pagosSnapshot.connectionState == ConnectionState.waiting) {
                           return const Center(
@@ -109,16 +108,17 @@ class _PantallaPagosState extends State<PantallaPagos> {
                           );
                         }
                         if (pagosSnapshot.hasError) {
-                          print('Error SNAPSHOT StreamBuilder: ${pagosSnapshot.error}');
+                          print("Error SNAPSHOT StreamBuilder: ${pagosSnapshot.error}");
+
                           return Center(
-                            child: Text('Error: ${pagosSnapshot.error}'),
+                            child: Text("Error: ${pagosSnapshot.error}"),
                           );
                         }
 
                         final pagosDocs = pagosSnapshot.data?.docs ?? [];
                         if (pagosDocs.isEmpty) {
                           return const Center(
-                            child: Text('No hay pagos registrados.'),
+                            child: Text("No hay pagos registrados."),
                           );
                         }
 
@@ -128,31 +128,33 @@ class _PantallaPagosState extends State<PantallaPagos> {
                             final pagoDoc = pagosDocs[index];
                             final pagoData = pagoDoc.data()! as Map<String, dynamic>;
 
-                            final descripcion = pagoData['descripcion'] ?? 'Sin descripción';
-                            final precio = pagoData['precio']?.toString() ?? 'N/A';
-                            final timestamp = pagoData['timestamp'] as Timestamp?;
+                            final descripcion = pagoData["descripcion"] ?? "Sin descripción";
+                            final precio = pagoData["precio"]?.toString() ?? "N/A";
+                            final timestamp = pagoData["timestamp"] as Timestamp?;
                             final fecha = timestamp != null
                                 ? DateTime.fromMillisecondsSinceEpoch(
                               timestamp.millisecondsSinceEpoch,
                             )
                                 : null;
-
-                            return ListTile(
-                              title: Text(descripcion),
-                              subtitle: Text(
-                                'Precio: $precio €\nFecha: ${fecha != null ? fecha.toLocal().toString().split(' ')[0] : 'N/A'}',
-                              ),
-                              trailing: const Icon(Icons.chevron_right),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) => PantallaEditarPago(
-                                      idPago: pagoDoc.id,
+                            return SingleChildScrollView(
+                              child: ListTile(
+                                title: Text(descripcion),
+                                subtitle: Text(
+                                  "Precio: $precio €\nFecha: ${fecha != null ? fecha.toLocal().toString().split(' ')[0] : "N/A"}",
+                                ),
+                                trailing: const Icon(Icons.chevron_right),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (_) => PantallaEditarPago(
+                                            idPago: pagoDoc.id,
+                                          ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             );
                           },
                         );

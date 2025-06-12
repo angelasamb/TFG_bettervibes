@@ -12,7 +12,7 @@ class PantallaCerrarSesion extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mi perfil'),
+        title: const Text("Mi perfil"),
         backgroundColor: Colors.black,
       ),
       body: Center(
@@ -49,7 +49,7 @@ class PantallaCerrarSesion extends StatelessWidget {
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               ),
-              child: const Text('Cerrar sesión'),
+              child: const Text("Cerrar sesión"),
             ),
             const SizedBox(height: 30),
             ElevatedButton(onPressed: () async {
@@ -58,7 +58,7 @@ class PantallaCerrarSesion extends StatelessWidget {
                 backgroundColor: Colors.redAccent,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15)),
-              child: const Text('Añadir usuario'),
+              child: const Text("Añadir usuario"),
             ),
           ],
         ),

@@ -66,7 +66,7 @@ class _BarChartRankingState extends State<BarChartRanking> {
 
         return BarChart(
           BarChartData(
-            alignment: BarChartAlignment.spaceBetween,
+            alignment: BarChartAlignment.spaceAround,
             maxY: maxYmultiplo5.toDouble(),
             titlesData: FlTitlesData(
               leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),

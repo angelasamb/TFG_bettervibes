@@ -55,10 +55,10 @@ class _ListaTareasPorDiaYFinalizacionState extends State<ListaTareasPorDiaYFinal
       final fin = inicio.add(const Duration(days: 1));
 
       final querySnapshot = await unidadFamiliarRef
-          .collection('Tareas')
-          .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(inicio))
-          .where('timestamp', isLessThan: Timestamp.fromDate(fin))
-          .where('realizada', isEqualTo: widget.mostrarRealizadas)
+          .collection("Tareas")
+          .where("timestamp", isGreaterThanOrEqualTo: Timestamp.fromDate(inicio))
+          .where("timestamp", isLessThan: Timestamp.fromDate(fin))
+          .where("realizada", isEqualTo: widget.mostrarRealizadas)
           .get();
 
       final tareasDocs = querySnapshot.docs;

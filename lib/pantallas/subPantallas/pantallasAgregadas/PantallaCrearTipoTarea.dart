@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
 import '../../../funcionalidades/FuncionesTipoTareas.dart';
 import '../../../widgets/ContadorNumerico.dart';
@@ -29,7 +30,10 @@ class _PantallaCrearTipoTareaState extends State<PantallaCrearTipoTarea> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Crear/Editar Tipo de Tarea")),
+      appBar: AppBar(
+        title: const Text("Crear/Editar Tipo de Tarea"),
+        foregroundColor: Colors.gamaColores.shade500,
+      ),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -43,11 +47,7 @@ class _PantallaCrearTipoTareaState extends State<PantallaCrearTipoTarea> {
                   onGuardado: _limpiarCampos,
                 ),
                 const SizedBox(height: 20),
-                Expanded(
-                  child: ListaTiposTareas(
-                    onEditar: _cargarParaEditar,
-                  ),
-                ),
+                Expanded(child: ListaTiposTareas(onEditar: _cargarParaEditar)),
               ],
             ),
           ),
@@ -101,14 +101,18 @@ class _TipoTareaFormState extends State<TipoTareaForm> {
   Future<void> _guardar() async {
     final nombre = _nombreCtrl.text.trim();
     if (nombre.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Completa el nombre")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Completa el nombre")));
       return;
     }
 
     if (widget.tipoTareaEditando != null) {
-      await editarTipoTarea(widget.tipoTareaEditando!, nombre, _puntuacionSeleccionada);
+      await editarTipoTarea(
+        widget.tipoTareaEditando!,
+        nombre,
+        _puntuacionSeleccionada,
+      );
     } else {
       await crearTipoTarea(nombre, _puntuacionSeleccionada);
     }
@@ -119,38 +123,37 @@ class _TipoTareaFormState extends State<TipoTareaForm> {
   @override
   Widget build(BuildContext context) {
     final editando = widget.tipoTareaEditando != null;
-    return Column(
-      children: [
-        TextField(
-          controller: _nombreCtrl,
-          decoration: const InputDecoration(
-            labelText: "Nombre del tipo de tarea",
-            border: OutlineInputBorder(),
-          ),
-        ),
-        const SizedBox(height: 20),
-        ContadorNumerico(
-          valor: _puntuacionSeleccionada,
-          onChanged: (val) => setState(() => _puntuacionSeleccionada = val),
-        ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 600),
+        child: Column(
           children: [
-            ElevatedButton(
-              onPressed: _guardar,
-              child: Text(editando ? "Guardar cambios" : "Crear"),
+            plantillaField(_nombreCtrl, "Nombre del tipo de tarea"),
+            const SizedBox(height: 20),
+            ContadorNumerico(
+              valor: _puntuacionSeleccionada,
+              onChanged: (val) => setState(() => _puntuacionSeleccionada = val),
             ),
-            if (editando) ...[
-              const SizedBox(width: 20),
-              OutlinedButton(
-                onPressed: widget.onCancelar,
-                child: const Text("Cancelar"),
-              ),
-            ],
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _guardar,
+                  child: Text(editando ? "Guardar cambios" : "Crear"),
+                ),
+                if (editando) ...[
+                  const SizedBox(width: 20),
+                  OutlinedButton(
+                    onPressed: widget.onCancelar,
+                    child: const Text("Cancelar"),
+                  ),
+                ],
+              ],
+            ),
           ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -160,17 +163,29 @@ class ListaTiposTareas extends StatelessWidget {
 
   const ListaTiposTareas({Key? key, required this.onEditar}) : super(key: key);
 
-  Future<void> _borrarTipoTarea(BuildContext context, DocumentReference ref) async {
+  Future<void> _borrarTipoTarea(
+    BuildContext context,
+    DocumentReference ref,
+  ) async {
     final confirmar = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Confirmar borrado"),
-        content: const Text("¿Seguro que quieres borrar este tipo de tarea?"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancelar")),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text("Borrar")),
-        ],
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: const Text("Confirmar borrado"),
+            content: const Text(
+              "¿Seguro que quieres borrar este tipo de tarea?",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text("Cancelar"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text("Borrar"),
+              ),
+            ],
+          ),
     );
 
     if (confirmar == true) {
@@ -183,10 +198,12 @@ class ListaTiposTareas extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: obtenerTiposTareasStream(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+        if (!snapshot.hasData)
+          return const Center(child: CircularProgressIndicator());
 
         final docs = snapshot.data!.docs;
-        if (docs.isEmpty) return const Center(child: Text("No hay tipos de tareas creados"));
+        if (docs.isEmpty)
+          return const Center(child: Text("No hay tipos de tareas creados"));
 
         return ListView.builder(
           itemCount: docs.length,

@@ -26,15 +26,16 @@ class _PieChartRankingState extends State<PieChartRanking> {
 
   @override
   Widget build(BuildContext context) {
+    List<dynamic> usuarioGanador = [];
     if (widget.unidadFamiliarRef == null) {
       return Center(child: CircularProgressIndicator());
     }
-    return FutureBuilder<QuerySnapshot>(
-      future:
+    return StreamBuilder<QuerySnapshot>(
+      stream:
           _firestore
               .collection("Usuario")
               .where("unidadFamiliarRef", isEqualTo: widget.unidadFamiliarRef!)
-              .get(),
+              .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Center(child: CircularProgressIndicator());
@@ -45,10 +46,18 @@ class _PieChartRankingState extends State<PieChartRanking> {
         final List<String> nombres = [];
         final List<int> puntuaciones = [];
         final List<Color> colores = [];
+        int maxPuntuacion = 0;
         for (var usuario in usuarios) {
           nombres.add(usuario["nombre"]);
           colores.add(getColorFromString(usuario["colorElegido"]));
-          puntuaciones.add(usuario["puntuacion"] ?? 0);
+          final puntuacion = usuario["puntuacion"] ?? 0;
+          puntuaciones.add(puntuacion);
+          if (maxPuntuacion < puntuacion) {
+            usuarioGanador = [usuario];
+            maxPuntuacion=puntuacion;
+          } else if (puntuacion == maxPuntuacion) {
+            usuarioGanador.add(usuario);
+          }
         }
 
         final totalPuntuacion = puntuaciones.fold<int>(0, (a, b) => a + b);
@@ -106,6 +115,17 @@ class _PieChartRankingState extends State<PieChartRanking> {
                       ],
                     );
                   }),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  usuarioGanador.length == 1
+                      ? "Va ganando: ${usuarioGanador.first["nombre"]}"
+                      : "Empate entre: ${usuarioGanador.map((u) => u["nombre"]).join(", ")}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.gamaColores.shade500,
+                  ),
                 ),
               ],
             ),

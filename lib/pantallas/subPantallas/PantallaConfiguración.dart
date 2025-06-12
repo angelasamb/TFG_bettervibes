@@ -192,8 +192,8 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
 
     final usuariosStream =
         firestore
-            .collection('Usuario')
-            .where('unidadFamiliarRef', isEqualTo: unidadFamiliarRef)
+            .collection("Usuario")
+            .where("unidadFamiliarRef", isEqualTo: unidadFamiliarRef)
             .snapshots();
     return Card(
       color: Colors.white,
@@ -241,7 +241,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                           child: ListTile(
                             leading:
                                 foto.isNotEmpty
-                                    ? (foto.endsWith('.svg')
+                                    ? (foto.endsWith(".svg")
                                         ? CircleAvatar(
                                           backgroundColor: Colors.transparent,
                                           child: SvgPicture.asset(

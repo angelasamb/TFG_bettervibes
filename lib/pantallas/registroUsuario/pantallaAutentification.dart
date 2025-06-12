@@ -26,7 +26,7 @@ class pantallaAutentification extends StatelessWidget {
       body: Stack(
         children: [
           Positioned.fill(
-            child: SvgPicture.asset('assets/imagenes/fondo1.svg', fit: BoxFit.cover),
+            child: SvgPicture.asset("assets/imagenes/fondo1.svg", fit: BoxFit.cover),
           ),
           Center(
             child: ConstrainedBox(
@@ -81,7 +81,7 @@ class pantallaAutentification extends StatelessWidget {
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Correo o contraseña incorrectos'),
+                            content: Text("Correo o contraseña incorrectos"),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -136,7 +136,7 @@ class pantallaAutentification extends StatelessWidget {
                         ),
                       );
                     },
-                    child: Text('Regístrarme por correo'),
+                    child: Text("Regístrarme por correo"),
                   ), //BOTON REGISTRARSE CORREO
                   SizedBox(height: 20),
                 ],

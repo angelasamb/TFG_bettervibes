@@ -98,7 +98,7 @@ class PantallaUnirteUnidadfamiliar extends StatelessWidget {
                         return;
                       }
                     },
-                    child: const Text('Unirse a unidad familiar'),
+                    child: const Text("Unirse a unidad familiar"),
                   ),
                 ],
               ),

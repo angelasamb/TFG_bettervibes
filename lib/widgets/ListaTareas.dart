@@ -198,6 +198,9 @@ Future<List<Widget>> listaTareasPorDia(
                                   .collection("Tareas")
                                   .doc(tarea.id)
                                   .update({"realizada": true});
+                              ScaffoldMessenger.of(
+                                context,
+                              ).showSnackBar(SnackBar(content: Text("Tarea marcada como realizada")));
                               CalculoPuntuacionSemanal(usuarioRef);
                             }
                           },
