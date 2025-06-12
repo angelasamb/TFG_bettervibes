@@ -10,7 +10,7 @@ Future<void> salirUnidadFamiliar(
   final user = FirebaseAuth.instance.currentUser;
   final firestore = FirebaseFirestore.instance;
 
-  if (user != null && unidadFamiliarRef != null) {
+  if (user != null) {
     final usuarioDocRef = firestore.collection("Usuario").doc(user.uid);
     final usuario = await usuarioDocRef.get();
     final unidadDocRef =  unidadFamiliarRef;

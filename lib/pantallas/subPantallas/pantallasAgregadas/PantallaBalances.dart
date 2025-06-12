@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/clases/Usuario.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../../../funcionalidades/FuncionesPagos.dart';
 import '../../../funcionalidades/FuncionesUsuario.dart';
 
@@ -85,12 +82,6 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                       Usuario.fromFirestore(doc.data() as Map<String, dynamic>),
                 )
                 .toList();
-        final usuariosId = usuariosDocs.map((doc) => doc.id).toList();
-        final usuariosData =
-            usuariosDocs
-                .map((doc) => doc.data() as Map<String, dynamic>)
-                .toList();
-
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [

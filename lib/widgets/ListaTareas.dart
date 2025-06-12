@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tfg_bettervibes/funcionalidades/PuntuacionSemanal.dart';
-
 import '../clases/ColorElegido.dart';
 import '../funcionalidades/MainFunciones.dart';
 import '../pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';

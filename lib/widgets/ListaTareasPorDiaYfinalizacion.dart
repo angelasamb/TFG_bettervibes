@@ -100,18 +100,8 @@ class _ListaTareasPorDiaYFinalizacionState extends State<ListaTareasPorDiaYFinal
         try {
           final tarea = Tareas.fromFirestore(doc.data());
 
-        if (tarea.tipoTareaRef == null) {
-          print("Documento ${doc.id} ERROR: tipoTareaRef es null");
-          continue; // Ignorar documento problemático
-        }
-
-        if (tarea.usuarioRef == null) {
-          print("Documento ${doc.id} ERROR: usuarioRef es null");
-          continue; // Ignorar documento problemático
-        }
-
-        final tipo = tiposMap[tarea.tipoTareaRef!.id];
-        final color = coloresUsuarios[tarea.usuarioRef!.id];
+        final tipo = tiposMap[tarea.tipoTareaRef.id];
+        final color = coloresUsuarios[tarea.usuarioRef.id];
 
         if (tipo == null) {
           print("Documento ${doc.id} ERROR: tipo no encontrado en tiposMap");
@@ -127,7 +117,7 @@ class _ListaTareasPorDiaYFinalizacionState extends State<ListaTareasPorDiaYFinal
           'docRef': doc.reference,
           'tarea': tarea,
           'tipo': tipo,
-          'usuarioId': tarea.usuarioRef!.id,
+          'usuarioId': tarea.usuarioRef.id,
           'color': color,
         });
         } catch (e) {

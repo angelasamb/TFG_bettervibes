@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
 import '../../../clases/ColorElegido.dart';
-import '../../../funcionalidades/FuncionesTipoTareas.dart';
-import '../../../widgets/ContadorNumerico.dart';
 import '../../../widgets/PlantillaSelector.dart';
 
 class PantallaModificarPerfil extends StatefulWidget {

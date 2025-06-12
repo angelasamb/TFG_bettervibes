@@ -58,7 +58,7 @@ class _ListaEventosDiaState extends State<ListaEventosDia> {
           querySnapshot.docs
               .map(
                 (doc) => Eventos.fromFirestore2(
-                  doc.data() as Map<String, dynamic>,
+                  doc.data(),
                   doc.id,
                 ),
               )

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaModificarPerfil.dart';
-import 'package:tfg_bettervibes/widgets/PlantillaSelector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/funcionalidades/SalirCambiarUnidadFamiliar.dart';
