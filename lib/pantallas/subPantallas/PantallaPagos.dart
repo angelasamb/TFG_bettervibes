@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaBalances.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaEditarPago.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -31,17 +32,35 @@ class _PantallaPagosState extends State<PantallaPagos> {
       ),
 
       backgroundColor: Colors.transparent,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.gamaColores.shade500,
-        foregroundColor: Colors.white,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const PantallaEditarPago()),
-          );
-        },
-        tooltip: "Añadir nuevo pago",
-        child: const Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            backgroundColor: Colors.gamaColores.shade500,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PantallaEditarPago()),
+              );
+            },
+            tooltip: "Añadir nuevo pago",
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(height: 12,),
+          FloatingActionButton(
+            backgroundColor: Colors.gamaColores.shade500,
+            foregroundColor: Colors.white,
+            onPressed: () {
+             /* Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PantallaBalances()),
+              );*/
+            },
+            tooltip: "Balances",
+            child: const Icon(Icons.add),
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -77,8 +96,8 @@ class _PantallaPagosState extends State<PantallaPagos> {
                     return StreamBuilder<QuerySnapshot>(
                       stream:
                           unidadFamiliarRef
-                              .collection('pagos')
-                              .orderBy('timestamp', descending: true)
+                              .collection("Pagos")
+                              .orderBy("timestamp", descending: true)
                               .snapshots(),
                       builder: (context, pagosSnapshot) {
                         if (pagosSnapshot.connectionState ==
@@ -89,17 +108,17 @@ class _PantallaPagosState extends State<PantallaPagos> {
                         }
                         if (pagosSnapshot.hasError) {
                           print(
-                            'Error SNAPSHOT StreamBuilder: ${pagosSnapshot.error}',
+                            "Error SNAPSHOT StreamBuilder: ${pagosSnapshot.error}",
                           );
                           return Center(
-                            child: Text('Error: ${pagosSnapshot.error}'),
+                            child: Text("Error: ${pagosSnapshot.error}"),
                           );
                         }
 
                         final pagosDocs = pagosSnapshot.data?.docs ?? [];
                         if (pagosDocs.isEmpty) {
                           return const Center(
-                            child: Text('No hay pagos registrados.'),
+                            child: Text("No hay pagos registrados."),
                           );
                         }
 
@@ -111,11 +130,11 @@ class _PantallaPagosState extends State<PantallaPagos> {
                                 pagoDoc.data()! as Map<String, dynamic>;
 
                             final descripcion =
-                                pagoData['descripcion'] ?? 'Sin descripción';
+                                pagoData["descripcion"] ?? "Sin descripción";
                             final precio =
-                                pagoData['precio']?.toString() ?? 'N/A';
+                                pagoData["precio"]?.toString() ?? "N/A";
                             final timestamp =
-                                pagoData['timestamp'] as Timestamp?;
+                                pagoData["timestamp"] as Timestamp?;
                             final fecha =
                                 timestamp != null
                                     ? DateTime.fromMillisecondsSinceEpoch(
@@ -123,23 +142,25 @@ class _PantallaPagosState extends State<PantallaPagos> {
                                     )
                                     : null;
 
-                            return ListTile(
-                              title: Text(descripcion),
-                              subtitle: Text(
-                                'Precio: $precio €\nFecha: ${fecha != null ? fecha.toLocal().toString().split(' ')[0] : 'N/A'}',
+                            return SingleChildScrollView(
+                              child: ListTile(
+                                title: Text(descripcion),
+                                subtitle: Text(
+                                  "Precio: $precio €\nFecha: ${fecha != null ? fecha.toLocal().toString().split(' ')[0] : "N/A"}",
+                                ),
+                                trailing: const Icon(Icons.chevron_right),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (_) => PantallaEditarPago(
+                                            idPago: pagoDoc.id,
+                                          ),
+                                    ),
+                                  );
+                                },
                               ),
-                              trailing: const Icon(Icons.chevron_right),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (_) => PantallaEditarPago(
-                                          idPago: pagoDoc.id,
-                                        ),
-                                  ),
-                                );
-                              },
                             );
                           },
                         );
