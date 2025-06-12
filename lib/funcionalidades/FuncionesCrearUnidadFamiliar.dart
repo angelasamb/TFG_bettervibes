@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/clases/UnidadFamiliar.dart';
 
 import '../clases/ColorElegido.dart';
-import '../datosDePrueba/tipoDeEventosDePrueba.dart';
+import '../datosDePrueba/TipoDeEventosDePrueba.dart';
 
 final nombreColeccionUnidadFamiliar = 'UnidadFamiliar';
 final nombreColeccionUsuarios = 'Usuario';
