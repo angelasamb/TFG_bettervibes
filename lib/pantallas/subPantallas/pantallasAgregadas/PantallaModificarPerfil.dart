@@ -35,7 +35,7 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
-          child: Align(
+          child: Padding(padding: EdgeInsets.all(20),child: Align(
             alignment: Alignment.topCenter,
             child: Card(
               color: Colors.white,
@@ -92,6 +92,7 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
               ),
             ),
           ),
+          )
         ),
       ),
     );
