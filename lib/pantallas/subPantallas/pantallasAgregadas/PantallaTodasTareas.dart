@@ -8,17 +8,17 @@ import '../../../clases/ColorElegido.dart';
 import '../../../funcionalidades/MainFunciones.dart';
 
 class PantallaTodasTareas extends StatefulWidget {
-  TextEditingController nombreController = TextEditingController();
-  String imagenSeleccionada = "";
-  ColorElegido colorSeleccionado = ColorElegido.Rojo;
-
-  PantallaTodasTareas();
+  const PantallaTodasTareas({super.key});
 
   @override
   State<PantallaTodasTareas> createState() => _Pantallatodastareas();
 }
 
 class _Pantallatodastareas extends State<PantallaTodasTareas> {
+  late final TextEditingController nombreController;
+  late final String imagenSeleccionada;
+  late final ColorElegido colorSeleccionado;
+
   DocumentReference? unidadFamiliarRef;
   String? user = FirebaseAuth.instance.currentUser?.uid;
   final todas = true;
@@ -26,6 +26,9 @@ class _Pantallatodastareas extends State<PantallaTodasTareas> {
   @override
   void initState() {
     super.initState();
+    nombreController = TextEditingController();
+    imagenSeleccionada = "";
+    colorSeleccionado = ColorElegido.Rojo;
     _cargarUnidadFamiliar();
   }
 

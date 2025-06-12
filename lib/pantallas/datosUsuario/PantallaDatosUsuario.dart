@@ -6,8 +6,8 @@ import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesUsuario.dart';
 
 import '../../widgets/PlantillaSelector.dart';
-import '../../widgets/personalizacion.dart';
-import '../registroUsuario/pantallaAutentification.dart';
+import '../../widgets/Personalizacion.dart';
+import '../registroUsuario/PantallaAutentification.dart';
 
 class PantallaDatosUsuario extends StatefulWidget {
   const PantallaDatosUsuario({super.key});
@@ -43,7 +43,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => pantallaAutentification()),
+              MaterialPageRoute(builder: (context) => PantallaAutentification()),
             );
           },
         ),

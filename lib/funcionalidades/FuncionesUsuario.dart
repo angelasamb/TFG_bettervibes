@@ -42,7 +42,6 @@ Future<bool> crearUsuarioBaseDeDatos(
 
 Future<bool> existeElUsuario() async {
   try {
-    final baseDatos = FirebaseFirestore.instance;
     final autentificacion = FirebaseAuth.instance;
     final usuarioConectado = autentificacion.currentUser;
 
@@ -50,14 +49,6 @@ Future<bool> existeElUsuario() async {
       print("ERROR: No hay usuario registrado, no se ha podido crear usuario");
       return false;
     }
-
-    final idUsuario = usuarioConectado.uid;
-
-    final registro =
-        await baseDatos
-            .collection(nombreColeccionUsuarios)
-            .doc(idUsuario)
-            .get();
     return (true);
   } catch (e) {
     print("ERROR: Error en FuncionesUsuario: $e");

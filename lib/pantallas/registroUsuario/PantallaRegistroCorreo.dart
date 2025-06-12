@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tfg_bettervibes/widgets/personalizacion.dart';
+import 'package:tfg_bettervibes/widgets/Personalizacion.dart';
 
 import '../../funcionalidades/EscogerPantalla.dart';
 
@@ -14,6 +14,8 @@ class PantallaRegistroCorreo extends StatelessWidget {
   final TextEditingController contrasena = TextEditingController();
   final TextEditingController contrasenaRepetida =
       TextEditingController();
+
+  PantallaRegistroCorreo({super.key});
 
   @override
   Widget build(BuildContext context) {

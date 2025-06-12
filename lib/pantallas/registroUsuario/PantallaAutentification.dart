@@ -2,17 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tfg_bettervibes/pantallas/registroUsuario/pantallaRegistroCorreo.dart';
-import 'package:tfg_bettervibes/widgets/personalizacion.dart';
-
-import '../datosUsuario/pantallaDatosUsuario.dart';
+import 'package:tfg_bettervibes/pantallas/registroUsuario/PantallaRegistroCorreo.dart';
+import 'package:tfg_bettervibes/widgets/Personalizacion.dart';
 
 
-class pantallaAutentification extends StatelessWidget {
+class PantallaAutentification extends StatefulWidget {
+  const PantallaAutentification({super.key});
+
+  @override
+  PantallaAutentificationState createState() => PantallaAutentificationState();
+}
+
+class PantallaAutentificationState extends State<PantallaAutentification> {
+  final TextEditingController correo = TextEditingController();
+  final TextEditingController contrasena = TextEditingController();
+
   final Autentificacion _autentificacionFirebase = Autentificacion();
 
-  TextEditingController correo = TextEditingController();
-  TextEditingController contrasena = TextEditingController();
+  @override
+  void dispose() {
+    correo.dispose();
+    contrasena.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

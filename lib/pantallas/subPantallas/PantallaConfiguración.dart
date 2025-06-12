@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaModificarPerfil.dart';
-import 'package:tfg_bettervibes/widgets/PlantillaSelector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tfg_bettervibes/funcionalidades/SalirCambiarUnidadFamiliar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../registroUsuario/pantallaAutentification.dart';
+import '../registroUsuario/PantallaAutentification.dart';
 
 class PantallaConfiguracion extends StatefulWidget {
   @override
@@ -99,7 +98,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                             Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => pantallaAutentification(),
+                                builder: (context) => PantallaAutentification(),
                               ),
                               (route) => false,
                             );
@@ -534,9 +533,9 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
             MaterialPageRoute(
               builder:
                   (_) => PantallaModificarPerfil(
-                    nombreController,
-                    imagenSeleccionada,
-                    colorSeleccionado,
+                    nombreController: nombreController,
+                    imagenSeleccionada: imagenSeleccionada,
+                    colorSeleccionado: colorSeleccionado,
                   ),
             ),
           );
