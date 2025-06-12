@@ -16,6 +16,7 @@ import '../clases/ColorElegido.dart';
           labelText: label,
           hintStyle: const TextStyle(color: Colors.grey),
         ),
+      maxLength: label=="Nombre"? 10:30,
       );
 
   }

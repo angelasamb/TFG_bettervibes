@@ -176,7 +176,19 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                       });
                     },
                   ),
+                if (widget.tareaEditar != null && _tareaRealizada)
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.gamaColores.shade200,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: marcarComoNoCompletada,
+                    child: Text("Desmarcar como realizada"),
 
+                  ),
                 const Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -245,20 +257,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                         },
                         child: Text("Borrar"),
                       ),
-                    if (widget.tareaEditar != null && _tareaRealizada)
-                      const SizedBox(width: 60),
-                    if (widget.tareaEditar != null && _tareaRealizada)
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.gamaColores.shade200,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: marcarComoNoCompletada,
-                        child: Text("Desmarcar como realizada"),
-                      ),
+
                   ],
                 ),
 
@@ -324,6 +323,8 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
 
   void marcarComoNoCompletada() async {
     widget.tareaEditar?.update({"realizada": false});
+
+    CalculoPuntuacionSemanal(usuarioRef);
     Navigator.pop(context);
   }
 
