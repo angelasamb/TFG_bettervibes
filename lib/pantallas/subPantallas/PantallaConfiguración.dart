@@ -497,9 +497,9 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
     if (uid == null) return false;
 
     final userSnapshot =
-        await FirebaseFirestore.instance.collection("Usuario").doc(uid).get();
+        await FirebaseFirestore.instance.collection('Usuario').doc(uid).get();
     final data = userSnapshot.data();
-    return data != null && data["admin"] == true;
+    return data != null && data['admin'] == true;
   }
 
   Future<void> _cambiarContraseniaUnidadFamiliar() async {

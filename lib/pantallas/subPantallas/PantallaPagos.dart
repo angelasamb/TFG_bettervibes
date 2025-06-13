@@ -140,7 +140,7 @@ class _PantallaPagosState extends State<PantallaPagos> {
                               child: ListTile(
                                 title: Text(descripcion),
                                 subtitle: Text(
-                                  "Precio: $precio €\nFecha: ${fecha != null ? fecha.toLocal().toString().split(" ")[0] : "N/A"}",
+                                  "Precio: $precio €\nFecha: ${fecha != null ? fecha.toLocal().toString().split(' ')[0] : "N/A"}",
                                 ),
                                 trailing: const Icon(Icons.chevron_right),
                                 onTap: () {
