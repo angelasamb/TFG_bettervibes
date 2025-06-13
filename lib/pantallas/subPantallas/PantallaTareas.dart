@@ -98,12 +98,55 @@ class _PantallaTareasState extends State<PantallaTareas> {
     );
   }
 
-  void _accionesBotones() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => PantallaCrearEvento(tipoActividad: "tarea"),
-      ),
-    );
+
+  void _accionesBotones() async {
+    final esAdmin = await esUsuarioActualAdmin();
+
+    if (esAdmin) {
+      // Para admins, mostramos un bottom sheet con dos opciones
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(Icons.task_alt),
+                title: Text('Crear tarea'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) => PantallaCrearEvento(tipoActividad: "tarea"),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.task),
+                title: Text('Crear TipoTarea'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => PantallaCrearTipoTarea()),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // Para usuarios normales, solo crear tarea
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => PantallaCrearEvento(tipoActividad: "tarea"),
+        ),
+      );
+    }
   }
 }
