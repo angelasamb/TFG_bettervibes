@@ -29,7 +29,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
       body: Stack(
         children: [
           SvgPicture.asset(
-            'assets/imagenes/fondo1.svg',
+            "assets/imagenes/fondo1.svg",
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
@@ -43,7 +43,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
 
               if (!snapshot.hasData || snapshot.data == null) {
                 return const Center(
-                  child: Text('Unidad familiar no encontrada.'),
+                  child: Text("Unidad familiar no encontrada."),
                 );
               }
 
@@ -60,8 +60,8 @@ class _PantallaBalancesState extends State<PantallaBalances> {
     return StreamBuilder<QuerySnapshot>(
       stream:
           FirebaseFirestore.instance
-              .collection('Usuario')
-              .where('unidadFamiliarRef', isEqualTo: unidadRef)
+              .collection("Usuario")
+              .where("unidadFamiliarRef", isEqualTo: unidadRef)
               .snapshots(),
       builder: (context, snapshotUsuarios) {
         if (snapshotUsuarios.connectionState == ConnectionState.waiting) {
@@ -70,7 +70,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
 
         if (!snapshotUsuarios.hasData || snapshotUsuarios.data!.docs.isEmpty) {
           return const Center(
-            child: Text('No hay usuarios en la unidad familiar.'),
+            child: Text("No hay usuarios en la unidad familiar."),
           );
         }
 

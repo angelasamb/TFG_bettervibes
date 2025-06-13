@@ -23,7 +23,7 @@ class Autentificacion {
 
       return await _autentificacion.signInWithCredential(credenciales);
     } catch (e) {
-      print('ERROR: Inicio sesión con Google: $e');
+      print("ERROR: Inicio sesión con Google: $e");
       return null;
     }
   }
@@ -33,7 +33,7 @@ class Autentificacion {
     try {
       return await _autentificacion.signInWithEmailAndPassword(email: correo, password: contrasena);
     }catch (e){
-      print('ERROR: Inicio sesión con Correo: $e');
+      print("ERROR: Inicio sesión con Correo: $e");
       return null;
     }
   }
@@ -43,10 +43,10 @@ class Autentificacion {
     try {
       return await _autentificacion.createUserWithEmailAndPassword(email: correo, password: contrasena);
     } on FirebaseAuthException catch (e) {
-      print('ERROR: Registro con correo: ${e.code} - ${e.message}');
+      print("ERROR: Registro con correo: ${e.code} - ${e.message}");
       throw e; // Lanzamos la excepción para manejarla fuera
     } catch (e) {
-      print('ERROR Registro con correo: $e');
+      print("ERROR Registro con correo: $e");
       return null;
     }
   }

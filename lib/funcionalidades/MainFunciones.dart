@@ -31,7 +31,7 @@ Future<bool> esUsuarioActualAdmin() async {
 }
 
 Future<Usuario?> obtenerUsuarioDesdeId(String idUsuario) async {
-  final doc = await FirebaseFirestore.instance.collection('Usuario').doc(idUsuario).get();
+  final doc = await FirebaseFirestore.instance.collection("Usuario").doc(idUsuario).get();
   if (!doc.exists) return null;
   return Usuario.fromFirestore(doc.data() as Map<String, dynamic>);
 }

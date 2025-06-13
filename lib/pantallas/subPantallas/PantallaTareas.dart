@@ -45,39 +45,35 @@ class _PantallaTareasState extends State<PantallaTareas> {
 
     final tareasRef = unidadFamiliarRef!.collection("Tareas");
     return Scaffold(
-      floatingActionButton: Stack(
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingActionButton(
-              backgroundColor: Colors.gamaColores.shade500,
-              foregroundColor: Colors.white,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => PantallaTodasTareas()),
-                );
-              },
-              child: const Text("Todas"),
-            ),
+          FloatingActionButton(
+            heroTag: 'boton_todas',
+            backgroundColor: Colors.gamaColores.shade500,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => PantallaTodasTareas()),
+              );
+            },
+            child: const Text("Todas"),
           ),
-          Positioned(
-            bottom: 90, // un poco más arriba que el anterior
-            right: 16,
-            child: FloatingActionButton(
-              backgroundColor: Colors.gamaColores.shade500,
-              foregroundColor: Colors.white,
-              onPressed: () async {
-                _accionesBotones();
-              },
-              child: const Icon(Icons.add),
-            ),
+          const SizedBox(height: 16),
+          FloatingActionButton(
+            heroTag: 'boton_crear',
+            backgroundColor: Colors.gamaColores.shade500,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              _accionesBotones();
+            },
+            child: const Icon(Icons.add),
           ),
         ],
       ),
       extendBodyBehindAppBar: true,
-
       body: Stack(
         children: [
           SvgPicture.asset(
@@ -102,54 +98,12 @@ class _PantallaTareasState extends State<PantallaTareas> {
     );
   }
 
-  void _accionesBotones() async {
-    final esAdmin = await esUsuarioActualAdmin();
-
-    if (esAdmin) {
-      // Para admins, mostramos un bottom sheet con dos opciones
-      showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.task_alt),
-                title: Text("Crear tarea"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (_) => PantallaCrearEvento(tipoActividad: "tarea"),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.task),
-                title: Text("Crear TipoTarea"),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PantallaCrearTipoTarea()),
-                  );
-                },
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      // Para usuarios normales, solo crear tarea
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => PantallaCrearEvento(tipoActividad: "tarea"),
-        ),
-      );
-    }
+  void _accionesBotones() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PantallaCrearEvento(tipoActividad: "tarea"),
+      ),
+    );
   }
 }
