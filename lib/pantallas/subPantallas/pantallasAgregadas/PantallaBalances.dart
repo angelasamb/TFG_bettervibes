@@ -25,7 +25,13 @@ class _PantallaBalancesState extends State<PantallaBalances> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Balances"), centerTitle:true , foregroundColor: Colors.gamaColores.shade500,),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("Balances"),
+        centerTitle: true,
+        foregroundColor: Colors.gamaColores.shade500,
+        backgroundColor: Colors.transparent,
+      ),
       body: Stack(
         children: [
           SvgPicture.asset(
@@ -34,22 +40,24 @@ class _PantallaBalancesState extends State<PantallaBalances> {
             width: double.infinity,
             height: double.infinity,
           ),
-          FutureBuilder<DocumentReference?>(
-            future: _unidadFamiliarRefFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
+          SafeArea(
+            child: FutureBuilder<DocumentReference?>(
+              future: _unidadFamiliarRefFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-              if (!snapshot.hasData || snapshot.data == null) {
-                return const Center(
-                  child: Text("Unidad familiar no encontrada."),
-                );
-              }
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return const Center(
+                    child: Text("Unidad familiar no encontrada."),
+                  );
+                }
 
-              final unidadRef = snapshot.data!;
-              return _contenidoBalances(unidadRef);
-            },
+                final unidadRef = snapshot.data!;
+                return _contenidoBalances(unidadRef);
+              },
+            ),
           ),
         ],
       ),
@@ -149,7 +157,10 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                             final nombres = snapshot.data!;
                             return CheckboxListTile(
                               value: data["hecho"] ?? false,
-                              title: Text("${nombres[0]} debe a ${nombres[1]} ${data["cantidad"]}€", style: TextStyle(fontSize: 16),),
+                              title: Text(
+                                "${nombres[0]} debe a ${nombres[1]} ${data["cantidad"]}€",
+                                style: TextStyle(fontSize: 16),
+                              ),
                               onChanged: (value) async {
                                 await actualizarEstadoBizum(
                                   bizumDoc.reference,

@@ -84,7 +84,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
       context: context,
       initialDate: _fechaSeleccionada,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
+      lastDate: _fechaSeleccionada,
     );
     if (nuevaFecha != null) {
       setState(() => _fechaSeleccionada = nuevaFecha);

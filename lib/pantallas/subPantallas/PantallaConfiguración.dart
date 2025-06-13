@@ -56,10 +56,10 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
             width: double.infinity,
             height: double.infinity,
           ),
-          Center(
+          SingleChildScrollView(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 600),
-                child: SingleChildScrollView(
+                child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
