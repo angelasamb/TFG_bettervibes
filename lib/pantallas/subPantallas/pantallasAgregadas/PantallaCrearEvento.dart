@@ -7,7 +7,7 @@ import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/funcionalidades/PuntuacionSemanal.dart';
 
 import '../../../funcionalidades/FuncionesEventos.dart';
-import '../../../widgets/Personalizacion.dart';
+import '../../../widgets/personalizacion.dart';
 
 class PantallaCrearEvento extends StatefulWidget {
   final String tipoActividad;

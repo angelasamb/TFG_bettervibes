@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tfg_bettervibes/widgets/Personalizacion.dart';
+import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 import '../../../clases/ColorElegido.dart';
 import '../../../widgets/PlantillaSelector.dart';
 

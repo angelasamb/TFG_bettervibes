@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tfg_bettervibes/pantallas/datosUsuario/PantallaDatosUsuario.dart';
-import 'package:tfg_bettervibes/pantallas/datosUsuario/PantallaUnirteUnidadFamiliar.dart';
-import 'package:tfg_bettervibes/pantallas/registroUsuario/PantallaAutentification.dart';
-import 'package:tfg_bettervibes/widgets/Personalizacion.dart';
+import 'package:tfg_bettervibes/pantallas/datosUsuario/pantallaDatosUsuario.dart';
+import 'package:tfg_bettervibes/pantallas/datosUsuario/pantallaUnirteUnidadFamiliar.dart';
+import 'package:tfg_bettervibes/pantallas/registroUsuario/pantallaAutentification.dart';
+import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesCrearUnidadFamiliar.dart';
-import 'package:tfg_bettervibes/pantallas/PantallaPrincipal.dart';
+import 'package:tfg_bettervibes/pantallas/pantallaPrincipal.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PantallaCrearUnidadFamiliar extends StatelessWidget {

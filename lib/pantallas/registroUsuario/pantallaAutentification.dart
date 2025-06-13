@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/EscogerPantalla.dart';
 import 'package:tfg_bettervibes/funcionalidades/FuncionesAutentificacion.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tfg_bettervibes/pantallas/registroUsuario/PantallaRegistroCorreo.dart';
-import 'package:tfg_bettervibes/widgets/Personalizacion.dart';
+import 'package:tfg_bettervibes/pantallas/registroUsuario/pantallaRegistroCorreo.dart';
+import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
 
 class PantallaAutentification extends StatefulWidget {

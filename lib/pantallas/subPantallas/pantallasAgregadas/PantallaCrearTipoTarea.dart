@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tfg_bettervibes/widgets/Personalizacion.dart';
+import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
 import '../../../funcionalidades/FuncionesTipoTareas.dart';
 import '../../../widgets/ContadorNumerico.dart';

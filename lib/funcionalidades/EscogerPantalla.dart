@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tfg_bettervibes/pantallas/PantallaPrincipal.dart';
-import '../pantallas/datosUsuario/PantallaCrearUnidadFamiliar.dart';
-import '../pantallas/datosUsuario/PantallaDatosUsuario.dart';
-import '../pantallas/registroUsuario/PantallaAutentification.dart';
+import 'package:tfg_bettervibes/pantallas/pantallaPrincipal.dart';
+import '../pantallas/datosUsuario/pantallaCrearUnidadFamiliar.dart';
+import '../pantallas/datosUsuario/pantallaDatosUsuario.dart';
+import '../pantallas/registroUsuario/pantallaAutentification.dart';
 
 
 class EscogerPantalla extends StatefulWidget{
