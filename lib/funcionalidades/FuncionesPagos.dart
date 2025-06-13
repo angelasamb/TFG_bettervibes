@@ -167,7 +167,7 @@ void generarBizums() async {
 
   // Limpiar bizums anteriores
   final bizumsRef = unidadRef.collection("Bizums");
-  final bizumsSnapshot = await bizumsRef.get();
+  final bizumsSnapshot = await bizumsRef.where("hecho", isEqualTo: false).get();
   for (var doc in bizumsSnapshot.docs) {
     await doc.reference.delete();
   }
@@ -224,7 +224,7 @@ Future<void> actualizarEstadoBizum(
 
       transaction.update(refDeudor, {"balance": nuevoBalanceDeudor});
       transaction.update(refAcreedor, {"balance": nuevoBalanceAcreedor});
-      transaction.update(bizumRef, {"hecho": true});
+      transaction.update(bizumRef, {"hecho": true, "timestamp":FieldValue.serverTimestamp()});
     });
   } else {
     await bizumRef.update({"hecho": nuevoEstado});

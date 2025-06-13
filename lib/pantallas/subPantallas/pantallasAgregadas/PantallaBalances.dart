@@ -134,7 +134,11 @@ class _PantallaBalancesState extends State<PantallaBalances> {
             ),
             const SizedBox(height: 8),
             StreamBuilder<QuerySnapshot>(
-              stream: unidadRef.collection("Bizums").snapshots(),
+              stream:
+                  unidadRef
+                      .collection("Bizums")
+                      .where("hecho", isEqualTo: false)
+                      .snapshots(),
               builder: (context, snapshotBizums) {
                 if (snapshotBizums.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -157,16 +161,45 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                             final nombres = snapshot.data!;
                             return CheckboxListTile(
                               value: data["hecho"] ?? false,
-                              title: Text(
-                                "${nombres[0]} debe a ${nombres[1]} ${(data["cantidad"] as num).toStringAsFixed(2)}€",
+                              title: Text("${nombres[0]} debe a ${nombres[1]} ${(data["cantidad"] as num).toStringAsFixed(2)}€",
                                 style: TextStyle(fontSize: 16),
                               ),
                               onChanged: (value) async {
-                                await actualizarEstadoBizum(
-                                  bizumDoc.reference,
-                                  data,
-                                  value!,
+                                final confirmacion = await showDialog<bool>(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text("Confirmar Bizum"),
+                                      content: const Text(
+                                        "¿Estás seguro de que quieres marcar este Bizum como realizado?",
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          child: const Text("Cancelar"),
+                                          onPressed:
+                                              () => Navigator.of(
+                                                context,
+                                              ).pop(false),
+                                        ),
+                                        ElevatedButton(
+                                          child: const Text("Confirmar"),
+                                          onPressed:
+                                              () => Navigator.of(
+                                                context,
+                                              ).pop(true),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
+                                if (confirmacion == true) {
+                                  await actualizarEstadoBizum(
+                                    bizumDoc.reference,
+                                    data,
+                                    value!,
+                                  );
+                                }
+                                ;
                               },
                             );
                           },
@@ -175,6 +208,67 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                 );
               },
             ),
+            // Bizums HECHOS
+            const SizedBox(height: 16),
+            Card(
+              elevation: 4,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Bizums realizados",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: unidadRef.collection("Bizums").where("hecho", isEqualTo: true).snapshots(),
+                      builder: (context, snapshotBizumsHechos) {
+                        if (snapshotBizumsHechos.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+
+                        final bizumsHechos = snapshotBizumsHechos.data?.docs ?? [];
+
+                        if (bizumsHechos.isEmpty) {
+                          return const Text("No hay Bizums realizados aún.");
+                        }
+                        final ordenados = List.from(bizumsHechos)
+                          ..sort((a, b) {
+                            final tsA = (a["timestamp"] as Timestamp).toDate();
+                            final tsB = (b["timestamp"] as Timestamp).toDate();
+                            return tsB.compareTo(tsA);
+                          });
+                        return Column(
+                          children: ordenados.map((bizumDoc) {
+                            final data = bizumDoc.data() as Map<String, dynamic>;
+                            return FutureBuilder<List<String>>(
+                              future: obtenerNombresUsuarios(
+                                data["personaPaga"] as DocumentReference,
+                                data["personaRecibe"] as DocumentReference,
+                              ),
+                              builder: (context, snapshot) {
+                                if (!snapshot.hasData) return const SizedBox.shrink();
+                                final nombres = snapshot.data!;
+                                return ListTile(
+                                  title: Text(
+                                    "${nombres[0]} pagó a ${nombres[1]} ${(data["cantidad"] as num).toStringAsFixed(2)}€",
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                );
+                              },
+                            );
+                          }).toList(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
           ],
         );
       },
