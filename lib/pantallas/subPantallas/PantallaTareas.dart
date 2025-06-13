@@ -58,7 +58,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
-            heroTag: 'boton_todas',
+            heroTag: "boton_todas",
             backgroundColor: Colors.gamaColores.shade500,
             foregroundColor: Colors.white,
             onPressed: () {
@@ -71,7 +71,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
           ),
           const SizedBox(height: 16),
           FloatingActionButton(
-            heroTag: 'boton_crear',
+            heroTag: "boton_crear",
             backgroundColor: Colors.gamaColores.shade500,
             foregroundColor: Colors.white,
             onPressed: () {
@@ -85,7 +85,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
       body: Stack(
         children: [
           SvgPicture.asset(
-            'assets/imagenes/fondo1.svg',
+            "assets/imagenes/fondo1.svg",
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
@@ -119,7 +119,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
             children: [
               ListTile(
                 leading: Icon(Icons.task_alt),
-                title: Text('Crear tarea'),
+                title: Text("Crear tarea"),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -133,7 +133,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
               ),
               ListTile(
                 leading: Icon(Icons.task),
-                title: Text('Crear TipoTarea'),
+                title: Text("Crear TipoTarea"),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(

@@ -78,7 +78,7 @@ class _DiagramaSectoresRankingState extends State<DiagramaSectoresRanking> {
             PieChartSectionData(
               color: colores[i % colores.length].withOpacity(0.7),
               value: puntuaciones[i].toDouble(),
-              title: '${porcentaje.toStringAsFixed(1)}%',
+              title: "${porcentaje.toStringAsFixed(1)}%",
               radius: 60,
               titleStyle: TextStyle(
                 fontWeight: FontWeight.bold,

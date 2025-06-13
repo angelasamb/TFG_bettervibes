@@ -45,7 +45,7 @@ class _SelectorUsuarioPagadorState extends State<SelectorUsuarioPagador> {
           itemCount: _usuarios.length,
           itemBuilder: (_, i) {
             final usuario = _usuarios[i];
-            final nombre = (usuario.data() as Map<String, dynamic>?)?['nombre'] ?? 'Sin nombre';
+            final nombre = (usuario.data() as Map<String, dynamic>?)?["nombre"] ?? "Sin nombre";
             final seleccionado = usuario.reference == widget.pagadorSeleccionado;
             return ListTile(
               title: Text(nombre),
@@ -69,7 +69,7 @@ class _SelectorUsuarioPagadorState extends State<SelectorUsuarioPagador> {
             (u) => u.reference == widget.pagadorSeleccionado,
         orElse: () => _usuarios.first,
       );
-      textoMostrar = (usuario.data() as Map<String, dynamic>?)?['nombre'] ?? textoMostrar;
+      textoMostrar = (usuario.data() as Map<String, dynamic>?)?["nombre"] ?? textoMostrar;
     }
 
     return ListTile(
@@ -132,7 +132,7 @@ class _SelectorUsuariosParticipantesState extends State<SelectorUsuariosParticip
                     itemCount: _usuarios.length,
                     itemBuilder: (_, i) {
                       final usuario = _usuarios[i];
-                      final nombre = (usuario.data() as Map<String, dynamic>?)?['nombre'] ?? 'Sin nombre';
+                      final nombre = (usuario.data() as Map<String, dynamic>?)?["nombre"] ?? "Sin nombre";
                       final estaSeleccionado = seleccionados.contains(usuario.reference);
                       return CheckboxListTile(
                         title: Text(nombre),

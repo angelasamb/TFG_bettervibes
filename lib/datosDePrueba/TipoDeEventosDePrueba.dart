@@ -31,7 +31,7 @@ Future<void> insertarTareasEjemploEnUnidadFamiliar() async {
     final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
     if (unidadFamiliarRef == null) throw Exception("No se encontró unidad familiar");
 
-    final tipoTareasRef = unidadFamiliarRef.collection('TipoTareas');
+    final tipoTareasRef = unidadFamiliarRef.collection("TipoTareas");
     final tareas = tareasEjemplo();
 
     for (var tarea in tareas) {

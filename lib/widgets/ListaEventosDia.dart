@@ -96,7 +96,7 @@ class _ListaEventosDiaState extends State<ListaEventosDia> {
                 ? Colors.black
                 : coloresUsuarios[evento.usuarioRef!.id] ?? Colors.black;
 
-        resultado.add({'evento': evento, 'color': color});
+        resultado.add({"evento": evento, "color": color});
       }
 
       resultado.sort(
@@ -133,11 +133,11 @@ class _ListaEventosDiaState extends State<ListaEventosDia> {
     return ListView.builder(
       itemCount: eventosConColor.length,
       itemBuilder: (context, index) {
-        final evento = eventosConColor[index]['evento'] as Eventos;
-        final color = eventosConColor[index]['color'] as Color;
+        final evento = eventosConColor[index]["evento"] as Eventos;
+        final color = eventosConColor[index]["color"] as Color;
         final fecha = evento.timestamp.toDate();
         final horaFormateada =
-            "${fecha.hour.toString().padLeft(2, '0')}:${fecha.minute.toString().padLeft(2, '0')}";
+            "${fecha.hour.toString().padLeft(2, "0")}:${fecha.minute.toString().padLeft(2, "0")}";
         final fechaFormateada = DateFormat("EEEE, dd MMM").format(fecha);
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),

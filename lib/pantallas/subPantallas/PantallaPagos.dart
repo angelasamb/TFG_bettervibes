@@ -67,7 +67,7 @@ class _PantallaPagosState extends State<PantallaPagos> {
       body: Stack(
         children: [
           SvgPicture.asset(
-            'assets/imagenes/fondo1.svg',
+            "assets/imagenes/fondo1.svg",
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,

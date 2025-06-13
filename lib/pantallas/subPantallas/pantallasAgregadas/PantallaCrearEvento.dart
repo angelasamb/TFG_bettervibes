@@ -153,7 +153,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                 const SizedBox(height: 16),
                 ListTile(
                   title: Text(
-                    'Fecha: ${DateFormat("dd/MM/yyyy").format(_fechaSeleccionada)}',
+                    "Fecha: ${DateFormat("dd/MM/yyyy").format(_fechaSeleccionada)}",
                   ),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: _seleccionarFecha,
@@ -161,7 +161,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
                 const SizedBox(width: 16),
                 ListTile(
                   title: Text(
-                    'Hora: ${_horaSeleccionada != null ? _horaSeleccionada!.format(context) : 'No seleccionada'}',
+                    "Hora: ${_horaSeleccionada != null ? _horaSeleccionada!.format(context) : "No seleccionada"}",
                   ),
                   trailing: const Icon(Icons.timelapse_outlined),
                   onTap: _seleccionarHora,

@@ -65,7 +65,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
         return;
       }
 
-      _descripcionController.text = pago.descripcion ?? '';
+      _descripcionController.text = pago.descripcion ?? "";
       _precioController.text = pago.precio.toString();
       _fechaSeleccionada = pago.timestamp.toDate();
       _pagador = pago.pagadorRef;
@@ -182,7 +182,7 @@ class _PantallaEditarPagoState extends State<PantallaEditarPago> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(esEdicion ? 'Editar Pago' : 'Nuevo Pago', style: TextStyle(color: Colors.gamaColores.shade500),),
+        title: Text(esEdicion ? "Editar Pago" : "Nuevo Pago", style: TextStyle(color: Colors.gamaColores.shade500),),
         actions: [
           if (esEdicion && !_cargandoDatos)
             IconButton(

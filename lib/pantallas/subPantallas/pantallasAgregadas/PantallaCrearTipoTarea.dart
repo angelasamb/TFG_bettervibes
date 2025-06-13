@@ -85,8 +85,8 @@ class _TipoTareaFormState extends State<TipoTareaForm> {
         widget.tipoTareaEditando!.get().then((doc) {
           final data = doc.data() as Map<String, dynamic>;
           setState(() {
-            _nombreCtrl.text = data['nombre'] ?? '';
-            _puntuacionSeleccionada = data['puntuacion'] ?? 0;
+            _nombreCtrl.text = data["nombre"] ?? "";
+            _puntuacionSeleccionada = data["puntuacion"] ?? 0;
           });
         });
       } else {

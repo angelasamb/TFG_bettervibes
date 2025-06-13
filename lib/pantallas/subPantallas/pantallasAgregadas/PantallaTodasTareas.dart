@@ -60,7 +60,7 @@ class _Pantallatodastareas extends State<PantallaTodasTareas> {
       body: Stack(
         children: [
           SvgPicture.asset(
-            'assets/imagenes/fondo1.svg',
+            "assets/imagenes/fondo1.svg",
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,

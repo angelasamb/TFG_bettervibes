@@ -22,8 +22,8 @@ class FuncionesPagos {
       if (!snapshot.exists) return;
 
       final data = snapshot.data() as Map<String, dynamic>;
-      final balanceActual = (data['balance'] ?? 0) as num;
-      transaction.update(usuarioRef, {'balance': balanceActual + cambio});
+      final balanceActual = (data["balance"] ?? 0) as num;
+      transaction.update(usuarioRef, {"balance": balanceActual + cambio});
     });
   }
   static Future<void> actualizarBalancePagador(
@@ -35,10 +35,10 @@ class FuncionesPagos {
       if (!snapshot.exists) return;
 
       final data = snapshot.data() as Map<String, dynamic>;
-      final balanceActual = (data['balance'] ?? 0) as num;
+      final balanceActual = (data["balance"] ?? 0) as num;
 
       transaction.update(pagadorRef, {
-        'balance': balanceActual + precio,
+        "balance": balanceActual + precio,
       });
     });
   }

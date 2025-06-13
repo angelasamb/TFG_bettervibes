@@ -23,11 +23,11 @@ class _PantallaEventosState extends State<PantallaEventos> {
   String _textoFormato(CalendarFormat formato) {
     switch (formato) {
       case CalendarFormat.month:
-        return 'Mes';
+        return "Mes";
       case CalendarFormat.twoWeeks:
-        return '2 semanas';
+        return "2 semanas";
       case CalendarFormat.week:
-        return 'Semana';
+        return "Semana";
     }
   }
 
@@ -62,7 +62,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
       body: Stack(
         children: [
           SvgPicture.asset(
-            'assets/imagenes/fondo1.svg',
+            "assets/imagenes/fondo1.svg",
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
@@ -127,7 +127,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
                               return _eventosPorDia[fechaSinHora] ?? [];
                             },
                             startingDayOfWeek: StartingDayOfWeek.monday,
-                            locale: 'es_ES',
+                            locale: "es_ES",
                             firstDay: DateTime(2020),
                             lastDay: DateTime(2030),
                             focusedDay: _fechaSeleccionada,
@@ -145,9 +145,9 @@ class _PantallaEventosState extends State<PantallaEventos> {
                               });
                             },
                             availableCalendarFormats: const {
-                              CalendarFormat.month: 'Mes',
-                              CalendarFormat.twoWeeks: '2 semanas',
-                              CalendarFormat.week: 'Semana',
+                              CalendarFormat.month: "Mes",
+                              CalendarFormat.twoWeeks: "2 semanas",
+                              CalendarFormat.week: "Semana",
                             },
                             calendarStyle: const CalendarStyle(
                               todayDecoration: BoxDecoration(
@@ -195,7 +195,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
                         ),
                         const SizedBox(height: 16),
                         const Text(
-                          'Eventos del día',
+                          "Eventos del día",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

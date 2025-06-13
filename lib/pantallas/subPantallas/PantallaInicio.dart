@@ -40,7 +40,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
       body: Stack(
         children: [
           SvgPicture.asset(
-            'assets/imagenes/fondo1.svg',
+            "assets/imagenes/fondo1.svg",
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
@@ -55,7 +55,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'TAREAS PARA HOY',
+                        "TAREAS PARA HOY",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -75,7 +75,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                       const SizedBox(height: 12),
 
                       const Text(
-                        'EVENTOS DE ESTA SEMANA',
+                        "EVENTOS DE ESTA SEMANA",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -88,7 +88,7 @@ class _PantallaInicioState extends State<PantallaInicio> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'PUNTUACIÓN SEMANAL',
+                        "PUNTUACIÓN SEMANAL",
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,

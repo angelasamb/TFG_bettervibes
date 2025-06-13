@@ -51,7 +51,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
       body: Stack(
         children: [
           SvgPicture.asset(
-            'assets/imagenes/fondo1.svg',
+            "assets/imagenes/fondo1.svg",
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
@@ -135,7 +135,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
           orElse: () => ColorElegido.Rojo,
         );
 
-        esUsuarioActualAdmin = datos['admin'] ?? false;
+        esUsuarioActualAdmin = datos["admin"] ?? false;
 
         final unidadRef = datos["unidadFamiliarRef"];
         if (unidadRef != null && unidadRef is DocumentReference) {
@@ -187,7 +187,7 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
             Row(
               children: [
                 Text(
-                  "Contraseña: ${mostrarContrasenia ? contraseniaUnidad : '********'}",
+                  "Contraseña: ${mostrarContrasenia ? contraseniaUnidad : "********"}",
                 ),
                 IconButton(
                   icon: Icon(
@@ -305,11 +305,11 @@ class _PantallaConfiguracionState extends State<PantallaConfiguracion> {
                   children:
                       usuariosDocs.map((doc) {
                         final datos = doc.data() as Map<String, dynamic>;
-                        final nombre = datos['nombre'] ?? "Sin nombre";
-                        final foto = datos['fotoPerfil'] ?? "";
+                        final nombre = datos["nombre"] ?? "Sin nombre";
+                        final foto = datos["fotoPerfil"] ?? "";
                         final color = datos["colorElegido"];
                         final colorElegido = getColorFromString(color);
-                        final esAdmin = datos['admin'] ?? false;
+                        final esAdmin = datos["admin"] ?? false;
                         final uid = doc.id;
 
                         final esUsuarioActual =

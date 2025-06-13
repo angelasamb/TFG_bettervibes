@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tfg_bettervibes/clases/Usuario.dart';
 import 'package:tfg_bettervibes/clases/ColorElegido.dart';
 
-final nombreColeccionUsuarios = 'Usuario';
+final nombreColeccionUsuarios = "Usuario";
 
 Future<bool> crearUsuarioBaseDeDatos(
   String imagenEscogida,
@@ -59,8 +59,8 @@ Future<List<String>> obtenerNombresUsuarios(DocumentReference ref1, DocumentRefe
   final snapshot1 = await ref1.get();
   final snapshot2 = await ref2.get();
 
-  final nombre1 = (snapshot1.data() as Map<String, dynamic>)['nombre'] ?? 'Desconocido';
-  final nombre2 = (snapshot2.data() as Map<String, dynamic>)['nombre'] ?? 'Desconocido';
+  final nombre1 = (snapshot1.data() as Map<String, dynamic>)["nombre"] ?? "Desconocido";
+  final nombre2 = (snapshot2.data() as Map<String, dynamic>)["nombre"] ?? "Desconocido";
   return [nombre1, nombre2];
 }
 

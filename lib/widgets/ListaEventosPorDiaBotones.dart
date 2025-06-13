@@ -138,7 +138,7 @@ class _ListaEventosPorDiaBotonesState extends State<ListaEventosPorDiaBotones> {
                 title: Text(evento.nombre),
                 subtitle: descripcion.isNotEmpty ? Text(descripcion) : null,
                 trailing: Text(
-                  "${fechaHora.hour.toString().padLeft(2, '0')}:${fechaHora.minute.toString().padLeft(2, '0')}",
+                  "${fechaHora.hour.toString().padLeft(2, "0")}:${fechaHora.minute.toString().padLeft(2, "0")}",
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 onTap: () {

@@ -49,14 +49,14 @@ class PantallaAutentificationState extends State<PantallaAutentification> {
                   const SizedBox(height: 130),
                   Center(
                     child: Image.asset(
-                      'assets/imagenes/iconos/logoFrase.png',
+                      "assets/imagenes/iconos/logoFrase.png",
                       height: 50,
                     ),
                   ),
                   const SizedBox(height: 10),
                   Center(
                     child: Image.asset(
-                      'assets/imagenes/iconos/iconoBetterVibes.png',
+                      "assets/imagenes/iconos/iconoBetterVibes.png",
                       height: 120,
                     ),
                   ),
@@ -82,7 +82,7 @@ class PantallaAutentificationState extends State<PantallaAutentification> {
                           .conectarConCorreo(correoAux, contrasenaAux);
                       if (credencialesUsuario != null) {
                         print(
-                          'Inicio de sesión correo: ${credencialesUsuario.user!.email}',
+                          "Inicio de sesión correo: ${credencialesUsuario.user!.email}",
                         );
                         Navigator.pushReplacement(
                           context,
@@ -100,7 +100,7 @@ class PantallaAutentificationState extends State<PantallaAutentification> {
                       }
                     },
                     child: const Text(
-                      'Iniciar sesión',
+                      "Iniciar sesión",
                       style: TextStyle(color: Colors.black),
                     ),
                   ), // BOTON CORREO
@@ -118,7 +118,7 @@ class PantallaAutentificationState extends State<PantallaAutentification> {
                           await _autentificacionFirebase.conectarConGoogle();
                       if (credencialesUsuario != null) {
                         print(
-                          'Inicio de sesión con Google: ${credencialesUsuario.user!.email}',
+                          "Inicio de sesión con Google: ${credencialesUsuario.user!.email}",
                         );
                         Navigator.pushReplacement(
                           context,
@@ -129,12 +129,12 @@ class PantallaAutentificationState extends State<PantallaAutentification> {
                       }
                     },
                     icon: Image.asset(
-                      'assets/imagenes/iconos/iconoGoogle.png',
+                      "assets/imagenes/iconos/iconoGoogle.png",
                       height: 24,
                       width: 24,
                     ),
                     label: const Text(
-                      'Inicio de sesión con google',
+                      "Inicio de sesión con google",
                       style: TextStyle(color: Colors.black),
                     ),
                   ),

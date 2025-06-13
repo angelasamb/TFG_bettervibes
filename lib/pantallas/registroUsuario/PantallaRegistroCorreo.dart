@@ -36,7 +36,7 @@ class PantallaRegistroCorreo extends StatelessWidget {
         children: [
           Positioned.fill(child:
           SvgPicture.asset(
-            'assets/imagenes/fondo1.svg',
+            "assets/imagenes/fondo1.svg",
             fit: BoxFit.cover,
           ), ),
           Center(
@@ -48,14 +48,14 @@ class PantallaRegistroCorreo extends StatelessWidget {
                 const SizedBox(height: 130),
                 Center(
                   child: Image.asset(
-                    'assets/imagenes/iconos/logoFrase.png',
+                    "assets/imagenes/iconos/logoFrase.png",
                     height: 50,
                   ),
                 ),
                 const SizedBox(height: 10),
                 Center(
                   child: Image.asset(
-                    'assets/imagenes/iconos/iconoBetterVibes.png',
+                    "assets/imagenes/iconos/iconoBetterVibes.png",
                     height: 120,
                   ),
                 ),
@@ -92,7 +92,7 @@ class PantallaRegistroCorreo extends StatelessWidget {
                             .registrarseConCorreo(correoAux, contrasenaAux);
                         if (credencialesUsuario != null) {
                           print(
-                            'Registro por correo: ${credencialesUsuario.user!.email}',
+                            "Registro por correo: ${credencialesUsuario.user!.email}",
                           );
                           Navigator.pushReplacement(
                             context,
@@ -134,20 +134,20 @@ class PantallaRegistroCorreo extends StatelessWidget {
   String _mensajeError(var e){
     String mensaje = "";
     switch (e.code) {
-      case 'email-already-in-use':
-        mensaje = 'El correo ya está en uso.';
+      case "email-already-in-use":
+        mensaje = "El correo ya está en uso.";
         break;
-      case 'invalid-email':
-        mensaje = 'Correo inválido.';
+      case "invalid-email":
+        mensaje = "Correo inválido.";
         break;
-      case 'weak-password':
-        mensaje = 'La contraseña es demasiado débil.';
+      case "weak-password":
+        mensaje = "La contraseña es demasiado débil.";
         break;
-      case 'missing-password':
-        mensaje = 'El campo contraseña está vacio.';
+      case "missing-password":
+        mensaje = "El campo contraseña está vacio.";
         break;
-      case 'channel-error':
-        mensaje ='Hay campos vacíos';
+      case "channel-error":
+        mensaje ="Hay campos vacíos";
       default:
         mensaje = e.message ?? mensaje;
     }
