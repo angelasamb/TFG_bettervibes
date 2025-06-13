@@ -23,44 +23,44 @@ Future<void> _quitarUsuarioDeUnidadConValidacion({
     throw Exception(
       "No se puede salir o expulsar: el usuario debe saldar sus cuentas.",
     );
-  }
+  } else {
+    await firestore.runTransaction((transaction) async {
+      final unidadSnapshot = await transaction.get(unidadDocRef);
+      final datosUnidad = unidadSnapshot.data() as Map<String, dynamic>?;
 
-  await firestore.runTransaction((transaction) async {
-    final unidadSnapshot = await transaction.get(unidadDocRef);
-    final datosUnidad = unidadSnapshot.data() as Map<String, dynamic>?;
+      if (datosUnidad == null) {
+        throw Exception("Unidad familiar no encontrada");
+      }
 
-    if (datosUnidad == null) {
-      throw Exception("Unidad familiar no encontrada");
-    }
+      List<dynamic> participantes = datosUnidad["participantes"] ?? [];
+      participantes = List.from(participantes);
 
-    List<dynamic> participantes = datosUnidad["participantes"] ?? [];
-    participantes = List.from(participantes);
+      participantes.removeWhere((ref) => ref.id == usuarioId);
 
-    participantes.removeWhere((ref) => ref.id == usuarioId);
+      transaction.update(usuarioDocRef, {
+        "unidadFamiliarRef": FieldValue.delete(),
+        "colorElegido": "",
+        "puntuacion": 0,
+      });
 
-    transaction.update(usuarioDocRef, {
-      "unidadFamiliarRef": FieldValue.delete(),
-      "colorElegido": "",
-      "puntuacion": 0,
+      if (participantes.isEmpty) {
+        transaction.delete(unidadDocRef);
+      } else {
+        transaction.update(unidadDocRef, {"participantes": participantes});
+      }
     });
-
-    if (participantes.isEmpty) {
-      transaction.delete(unidadDocRef);
-    } else {
-      transaction.update(unidadDocRef, {"participantes": participantes});
-    }
-  });
+  }
 }
 
 Future<void> salirUnidadFamiliar(
-    BuildContext context,
-    DocumentReference unidadFamiliarRef,
-    ) async {
+  BuildContext context,
+  DocumentReference unidadFamiliarRef,
+) async {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("No hay usuario autenticado")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("No hay usuario autenticado")));
     return;
   }
 
@@ -75,14 +75,14 @@ Future<void> salirUnidadFamiliar(
       usuarioId: user.uid,
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Has salido de la unidad familiar")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Has salido de la unidad familiar")));
 
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => EscogerPantalla()),
-          (route) => false,
+      (route) => false,
     );
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -92,10 +92,10 @@ Future<void> salirUnidadFamiliar(
 }
 
 Future<void> expulsarUsuario(
-    BuildContext context,
-    DocumentReference usuarioRef,
-    DocumentReference? unidadFamiliarRef,
-    ) async {
+  BuildContext context,
+  DocumentReference usuarioRef,
+  DocumentReference? unidadFamiliarRef,
+) async {
   if (unidadFamiliarRef == null) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("No hay unidad familiar seleccionada")),
@@ -111,16 +111,15 @@ Future<void> expulsarUsuario(
       usuarioId: usuarioRef.id,
     );
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Usuario expulsado correctamente")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Usuario expulsado correctamente")));
   } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Error al expulsar usuario: $e")),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text("Error al expulsar usuario: $e")));
   }
 }
-
 
 Future<bool> cambiarContraseniaUnidadFamiliar({
   required BuildContext context,
@@ -167,4 +166,3 @@ Future<void> actualizarAdmin(String uid, bool esAdmin) async {
   final userRef = db.collection("Usuario").doc(uid);
   await userRef.update({"admin": esAdmin});
 }
-
