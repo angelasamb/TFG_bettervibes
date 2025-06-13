@@ -53,7 +53,9 @@ class _PantallaEventosState extends State<PantallaEventos> {
                     fechaSeleccionada: _fechaSeleccionada,
                   ),
             ),
-          );
+          ).then((_) {
+            _cargarEventos();
+          });
         },
         child: const Icon(Icons.add),
       ),
