@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaRanking.dart';
 import 'package:tfg_bettervibes/widgets/ListaTareasPorDiaYfinalizacion.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaTareas.dart';
+import 'package:tfg_bettervibes/pantallas/subPantallas/PantallaEventos.dart';
+import '../../funcionalidades/MainFunciones.dart';
 import '../../widgets/BarChartRanking.dart';
 import '../../widgets/ListaEventosDia.dart';
 

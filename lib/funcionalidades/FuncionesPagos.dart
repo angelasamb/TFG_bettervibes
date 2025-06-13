@@ -1,6 +1,8 @@
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../clases/Pagos.dart';
+import '../clases/Usuario.dart';
 import 'MainFunciones.dart';
 
 class FuncionesPagos {

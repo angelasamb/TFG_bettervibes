@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tfg_bettervibes/pantallas/registroUsuario/pantallaRegistroCorreo.dart';
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
+import '../datosUsuario/pantallaDatosUsuario.dart';
+
 
 class pantallaAutentification extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
