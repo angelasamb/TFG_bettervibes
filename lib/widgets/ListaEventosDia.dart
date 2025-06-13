@@ -100,8 +100,8 @@ class _ListaEventosDiaState extends State<ListaEventosDia> {
       }
 
       resultado.sort(
-        (a, b) => (a['evento'] as Eventos).timestamp.compareTo(
-          (b['evento'] as Eventos).timestamp,
+        (a, b) => (a["evento"] as Eventos).timestamp.compareTo(
+          (b["evento"] as Eventos).timestamp,
         ),
       );
 

@@ -5,14 +5,34 @@ Widget plantillaField(
   String label, {
   bool esContrasena = false,
 }) {
-  return TextField(
-    controller: controlador,
-    obscureText: esContrasena,
-    maxLength: label == "Nombre" ? 10 : 30,
-    style: const TextStyle(color: Colors.black),
-    decoration: InputDecoration(
-      labelText: label,
-      hintStyle: const TextStyle(color: Colors.grey),
-    ),
+  bool ocultarContrasena = esContrasena;
+  return StatefulBuilder(
+    builder: (context, setState) {
+      return TextField(
+        controller: controlador,
+        obscureText: ocultarContrasena,
+        maxLength: label == "Nombre" ? 10 : 30,
+        style: const TextStyle(color: Colors.black),
+        decoration: InputDecoration(
+          labelText: label,
+          hintStyle: const TextStyle(color: Colors.grey),
+          suffix:
+              esContrasena
+                  ? IconButton(
+                    icon: Icon(
+                      ocultarContrasena
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        ocultarContrasena = !ocultarContrasena;
+                      });
+                    },
+                  )
+                  : null,
+        ),
+      );
+    },
   );
 }

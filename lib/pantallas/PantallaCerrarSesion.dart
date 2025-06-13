@@ -29,7 +29,7 @@ class PantallaCerrarSesion extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                usuario.displayName ?? 'Usuario',
+                usuario.displayName ?? "Usuario",
                 style: const TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 8),
