@@ -28,9 +28,6 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
   }
   @override
   Widget build(BuildContext context) {
-    if (colorSeleccionado == null) {
-      return Center(child: CircularProgressIndicator());
-    }
 
     return Scaffold(
       extendBodyBehindAppBar: true, //para que la imagen de las lineas se vea detras de la appBar tambien
