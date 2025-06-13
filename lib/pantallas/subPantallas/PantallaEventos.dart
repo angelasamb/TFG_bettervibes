@@ -7,6 +7,7 @@ import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaCrearEvento.dart';
 
 import '../../widgets/ListaEventosPorDiaBotones.dart';
+import '../datosUsuario/PantallaUnirteUnidadFamiliar.dart';
 
 class PantallaEventos extends StatefulWidget {
   const PantallaEventos({super.key});
@@ -234,6 +235,15 @@ class _PantallaEventosState extends State<PantallaEventos> {
   Future<void> _cargarEventos() async {
     try {
       final unidadFamiliarRef = await obtenerUnidadFamiliarRefActual();
+      if (unidadFamiliarRef == null && mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const PantallaUnirteUnidadfamiliar(),
+          ),
+        );
+      } else {
+      }
       final idUsuario = FirebaseAuth.instance.currentUser?.uid;
       final snapshot = await unidadFamiliarRef!.collection("Eventos").get();
       final Map<DateTime, List<Map<String, dynamic>>> eventosTemp = {};
@@ -251,6 +261,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
       }
       setState(() {
         _eventosPorDia = eventosTemp;
+        _fechaSeleccionada = _fechaSeleccionada;
       });
     } catch (e) {
       print("Error cargando eventos: $e");

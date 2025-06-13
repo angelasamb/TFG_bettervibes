@@ -17,6 +17,7 @@ Future<DocumentReference?> obtenerUnidadFamiliarRefActual() async {
 
     return usuarioData?["unidadFamiliarRef"] as DocumentReference?;
   }catch(e){
+
     print("Error obteniendo unidad familiar: $e");
     return null;
   }

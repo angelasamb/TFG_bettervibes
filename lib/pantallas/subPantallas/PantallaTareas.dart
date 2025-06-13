@@ -33,9 +33,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
     if (ref == null && mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const PantallaUnirteUnidadfamiliar(),
-        ),
+        MaterialPageRoute(builder: (_) => const PantallaUnirteUnidadfamiliar()),
       );
     } else {
       setState(() {
@@ -58,7 +56,17 @@ class _PantallaTareasState extends State<PantallaTareas> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           FloatingActionButton(
-            heroTag: "boton_todas",
+            heroTag: "boton_crear",
+            backgroundColor: Colors.gamaColores.shade500,
+            foregroundColor: Colors.white,
+            onPressed: () {
+              _accionesBotones();
+            },
+            child: const Icon(Icons.add),
+          ),
+          const SizedBox(height: 16),
+          FloatingActionButton(
+            heroTag: "boton_anteriores",
             backgroundColor: Colors.gamaColores.shade500,
             foregroundColor: Colors.white,
             onPressed: () {
@@ -67,17 +75,7 @@ class _PantallaTareasState extends State<PantallaTareas> {
                 MaterialPageRoute(builder: (_) => PantallaTodasTareas()),
               );
             },
-            child: const Text("Todas"),
-          ),
-          const SizedBox(height: 16),
-          FloatingActionButton(
-            heroTag: "boton_crear",
-            backgroundColor: Colors.gamaColores.shade500,
-            foregroundColor: Colors.white,
-            onPressed: () {
-              _accionesBotones();
-            },
-            child: const Icon(Icons.add),
+            child: const Icon(Icons.arrow_back),
           ),
         ],
       ),
@@ -104,7 +102,6 @@ class _PantallaTareasState extends State<PantallaTareas> {
       ),
     );
   }
-
 
   void _accionesBotones() async {
     final esAdmin = await esUsuarioActualAdmin();

@@ -9,6 +9,8 @@ import '../../widgets/ListaEventosDia.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../datosUsuario/PantallaUnirteUnidadFamiliar.dart';
+
 class PantallaInicio extends StatefulWidget {
   final VoidCallback? irATareas;
   final VoidCallback? irAEventos;
@@ -149,8 +151,17 @@ class _PantallaInicioState extends State<PantallaInicio> {
 
   Future<void> cargarUnidadFamiliar() async {
     final referencia= await obtenerUnidadFamiliarRefActual();
-    setState(() {
-      unidadFamiliarRef = referencia;
-    });
+    if (referencia == null && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const PantallaUnirteUnidadfamiliar(),
+        ),
+      );
+    } else {
+      setState(() {
+        unidadFamiliarRef = referencia;
+      });
+    }
   }
 }
