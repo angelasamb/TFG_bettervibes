@@ -13,7 +13,7 @@ class FuncionesPagos {
     return Pagos.fromFirestore(doc.data()!);
   }
 
-  static Future<void> actualizarBalanceUsuario(
+  static Future<void> actualizarBalanceParticipantes(
     DocumentReference usuarioRef,
     num cambio,
   ) async {
@@ -24,6 +24,22 @@ class FuncionesPagos {
       final data = snapshot.data() as Map<String, dynamic>;
       final balanceActual = (data['balance'] ?? 0) as num;
       transaction.update(usuarioRef, {'balance': balanceActual + cambio});
+    });
+  }
+  static Future<void> actualizarBalancePagador(
+      DocumentReference pagadorRef,
+      num precio,
+      ) async {
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final snapshot = await transaction.get(pagadorRef);
+      if (!snapshot.exists) return;
+
+      final data = snapshot.data() as Map<String, dynamic>;
+      final balanceActual = (data['balance'] ?? 0) as num;
+
+      transaction.update(pagadorRef, {
+        'balance': balanceActual + precio,
+      });
     });
   }
 
@@ -47,10 +63,10 @@ class FuncionesPagos {
     if (idPago == null) {
       await unidadFamiliarRef.collection("Pagos").add(pagoNuevo.toFirestore());
 
-      await actualizarBalanceUsuario(pagadorRef, precio);
+      await actualizarBalancePagador(pagadorRef, precio);
       final reparto = precio / participantes.length;
       for (final participante in participantes) {
-        await actualizarBalanceUsuario(participante, -reparto);
+        await actualizarBalanceParticipantes(participante, -reparto);
       }
     } else {
       final pagoOriginal = await cargarPago(
@@ -58,14 +74,14 @@ class FuncionesPagos {
         idPago: idPago,
       );
       if (pagoOriginal != null) {
-        await actualizarBalanceUsuario(
+        await actualizarBalancePagador(
           pagoOriginal.pagadorRef,
           -pagoOriginal.precio,
         );
         final repartoOriginal =
             pagoOriginal.precio / pagoOriginal.participantes.length;
         for (final participante in pagoOriginal.participantes) {
-          await actualizarBalanceUsuario(participante, repartoOriginal);
+          await actualizarBalanceParticipantes(participante, repartoOriginal);
         }
       }
 
@@ -74,10 +90,10 @@ class FuncionesPagos {
           .doc(idPago)
           .update(pagoNuevo.toFirestore());
 
-      await actualizarBalanceUsuario(pagadorRef, precio);
+      await actualizarBalanceParticipantes(pagadorRef, precio);
       final repartoNuevo = precio / participantes.length;
       for (final participante in participantes) {
-        await actualizarBalanceUsuario(participante, -repartoNuevo);
+        await actualizarBalanceParticipantes(participante, -repartoNuevo);
       }
     }
   }
@@ -92,10 +108,10 @@ class FuncionesPagos {
     );
     if (pago == null) return;
 
-    await actualizarBalanceUsuario(pago.pagadorRef, -pago.precio);
+    await actualizarBalancePagador(pago.pagadorRef, -pago.precio);
     final reparto = pago.precio / pago.participantes.length;
     for (final participante in pago.participantes) {
-      await actualizarBalanceUsuario(participante, reparto);
+      await actualizarBalanceParticipantes(participante, reparto);
     }
 
     await unidadFamiliarRef.collection("Pagos").doc(idPago).delete();
