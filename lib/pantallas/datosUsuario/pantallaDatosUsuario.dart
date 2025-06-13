@@ -43,7 +43,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => PantallaAutentification()),
+              MaterialPageRoute(builder: (context) => pantallaAutentification()),
             );
           },
         ),

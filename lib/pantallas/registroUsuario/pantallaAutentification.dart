@@ -6,25 +6,11 @@ import 'package:tfg_bettervibes/pantallas/registroUsuario/pantallaRegistroCorreo
 import 'package:tfg_bettervibes/widgets/personalizacion.dart';
 
 
-class PantallaAutentification extends StatefulWidget {
-  const PantallaAutentification({super.key});
-
-  @override
-  PantallaAutentificationState createState() => PantallaAutentificationState();
-}
-
-class PantallaAutentificationState extends State<PantallaAutentification> {
-  final TextEditingController correo = TextEditingController();
-  final TextEditingController contrasena = TextEditingController();
-
+class pantallaAutentification extends StatelessWidget {
   final Autentificacion _autentificacionFirebase = Autentificacion();
 
-  @override
-  void dispose() {
-    correo.dispose();
-    contrasena.dispose();
-    super.dispose();
-  }
+  TextEditingController correo = TextEditingController();
+  TextEditingController contrasena = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

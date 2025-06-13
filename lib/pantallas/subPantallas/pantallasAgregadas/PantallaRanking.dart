@@ -9,17 +9,17 @@ import '../../../funcionalidades/MainFunciones.dart';
 import '../../../widgets/DiagramaSectoresRanking.dart';
 
 class PantallaRanking extends StatefulWidget {
-  const PantallaRanking({super.key});
+  TextEditingController nombreController = TextEditingController();
+  String imagenSeleccionada = "";
+  ColorElegido colorSeleccionado = ColorElegido.Rojo;
+
+  PantallaRanking();
 
   @override
   State<PantallaRanking> createState() => _PantallaRankingState();
 }
 
 class _PantallaRankingState extends State<PantallaRanking> {
-  late final TextEditingController nombreController;
-  late final String imagenSeleccionada;
-  late final ColorElegido colorSeleccionado;
-
   DocumentReference? unidadFamiliarRef;
   String? user = FirebaseAuth.instance.currentUser?.uid;
   final todas = true;
@@ -27,9 +27,6 @@ class _PantallaRankingState extends State<PantallaRanking> {
   @override
   void initState() {
     super.initState();
-    nombreController = TextEditingController();
-    imagenSeleccionada = "";
-    colorSeleccionado = ColorElegido.Rojo;
     _cargarUnidadFamiliar();
   }
 
