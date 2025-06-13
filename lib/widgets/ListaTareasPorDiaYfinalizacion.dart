@@ -57,7 +57,7 @@ class _ListaTareasPorDiaYFinalizacionState extends State<ListaTareasPorDiaYFinal
       final querySnapshot = await unidadFamiliarRef
           .collection("Tareas")
           .where("timestamp", isGreaterThanOrEqualTo: Timestamp.fromDate(inicio))
-          .where("timestamp", isLessThan: Timestamp.fromDate(fin))
+          .where("timestamp", isLessThanOrEqualTo: Timestamp.fromDate(fin))
           .where("realizada", isEqualTo: widget.mostrarRealizadas)
           .get();
 
