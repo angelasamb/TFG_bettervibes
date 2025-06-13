@@ -12,14 +12,16 @@ class ListaEventosPorDiaBotones extends StatefulWidget {
   const ListaEventosPorDiaBotones({super.key, required this.fecha});
 
   @override
-  State<ListaEventosPorDiaBotones> createState() => _ListaEventosPorDiaBotonesState();
+  State<ListaEventosPorDiaBotones> createState() =>
+      _ListaEventosPorDiaBotonesState();
 }
 
 class _ListaEventosPorDiaBotonesState extends State<ListaEventosPorDiaBotones> {
-  List<Eventos> eventosFiltrados = [];
   bool cargando = true;
   String? error;
+  Stream<QuerySnapshot>? _eventosStream;
   late DocumentReference? unidadFamiliarRef;
+
   @override
   void initState() {
     super.initState();
@@ -57,25 +59,23 @@ class _ListaEventosPorDiaBotonesState extends State<ListaEventosPorDiaBotones> {
         return;
       }
 
-      final diaInicio = DateTime(widget.fecha.year, widget.fecha.month, widget.fecha.day);
+      final diaInicio = DateTime(
+        widget.fecha.year,
+        widget.fecha.month,
+        widget.fecha.day,
+      );
       final diaFin = diaInicio.add(const Duration(days: 1));
-
-      final snapshot = await unidadFamiliarRef
-          !.collection("Eventos")
-          .where("timestamp", isGreaterThanOrEqualTo: Timestamp.fromDate(diaInicio))
-          .where("timestamp", isLessThan: Timestamp.fromDate(diaFin))
-          .get();
-
-      final eventos = snapshot.docs.map((doc) {
-        return Eventos.fromFirestore(doc);
-      }).where((evento) {
-        // Filtra por usuario si tiene usuarioRef
-        return evento.usuarioRef == null || evento.usuarioRef!.id == user.uid;
-      }).toList();
-
       setState(() {
-        eventosFiltrados = eventos;
-        cargando = false;
+        _eventosStream =
+            unidadFamiliarRef!
+                .collection("Eventos")
+                .where(
+                  "timestamp",
+                  isGreaterThanOrEqualTo: Timestamp.fromDate(diaInicio),
+                )
+                .where("timestamp", isLessThan: Timestamp.fromDate(diaFin))
+                .snapshots();
+      cargando=false;
       });
     } catch (e) {
       setState(() {
@@ -89,30 +89,71 @@ class _ListaEventosPorDiaBotonesState extends State<ListaEventosPorDiaBotones> {
   Widget build(BuildContext context) {
     if (cargando) return const Center(child: CircularProgressIndicator());
     if (error != null) return Center(child: Text(error!));
-    if (eventosFiltrados.isEmpty) return const Center(child: Text("No hay eventos para este día"));
+    if (_eventosStream == null)
+      return const Center(child: Text("No hay eventos para este día"));
 
-    return ListView.builder(
-      itemCount: eventosFiltrados.length,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      itemBuilder: (context, index) {
-        final evento = eventosFiltrados[index];
-        final fechaHora = evento.timestamp.toDate();
-        final descripcion = evento.descripcion ?? '';
-        DocumentReference eventoEditar = unidadFamiliarRef!.collection("Eventos").doc(evento.id);
-        return Card(
-          margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-          child: ListTile(
-            title: Text(evento.nombre),
-            subtitle: descripcion.isNotEmpty ? Text(descripcion) : null,
-            trailing: Text(
-              "${fechaHora.hour.toString().padLeft(2, '0')}:${fechaHora.minute.toString().padLeft(2, '0')}",
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => PantallaCrearEvento(eventoEditar: eventoEditar,)));
+    final user = FirebaseAuth.instance.currentUser!;
 
-            },
-          ),
+    return StreamBuilder<QuerySnapshot>(
+      stream: _eventosStream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Center(child: Text("Error: ${snapshot.error}"));
+        }
+
+        if (!snapshot.hasData) {
+          return const Center(child: Text("No hay datos disponibles"));
+        }
+
+        final eventosFiltrados =
+            snapshot.data!.docs
+                .map((doc) => Eventos.fromFirestore(doc))
+                .where(
+                  (evento) =>
+                      evento.usuarioRef == null ||
+                      evento.usuarioRef!.id == user.uid,
+                )
+                .toList();
+        if (eventosFiltrados.isEmpty) {
+          return const Center(child: Text("No hay eventos para este día"));
+        }
+
+        return ListView.builder(
+          itemCount: eventosFiltrados.length,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          itemBuilder: (context, index) {
+            final evento = eventosFiltrados[index];
+            final fechaHora = evento.timestamp.toDate();
+            final descripcion = evento.descripcion ?? "";
+            DocumentReference eventoEditar = unidadFamiliarRef!
+                .collection("Eventos")
+                .doc(evento.id);
+            return Card(
+              margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+              child: ListTile(
+                title: Text(evento.nombre),
+                subtitle: descripcion.isNotEmpty ? Text(descripcion) : null,
+                trailing: Text(
+                  "${fechaHora.hour.toString().padLeft(2, '0')}:${fechaHora.minute.toString().padLeft(2, '0')}",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder:
+                          (_) =>
+                              PantallaCrearEvento(eventoEditar: eventoEditar),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
         );
       },
     );

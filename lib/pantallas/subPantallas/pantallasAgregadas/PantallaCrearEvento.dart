@@ -46,6 +46,9 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
   void initState() {
     super.initState();
     _fechaSeleccionada = widget.fechaSeleccionada ?? DateTime.now();
+    if(widget.tareaEditar==null && widget.eventoEditar==null){
+      _horaSeleccionada =TimeOfDay.now();
+    }
     cargaDatos();
   }
 
@@ -353,7 +356,7 @@ class _PantallaCrearEventoState extends State<PantallaCrearEvento> {
     }
     if (_tipoActividad == "tarea" && tipoTareaSeleccionada == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Por favor, completa el nombre del evento")),
+        SnackBar(content: Text("Por favor, completa el nombre de la tarea")),
       );
       return;
     }

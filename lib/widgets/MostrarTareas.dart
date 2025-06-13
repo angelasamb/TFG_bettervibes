@@ -5,22 +5,29 @@ import 'package:flutter/material.dart';
 import 'ListaTareas.dart';
 
 class MostrarTareas extends StatefulWidget {
-
   final DocumentReference? unidadFamiliarRef;
   final String? user;
   final int tipo;
-  final CollectionReference<Map<String, dynamic>> tareasRef;
 
-  const MostrarTareas({required this.unidadFamiliarRef,required this.user, required this.tipo, required this.tareasRef});
-
+  const MostrarTareas({
+    required this.unidadFamiliarRef,
+    required this.user,
+    required this.tipo,
+  });
 
   @override
   State<MostrarTareas> createState() => _MostrarTareasState();
 }
 
 class _MostrarTareasState extends State<MostrarTareas> {
+
   @override
   Widget build(BuildContext context) {
+    if(widget.unidadFamiliarRef==null){
+      return Center(child: CircularProgressIndicator(),);
+    }
+
+    final tareasRef = widget.unidadFamiliarRef!.collection("Tareas");
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
@@ -28,7 +35,7 @@ class _MostrarTareasState extends State<MostrarTareas> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: StreamBuilder(
-            stream: widget.tareasRef.snapshots(),
+            stream: tareasRef.snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData)
                 return const Center(child: CircularProgressIndicator());

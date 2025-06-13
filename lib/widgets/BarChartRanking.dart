@@ -25,12 +25,12 @@ class _BarChartRankingState extends State<BarChartRanking> {
     if (unidadFamiliarRef == null) {
       return Center(child: CircularProgressIndicator());
     }
-    return FutureBuilder<QuerySnapshot>(
-      future:
+    return StreamBuilder<QuerySnapshot>(
+      stream:
           _firestore
               .collection("Usuario")
               .where("unidadFamiliarRef", isEqualTo: unidadFamiliarRef!)
-              .get(),
+              .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Center(child: CircularProgressIndicator());

@@ -1,20 +1,40 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaRanking.dart';
-import 'package:tfg_bettervibes/widgets/ListaTareasPorDiaYfinalizacion.dart';
+import 'package:tfg_bettervibes/widgets/ListaTareas.dart';
+import 'package:tfg_bettervibes/widgets/MostrarTareas.dart';
 import '../../widgets/BarChartRanking.dart';
 import '../../widgets/ListaEventosDia.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
-class PantallaInicio extends StatelessWidget {
+class PantallaInicio extends StatefulWidget {
   final VoidCallback? irATareas;
   final VoidCallback? irAEventos;
 
   PantallaInicio({super.key, this.irATareas, this.irAEventos});
 
   @override
+  State<PantallaInicio> createState() => _PantallaInicioState();
+}
+
+class _PantallaInicioState extends State<PantallaInicio> {
+  DocumentReference? unidadFamiliarRef;
+
+
+  @override
+  void initState() {
+    super.initState();
+    cargarUnidadFamiliar();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final hoy = DateTime.now();
+    final usuario = FirebaseAuth.instance.currentUser!;
+    final uid = usuario.uid;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -44,11 +64,12 @@ class PantallaInicio extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       GestureDetector(
-                        onTap: irATareas,
+                        onTap: widget.irATareas,
                         child: seccionCaja(
-                          hijo: ListaTareasPorDiaYFinalizacion(
-                            fecha: hoy,
-                            mostrarRealizadas: false,
+                          hijo: MostrarTareas(
+                            unidadFamiliarRef: unidadFamiliarRef,
+                            user: uid,
+                            tipo: 3,
                           ),
                         ),
                       ),
@@ -63,7 +84,7 @@ class PantallaInicio extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       GestureDetector(
-                        onTap: irAEventos,
+                        onTap: widget.irAEventos,
                         child: seccionCaja(hijo: ListaEventosDia(fecha: hoy)),
                       ),
                       const SizedBox(height: 12),
@@ -125,5 +146,12 @@ class PantallaInicio extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> cargarUnidadFamiliar() async {
+    final referencia= await obtenerUnidadFamiliarRefActual();
+    setState(() {
+      unidadFamiliarRef = referencia;
+    });
   }
 }

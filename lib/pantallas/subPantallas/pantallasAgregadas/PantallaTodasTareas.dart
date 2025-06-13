@@ -48,8 +48,6 @@ class _Pantallatodastareas extends State<PantallaTodasTareas> {
       );
     }
 
-    final tareasRef = unidadFamiliarRef!.collection("Tareas");
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -75,7 +73,6 @@ class _Pantallatodastareas extends State<PantallaTodasTareas> {
                   unidadFamiliarRef: unidadFamiliarRef,
                   user: user,
                   tipo: 1,
-                  tareasRef: tareasRef,
                 ),
               ),
             ),

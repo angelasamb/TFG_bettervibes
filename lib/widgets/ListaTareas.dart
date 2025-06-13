@@ -33,15 +33,24 @@ Future<List<Widget>> listaTareasPorDia(
               isGreaterThanOrEqualTo: Timestamp.fromDate(hoySoloFecha),
             )
             .get();
+  } else if (tipo == 3) {
+    final finDia = hoySoloFecha.add(Duration(days: 1));
+    queryTareas =
+        await unidadFamiliarRef
+            .collection("Tareas")
+            .where("unidadFamiliarRef", isEqualTo: unidadFamiliarRef)
+            .where("realizada", isEqualTo: false)
+            .where(
+              "timestamp",
+              isGreaterThanOrEqualTo: Timestamp.fromDate(hoySoloFecha),
+            )
+            .where("timestamp", isLessThanOrEqualTo: Timestamp.fromDate(finDia))
+            .get();
   } else {
     queryTareas =
         await unidadFamiliarRef
             .collection("Tareas")
             .where("realizada", isEqualTo: true)
-            .where(
-              "timestamp",
-              isGreaterThanOrEqualTo: Timestamp.fromDate(inicioSemana),
-            )
             .where(
               "timestamp",
               isLessThanOrEqualTo: Timestamp.fromDate(finalSemana),
@@ -101,13 +110,18 @@ Future<List<Widget>> listaTareasPorDia(
       (a, b) =>
           (a["timestamp"] as Timestamp).compareTo(b["timestamp"] as Timestamp),
     );
-    final String fechaFormateada = DateFormat(
-      //formateo de fecha
-      "EEE, dd MMM yyyy",
-    ).format(fecha);
-    lista.add(
-      Padding(padding: const EdgeInsets.all(8), child: Text(fechaFormateada)),
-    );
+
+    String fechaFormateada = "";
+    if (tipo != 3) {
+      fechaFormateada = DateFormat(
+        //formateo de fecha
+        "EEE, dd MMM yyyy",
+      ).format(fecha);
+
+      lista.add(
+        Padding(padding: const EdgeInsets.all(8), child: Text(fechaFormateada)),
+      );
+    }
     for (var tarea in tareaDia) {
       //iterador de tareas sobre ese dia para mostrarlas por pantalla
       final tipoTareaRef = tarea["tipotareaRef"] as DocumentReference;
@@ -195,9 +209,11 @@ Future<List<Widget>> listaTareasPorDia(
                                   .collection("Tareas")
                                   .doc(tarea.id)
                                   .update({"realizada": true});
-                              ScaffoldMessenger.of(
-                                context,
-                              ).showSnackBar(SnackBar(content: Text("Tarea marcada como realizada")));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Tarea marcada como realizada"),
+                                ),
+                              );
                               CalculoPuntuacionSemanal(usuarioRef);
                             }
                           },

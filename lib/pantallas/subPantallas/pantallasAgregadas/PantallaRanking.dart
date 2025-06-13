@@ -49,7 +49,6 @@ class _PantallaRankingState extends State<PantallaRanking> {
       );
     }
 
-    final tareasRef = unidadFamiliarRef!.collection("Tareas");
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -97,8 +96,7 @@ class _PantallaRankingState extends State<PantallaRanking> {
                       child: MostrarTareas(
                         unidadFamiliarRef: unidadFamiliarRef,
                         user: user,
-                        tipo: 3,
-                        tareasRef: tareasRef,
+                        tipo: 4,
                       ),
                     ),
                   ],

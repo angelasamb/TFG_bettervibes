@@ -52,8 +52,6 @@ class _PantallaTareasState extends State<PantallaTareas> {
         body: Center(child: CircularProgressIndicator()),
       );
     }
-
-    final tareasRef = unidadFamiliarRef!.collection("Tareas");
     return Scaffold(
       floatingActionButton: Column(
         mainAxisSize: MainAxisSize.min,
@@ -99,7 +97,6 @@ class _PantallaTareasState extends State<PantallaTareas> {
                 unidadFamiliarRef: unidadFamiliarRef,
                 user: user,
                 tipo: 2,
-                tareasRef: tareasRef,
               ),
             ),
           ),
