@@ -8,6 +8,7 @@ import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/Pantal
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaTodasTareas.dart';
 
 import '../../widgets/MostrarTareas.dart';
+import '../datosUsuario/PantallaUnirteUnidadFamiliar.dart';
 
 class PantallaTareas extends StatefulWidget {
   const PantallaTareas({super.key});
@@ -29,9 +30,18 @@ class _PantallaTareasState extends State<PantallaTareas> {
 
   Future<void> _cargarUnidadFamiliar() async {
     final ref = await obtenerUnidadFamiliarRefActual();
-    setState(() {
-      unidadFamiliarRef = ref;
-    });
+    if (ref == null && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const PantallaUnirteUnidadfamiliar(),
+        ),
+      );
+    } else {
+      setState(() {
+        unidadFamiliarRef = ref;
+      });
+    }
   }
 
   @override
