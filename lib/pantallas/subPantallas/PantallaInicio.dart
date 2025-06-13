@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tfg_bettervibes/funcionalidades/MainFunciones.dart';
 import 'package:tfg_bettervibes/pantallas/subPantallas/pantallasAgregadas/PantallaRanking.dart';
-import 'package:tfg_bettervibes/widgets/ListaTareas.dart';
 import 'package:tfg_bettervibes/widgets/MostrarTareas.dart';
 import '../../widgets/BarChartRanking.dart';
 import '../../widgets/ListaEventosDia.dart';

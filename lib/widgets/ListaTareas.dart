@@ -35,16 +35,17 @@ Future<List<Widget>> listaTareasPorDia(
             .get();
   } else if (tipo == 3) {
     final finDia = hoySoloFecha.add(Duration(days: 1));
+    final usuarioRef = FirebaseFirestore.instance.collection("Usuario").doc(user);
     queryTareas =
         await unidadFamiliarRef
             .collection("Tareas")
-            .where("unidadFamiliarRef", isEqualTo: unidadFamiliarRef)
+            .where("usuarioRef", isEqualTo: usuarioRef )
             .where("realizada", isEqualTo: false)
             .where(
               "timestamp",
               isGreaterThanOrEqualTo: Timestamp.fromDate(hoySoloFecha),
             )
-            .where("timestamp", isLessThanOrEqualTo: Timestamp.fromDate(finDia))
+            .where("timestamp", isLessThan: Timestamp.fromDate(finDia))
             .get();
   } else {
     queryTareas =

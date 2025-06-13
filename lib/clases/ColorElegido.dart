@@ -6,20 +6,20 @@ import '../funcionalidades/MainFunciones.dart';
 
 enum ColorElegido{
   Rojo,
-  Amarillo,
+  Naranja,
   VerdeAzulado,
   AzulClaro,
   AzulOscuro,
   Morado,
   Rosa,
-  Gris;
+  Gris,
 }
 Color getColorFromString(String color) {
   switch (color) {
     case "Rojo":
       return Color(0xffd73027);
-    case "Amarillo":
-      return Color(0xFFFFFF00);
+    case "Naranja":
+      return Color(0xFFFF6E00);
     case "VerdeAzulado":
       return Color(0xff008080);
     case "AzulClaro":
@@ -33,15 +33,15 @@ Color getColorFromString(String color) {
     case "Gris":
       return Color(0xFF97919B);
     default:
-      return Color(0xFF97919B);
+      return Color(0xFF000000);
   }
 }
 ColorElegido? getColorElegidoFromString(String color) {
   switch (color) {
     case "Rojo":
       return ColorElegido.Rojo;
-    case "Amarillo":
-      return ColorElegido.Amarillo;
+    case "Naranja":
+      return ColorElegido.Naranja;
     case "VerdeAzulado":
       return ColorElegido.VerdeAzulado;
     case "AzulClaro":

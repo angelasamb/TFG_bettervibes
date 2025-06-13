@@ -25,7 +25,7 @@ Future<bool> crearUsuarioBaseDeDatos(
       admin: false,
       fotoPerfil: imagenEscogida,
       nombre: nombreEscogido,
-      colorElegido: ColorElegido.Rojo,
+      colorElegido: ColorElegido.Gris,
     );
 
     await baseDatos

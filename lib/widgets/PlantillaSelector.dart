@@ -30,13 +30,13 @@ class _PlantillaSelectorState extends State<PlantillaSelector> {
 
   final Map<ColorElegido, Color> mapaColores = {
     ColorElegido.Rojo: Color(0xffd73027),
-    ColorElegido.Amarillo: Color(0xFFFFFF00),
+    ColorElegido.Naranja: Color(0xFFFF6E00),
     ColorElegido.VerdeAzulado: Color(0xff008080),
     ColorElegido.AzulClaro: Color(0xFF87CEEB),
     ColorElegido.AzulOscuro: Color(0xff173370),
     ColorElegido.Morado: Color(0xFF762A83),
     ColorElegido.Rosa: Color(0xFFD986E3),
-    ColorElegido.Gris: Color(0xFF97919B),
+    ColorElegido.Gris: Color(0xFF97919B)
   };
 
   List<ColorElegido> coloresOcupados = [];

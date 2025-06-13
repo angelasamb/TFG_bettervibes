@@ -89,7 +89,6 @@ Future<bool> unirseUnidadFamiliar(String unidadFamiliarId, String contrasenaInte
 Future<void> asignarColorAleatorio(DocumentReference<Object?> usuarioRef) async {
   final coloresOcupados = await listaColoresOcupados();
   final disponibles = ColorElegido.values.where((color)=>!coloresOcupados.contains(color)).toList();
-  print(disponibles);
   if(disponibles.isNotEmpty){
     disponibles.shuffle();
     await usuarioRef.update({"colorElegido":disponibles.first.name});
