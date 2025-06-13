@@ -123,11 +123,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
                           padding: const EdgeInsets.all(8),
                           child: TableCalendar(
                             eventLoader: (dia) {
-                              final fechaSinHora = DateTime(
-                                dia.year,
-                                dia.month,
-                                dia.day,
-                              );
+                              final fechaSinHora = _normalizarFecha(dia);
                               return _eventosPorDia[fechaSinHora] ?? [];
                             },
                             startingDayOfWeek: StartingDayOfWeek.monday,
@@ -246,11 +242,7 @@ class _PantallaEventosState extends State<PantallaEventos> {
         final usuarioRef = data["usuarioRef"];
         if (usuarioRef == null || usuarioRef.id == idUsuario) {
           final timestamp = (data["timestamp"] as Timestamp).toDate();
-          final fecha = DateTime(
-            timestamp.year,
-            timestamp.month,
-            timestamp.day,
-          );
+          final fecha = _normalizarFecha(timestamp);
           if (eventosTemp[fecha] == null) {
             eventosTemp[fecha] = [];
           }
@@ -266,5 +258,9 @@ class _PantallaEventosState extends State<PantallaEventos> {
         context,
       ).showSnackBar(SnackBar(content: Text("Error cargando eventos: $e")));
     }
+  }
+
+  DateTime _normalizarFecha(DateTime fecha) {
+    return DateTime(fecha.year, fecha.month, fecha.day);
   }
 }
