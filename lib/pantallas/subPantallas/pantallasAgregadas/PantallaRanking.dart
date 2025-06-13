@@ -59,7 +59,8 @@ class _PantallaRankingState extends State<PantallaRanking> {
         automaticallyImplyLeading: true,
         centerTitle: true,
       ),
-      body: Stack(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SvgPicture.asset(
             "assets/imagenes/fondo1.svg",

@@ -158,7 +158,7 @@ class _PantallaBalancesState extends State<PantallaBalances> {
                             return CheckboxListTile(
                               value: data["hecho"] ?? false,
                               title: Text(
-                                "${nombres[0]} debe a ${nombres[1]} ${data["cantidad"]}€",
+                                "${nombres[0]} debe a ${nombres[1]} ${(data["cantidad"] as num).toStringAsFixed(2)}€",
                                 style: TextStyle(fontSize: 16),
                               ),
                               onChanged: (value) async {

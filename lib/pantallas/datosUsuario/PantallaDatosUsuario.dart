@@ -55,10 +55,9 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
           Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
-              child: ListView(
+              child: SafeArea(child:  ListView(
                 padding: const EdgeInsets.all(40),
                 children: [
-                  const SizedBox(height: 40),
                   const Text(
                     "Datos Usuario",
                     style: TextStyle(
@@ -118,7 +117,7 @@ class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
                     child: _texto("Guardar"),
                   ),
                 ],
-              ),
+              ),)
             ),
           ),
         ],

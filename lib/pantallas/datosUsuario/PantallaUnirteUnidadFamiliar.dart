@@ -39,10 +39,9 @@ class PantallaUnirteUnidadfamiliar extends StatelessWidget {
           Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 400),
-              child: ListView(
+              child: SafeArea(child: ListView(
                 padding: const EdgeInsets.all(40),
                 children: [
-                  const SizedBox(height: 160),
                   Icon(
                     Icons.house,
                     size: 100,
@@ -102,7 +101,7 @@ class PantallaUnirteUnidadfamiliar extends StatelessWidget {
                     child: const Text("Unirse a unidad familiar"),
                   ),
                 ],
-              ),
+              ),)
             ),
           ),
         ],

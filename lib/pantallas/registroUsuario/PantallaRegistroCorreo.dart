@@ -41,11 +41,10 @@ class PantallaRegistroCorreo extends StatelessWidget {
           ), ),
           Center(
             child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 400),
-            child: ListView(
+            child: SafeArea(child: ListView(
               padding: const EdgeInsets.all(20),
               //padding uniforme de 20 pixeles en todos los lados
               children: [
-                const SizedBox(height: 130),
                 Center(
                   child: Image.asset(
                     "assets/imagenes/iconos/logoFrase.png",
@@ -125,7 +124,7 @@ class PantallaRegistroCorreo extends StatelessWidget {
             )
 
           )
-        ],
+          )],
 
       ),
     );
