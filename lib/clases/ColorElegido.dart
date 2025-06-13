@@ -6,14 +6,12 @@ import '../funcionalidades/MainFunciones.dart';
 
 enum ColorElegido{
   Rojo,
-  Naranja,
   Amarillo,
-  Verde,
+  VerdeAzulado,
   AzulClaro,
   AzulOscuro,
   Morado,
   Rosa,
-  VerdeAzulado,
   Gris;
 }
 Color getColorFromString(String color) {

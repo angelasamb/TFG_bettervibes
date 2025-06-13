@@ -5,8 +5,8 @@ import 'package:tfg_bettervibes/clases/UnidadFamiliar.dart';
 import '../clases/ColorElegido.dart';
 import '../datosDePrueba/TipoDeEventosDePrueba.dart';
 
-final nombreColeccionUnidadFamiliar = 'UnidadFamiliar';
-final nombreColeccionUsuarios = 'Usuario';
+final nombreColeccionUnidadFamiliar = "UnidadFamiliar";
+final nombreColeccionUsuarios = "Usuario";
 
 Future<bool> crearUnidadFamiliar(String nombre, String contrasena) async {
   try {
@@ -34,10 +34,10 @@ Future<bool> crearUnidadFamiliar(String nombre, String contrasena) async {
         .add(datosAFirebase);
 
     await usuarioRef.update({
-      'unidadFamiliarRef': unidadRef,
-      'admin': true,
+      "unidadFamiliarRef": unidadRef,
+      "admin": true,
     });
-    await asignarColorAleatorio(unidadRef);
+    await asignarColorAleatorio(usuarioRef);
     insertarTareasEjemploEnUnidadFamiliar();
     return true;
   } catch (e) {
@@ -65,15 +65,15 @@ Future<bool> unirseUnidadFamiliar(String unidadFamiliarId, String contrasenaInte
     if (unidad.contrasenia != contrasenaIntento) return false;
 
     await usuarioRef.update({
-      'unidadFamiliarRef': unidadRef,
-      'admin': false,
+      "unidadFamiliarRef": unidadRef,
+      "admin": false,
     });
 
     try {
       await unidadRef.update({
-        'participantes': FieldValue.arrayUnion([usuarioRef]),
+        "participantes": FieldValue.arrayUnion([usuarioRef]),
       });
-     await asignarColorAleatorio(unidadRef);
+     await asignarColorAleatorio(usuarioRef);
     } catch (e) {
       print("ERROR: $e");
     }
@@ -86,12 +86,12 @@ Future<bool> unirseUnidadFamiliar(String unidadFamiliarId, String contrasenaInte
 }
 
 
-Future<void> asignarColorAleatorio(DocumentReference<Object?> unidadRef) async {
+Future<void> asignarColorAleatorio(DocumentReference<Object?> usuarioRef) async {
   final coloresOcupados = await listaColoresOcupados();
   final disponibles = ColorElegido.values.where((color)=>!coloresOcupados.contains(color)).toList();
-
+  print(disponibles);
   if(disponibles.isNotEmpty){
     disponibles.shuffle();
-    await unidadRef.update({"colorElegido":disponibles.first.toString()});
+    await usuarioRef.update({"colorElegido":disponibles.first.name});
   }
 }

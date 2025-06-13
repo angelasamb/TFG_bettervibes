@@ -19,7 +19,6 @@ class PantallaDatosUsuario extends StatefulWidget {
 class _PantallaDatosUsuarioState extends State<PantallaDatosUsuario> {
   TextEditingController nombre = TextEditingController();
   String imagenSeleccionada = "";
-  ColorElegido? colorSeleccionado;
 
 @override
   void initState() {

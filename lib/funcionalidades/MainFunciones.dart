@@ -15,7 +15,7 @@ Future<DocumentReference?> obtenerUnidadFamiliarRefActual() async {
     final usuarioSnapshot = await usuarioRef.get();
     final usuarioData = usuarioSnapshot.data();
 
-    return usuarioData?['unidadFamiliarRef'] as DocumentReference?;
+    return usuarioData?["unidadFamiliarRef"] as DocumentReference?;
   }catch(e){
     print("Error obteniendo unidad familiar: $e");
     return null;
