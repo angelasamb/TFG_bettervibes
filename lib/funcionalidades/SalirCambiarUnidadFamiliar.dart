@@ -3,77 +3,124 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'EscogerPantalla.dart';
 
-Future<void> salirUnidadFamiliar(
-  BuildContext context,
-  DocumentReference unidadFamiliarRef,
-) async {
-  final user = FirebaseAuth.instance.currentUser;
+Future<void> _quitarUsuarioDeUnidadConValidacion({
+  required BuildContext context,
+  required DocumentReference usuarioDocRef,
+  required DocumentReference unidadDocRef,
+  required String usuarioId,
+}) async {
   final firestore = FirebaseFirestore.instance;
 
-  if (user != null) {
-    final usuarioDocRef = firestore.collection("Usuario").doc(user.uid);
-    final usuario = await usuarioDocRef.get();
-    final unidadDocRef =  unidadFamiliarRef;
-    if(usuario["balance"]==0) {
-      try {
-        await firestore.runTransaction((transaction) async {
-          final unidadSnapshot = await transaction.get(unidadDocRef);
-          final datosUnidad = unidadSnapshot.data() as Map<String, dynamic>?;
+  final usuarioSnapshot = await usuarioDocRef.get();
 
-          if (datosUnidad == null)
-            throw Exception("Unidad familiar no encontrada");
+  if (!usuarioSnapshot.exists) {
+    throw Exception("Usuario no encontrado");
+  }
 
-          List<dynamic> participantes = datosUnidad["participantes"] ?? [];
-          participantes = List.from(participantes);
+  final balance = usuarioSnapshot.get("balance") ?? 0;
 
-          participantes.removeWhere((ref) => ref.id == user.uid);
+  if (balance != 0) {
+    throw Exception(
+      "No se puede salir o expulsar: el usuario debe saldar sus cuentas.",
+    );
+  }
 
-          transaction.update(usuarioDocRef, {
-            "unidadFamiliarRef": FieldValue.delete(),
-            "colorElegido": "",
-            "puntuacion": 0,
-          });
+  await firestore.runTransaction((transaction) async {
+    final unidadSnapshot = await transaction.get(unidadDocRef);
+    final datosUnidad = unidadSnapshot.data() as Map<String, dynamic>?;
 
-          if (participantes.isEmpty) {
-            transaction.delete(unidadDocRef);
-          } else {
-            transaction.update(unidadDocRef, {"participantes": participantes});
-          }
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Has salido de la unidad familiar")),
-        );
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (_) => EscogerPantalla()),
-              (route) => false,
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error al salir de la unidad familiar: $e")),
-        );
-      }
-    }else{
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "No te puedes salir de la unidad familiar hasta que no hayas saldado tus cuentas",
-          ),
-        ),
-      );
+    if (datosUnidad == null) {
+      throw Exception("Unidad familiar no encontrada");
     }
-  } else {
+
+    List<dynamic> participantes = datosUnidad["participantes"] ?? [];
+    participantes = List.from(participantes);
+
+    participantes.removeWhere((ref) => ref.id == usuarioId);
+
+    transaction.update(usuarioDocRef, {
+      "unidadFamiliarRef": FieldValue.delete(),
+      "colorElegido": "",
+      "puntuacion": 0,
+    });
+
+    if (participantes.isEmpty) {
+      transaction.delete(unidadDocRef);
+    } else {
+      transaction.update(unidadDocRef, {"participantes": participantes});
+    }
+  });
+}
+
+Future<void> salirUnidadFamiliar(
+    BuildContext context,
+    DocumentReference unidadFamiliarRef,
+    ) async {
+  final user = FirebaseAuth.instance.currentUser;
+  if (user == null) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          "No hay usuario autenticado o unidad familiar seleccionada",
-        ),
-      ),
+      SnackBar(content: Text("No hay usuario autenticado")),
+    );
+    return;
+  }
+
+  final firestore = FirebaseFirestore.instance;
+  final usuarioDocRef = firestore.collection("Usuario").doc(user.uid);
+
+  try {
+    await _quitarUsuarioDeUnidadConValidacion(
+      context: context,
+      usuarioDocRef: usuarioDocRef,
+      unidadDocRef: unidadFamiliarRef,
+      usuarioId: user.uid,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Has salido de la unidad familiar")),
+    );
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => EscogerPantalla()),
+          (route) => false,
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error al salir de la unidad familiar: $e")),
     );
   }
 }
+
+Future<void> expulsarUsuario(
+    BuildContext context,
+    DocumentReference usuarioRef,
+    DocumentReference? unidadFamiliarRef,
+    ) async {
+  if (unidadFamiliarRef == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("No hay unidad familiar seleccionada")),
+    );
+    return;
+  }
+
+  try {
+    await _quitarUsuarioDeUnidadConValidacion(
+      context: context,
+      usuarioDocRef: usuarioRef,
+      unidadDocRef: unidadFamiliarRef,
+      usuarioId: usuarioRef.id,
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Usuario expulsado correctamente")),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error al expulsar usuario: $e")),
+    );
+  }
+}
+
 
 Future<bool> cambiarContraseniaUnidadFamiliar({
   required BuildContext context,
@@ -121,44 +168,3 @@ Future<void> actualizarAdmin(String uid, bool esAdmin) async {
   await userRef.update({"admin": esAdmin});
 }
 
-Future<void> expulsarUsuario(
-  BuildContext context,
-  DocumentReference usuarioRef,
-  DocumentReference? unidadFamiliarRef,
-) async {
-  final firestore = FirebaseFirestore.instance;
-
-  if (unidadFamiliarRef == null) return;
-
-  try {
-    await firestore.runTransaction((transaction) async {
-      final unidadSnapshot = await transaction.get(unidadFamiliarRef);
-      final datosUnidad = unidadSnapshot.data() as Map<String, dynamic>?;
-
-      if (datosUnidad == null) throw Exception("Unidad familiar no encontrada");
-
-      List<dynamic> participantes = datosUnidad["participantes"] ?? [];
-      participantes = List.from(participantes);
-
-      participantes.removeWhere((ref) => ref.id == usuarioRef.id);
-
-      if (participantes.isEmpty) {
-        transaction.delete(unidadFamiliarRef);
-      } else {
-        transaction.update(unidadFamiliarRef, {"participantes": participantes});
-      }
-
-      transaction.update(usuarioRef, {
-        "unidadFamiliarRef": FieldValue.delete(),
-      });
-    });
-
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Usuario expulsado correctamente")));
-  } catch (e) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Error al expulsar usuario: $e")));
-  }
-}
