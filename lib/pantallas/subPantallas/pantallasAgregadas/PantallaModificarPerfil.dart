@@ -43,7 +43,7 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: ConstrainedBox(
+        child: Center(child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
           child: Padding(
             padding: EdgeInsets.all(20),
@@ -104,7 +104,7 @@ class _PantallaCrearTipoTareaState extends State<PantallaModificarPerfil> {
               ),
             ),
           ),
-        ),
+        ),)
       ),
     );
   }
